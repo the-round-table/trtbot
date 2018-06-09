@@ -1,0 +1,2 @@
+# trtbot
+🤖 Discord Bot
