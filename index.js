@@ -110,7 +110,7 @@ const MESSAGE_LISTENERS = [
 // from Discord _after_ ready is emitted
 client.on('ready', () => {
   client.user.setUsername("The Round Bot");
-  client.user.setPresence({ game: { name: 'Tensorflow' }, status: 'online' })
+  client.user.setPresence({ game: { name: 'The Cloud' }, status: 'online' })
 }).on('message', (message) => {
   MESSAGE_LISTENERS.forEach(listener => listener(message));
 });
