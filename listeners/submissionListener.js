@@ -1,5 +1,4 @@
-const config = require('./config.js')
-const utils = require('./utils');
+const utils = require('../utils');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
@@ -9,11 +8,7 @@ module.exports = (sequelize) => async (message) => {
 
     const link = utils.getPostedUrl(message);
 
-    if (!link) {
-        console.log("Not recording embed: no link");
-        return;
-    } else if (!message.guild) {
-        console.log("Not recording non-guild submissions");
+    if (!link || !message.guild) {
         return;
     }
 

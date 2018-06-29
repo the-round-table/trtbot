@@ -16,8 +16,7 @@ module.exports = class ReadingListCommand extends commando.Command {
             guildOnly: false,
         });
 
-        this.sequelize = client.sequelize;
-        this.Submissions = this.sequelize.import(__dirname + '/../../submission.js');
+        this.Submissions = client.Submissions;
     }
 
     async run(msg, args) {

@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 const readingTime = require('reading-time');
-const utils = require('./utils.js')
+const utils = require('../utils.js')
 
 const READING_TIME_THRESHOLD = 10;
 

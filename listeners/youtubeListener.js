@@ -1,5 +1,5 @@
 const Youtube = require('simple-youtube-api');
-const config = require('./config.js')
+const config = require('../config.js')
 
 const youtubeClient = new Youtube(config.YOUTUBE_API_KEY);
 const DURATION_REPORT_THRESHOLD = 300; // 5 minutes

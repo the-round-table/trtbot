@@ -3,14 +3,14 @@ const config = require('./config.js');
 const serviceAccount = require('./serviceAccount.json');
 const path = require('path');
 const oneLine = require('common-tags').oneLine;
-const youtubeListener = require('./youtubeListener.js');
-const submissionListener = require('./submissionListener.js');
-const longReadsListener = require('./longReadsListener.js');
+const youtubeListener = require('./listeners/youtubeListener.js');
+const submissionListener = require('./listeners/submissionListener.js');
+const longReadsListener = require('./listeners/longReadsListener.js');
 const Sequelize = require('sequelize');
 
 const sequelize = new Sequelize('sqlite:db.sqlite');
-const Submission = sequelize.import(__dirname + '/submission.js');
-Submission.sync();
+const Submissions = sequelize.import(__dirname + '/models/submission.js');
+Submissions.sync();
 
 const Commando = require('discord.js-commando');
 
@@ -19,7 +19,7 @@ const client = new Commando.Client({
   commandPrefix: 'trt'
 });
 
-client.sequelize= sequelize;
+client.Submissions = Submissions;
 
 client
   .on('error', console.error)
@@ -61,16 +61,16 @@ client
 		`);
   });
 
-client.registry
-  .registerGroup('math', 'Math')
-  .registerDefaultTypes()
-  .registerGroup('util', 'Utilities')
-  .registerGroup('topics', 'Topics')
-  .registerGroup('submissions', 'Submissions')
-  .registerDefaultCommands({
-    commandState: false
-  })
-  .registerCommandsIn(path.join(__dirname, 'commands'));
+// client.registry
+//   .registerDefaultTypes()
+//   .registerGroup('util', 'Utilities')
+//   .registerGroup('topics', 'Topics')
+//   .registerGroup('submissions', 'Submissions')
+//   .registerDefaultCommands({
+//     commandState: false
+//   })
+//   .registerCommandsIn(path.join(__dirname, 'commands'));
+// 
 
 const commandHelpers = {
   help: (channel, args) => {
