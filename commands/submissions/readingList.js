@@ -35,6 +35,7 @@ module.exports = class ReadingListCommand extends commando.Command {
         const embed = new discord.RichEmbed()
           .setTitle(`📚 Reading List for ${moment().format('MMMM D, YYYY')}`)
           .setDescription("Here's what was posted to the Discord today:");
+
         _.chain(records)
           .groupBy('channel')
           .toPairs()

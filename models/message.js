@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     channel: DataTypes.STRING,
     guildId: DataTypes.STRING,
     id: {
-      type: DataTypes.String,
+      type: DataTypes.STRING,
       primaryKey: true
     }
   });

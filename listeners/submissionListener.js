@@ -2,9 +2,7 @@ const utils = require('../utils');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
-module.exports = sequelize => async message => {
-  const Submission = sequelize.import(__dirname + '/submission.js');
-
+module.exports = (sequelize, Submissions) => message => {
   const link = utils.getPostedUrl(message);
 
   if (!link || !message.guild) {
@@ -16,7 +14,7 @@ module.exports = sequelize => async message => {
     const channel = message.channel.name;
     const guildId = message.guild.id;
 
-    Submission.count({
+    Submissions.count({
       where: {
         link: link,
         guildId: guildId,
@@ -32,7 +30,7 @@ module.exports = sequelize => async message => {
         return;
       }
 
-      Submission.create({
+      Submissions.create({
         link: link,
         submitter: username,
         guildId: guildId,

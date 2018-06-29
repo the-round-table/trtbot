@@ -3,16 +3,21 @@ const config = require('./config.js');
 const serviceAccount = require('./serviceAccount.json');
 const path = require('path');
 const oneLine = require('common-tags').oneLine;
+const Sequelize = require('sequelize');
+const Commando = require('discord.js-commando');
+
 const youtubeListener = require('./listeners/youtubeListener.js');
 const submissionListener = require('./listeners/submissionListener.js');
 const longReadsListener = require('./listeners/longReadsListener.js');
-const Sequelize = require('sequelize');
+const messageListener = require('./listeners/messageListener.js');
 
-const sequelize = new Sequelize('sqlite:db.sqlite');
+const sequelize = new Sequelize('sqlite:db.sqlite', { logging: false });
 const Submissions = sequelize.import(__dirname + '/models/submission.js');
-Submissions.sync();
+const Messages = sequelize.import(__dirname + '/models/message.js');
 
-const Commando = require('discord.js-commando');
+// Create database tables
+Submissions.sync();
+Messages.sync();
 
 // Create an instance of a Discord client
 const client = new Commando.Client({
@@ -113,8 +118,9 @@ const commandHelpers = {
 
 const MESSAGE_LISTENERS = [
   youtubeListener,
-  submissionListener(sequelize),
-  longReadsListener
+  submissionListener(sequelize, Submissions),
+  longReadsListener,
+  messageListener(Messages)
 ];
 
 // The ready event is vital, it means that your bot will only start reacting to information
