@@ -1,5 +1,4 @@
 const Discord = require('discord.js');
-const admin = require('firebase-admin');
 const config = require('./config.js');
 const serviceAccount = require('./serviceAccount.json');
 const path = require('path');
@@ -7,22 +6,18 @@ const oneLine = require('common-tags').oneLine;
 const youtubeListener = require('./youtubeListener.js');
 const submissionListener = require('./submissionListener.js');
 const longReadsListener = require('./longReadsListener.js');
+const Sequelize = require('sequelize');
+
+const sequelize = new Sequelize('sqlite:db.sqlite');
 
 const Commando = require('discord.js-commando');
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: config.FIRESTORE_DATABASE
-});
-
-const database = admin.firestore();
 
 // Create an instance of a Discord client
 const client = new Commando.Client({
   commandPrefix: 'trt'
 });
 
-client.dbRef = database;
+client.sequelize= sequelize;
 
 client
   .on('error', console.error)
@@ -102,7 +97,7 @@ const commandHelpers = {
 
 const MESSAGE_LISTENERS = [
   youtubeListener,
-  submissionListener(database),
+  submissionListener(sequelize),
   longReadsListener,
 ];
 
