@@ -10,8 +10,6 @@ function getEmbedUrl(message) {
     return link;
 }
 function getPostedUrl(message) {
-    console.log(message.content);
-    console.log(getUrls(message.content))
     const embedUrl = getEmbedUrl(message);
     if (embedUrl) {
         return embedUrl;

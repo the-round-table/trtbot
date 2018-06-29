@@ -22,11 +22,14 @@
     "common-tags": "^1.8.0",
     "discord.js": "^11.3.2",
     "discord.js-commando": "^0.10.0",
-    "firebase-admin": "^5.12.1",
     "get-urls": "^7.2.0",
+    "lodash": "^4.17.10",
+    "moment": "^2.22.2",
     "node-fetch": "^2.1.2",
     "reading-time": "^1.1.2",
+    "sequelize": "^4.38.0",
     "simple-youtube-api": "^5.0.2",
+    "sqlite3": "^4.0.1",
     "typescript": "^2.9.1"
   },
   "devDependencies": {

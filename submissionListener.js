@@ -1,40 +1,51 @@
 const config = require('./config.js')
 const utils = require('./utils');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
-module.exports = (dbRef) => (message) => {
+
+module.exports = (sequelize) => async (message) => {
+    const Submission = sequelize.import(__dirname + '/submission.js');
+
     const link = utils.getPostedUrl(message);
 
     if (!link) {
         console.log("Not recording embed: no link");
         return;
+    } else if (!message.guild) {
+        console.log("Not recording non-guild submissions");
+        return;
     }
 
-    dbRef.runTransaction(transaction => {
-        const submissions = dbRef.collection('submissions');
-        const docRef = submissions.doc(message.author.id);
-        const linkKey = link.replace(/\//g, "-");
-        const submissionRef = docRef.collection('links').doc(linkKey);
+    return sequelize.transaction(t => {
+        const username = message.author.username;
+        const channel = message.channel.name;
+        const guildId = message.guild.id;
 
-        return transaction.get(submissionRef).then(submissionSnap => {
-            // Duplicate submission
-            if (submissionSnap.exists) {
+        Submission.count({
+            where: {
+                link: link,
+                guildId: guildId,
+                // Created in last day
+                createdAt: {
+                    [Op.gt]: new Date(new Date() - 24 * 60 * 60 * 1000)
+                }
+            }
+        }).then(existing => {
+            // Don't create duplicate submissions
+            if(existing) {
                 console.log('Duplicate submission!');
                 return;
             }
 
-            return transaction.get(docRef).then(docSnap => {
-                const payload = { name: message.author.username };
-
-                if (!docSnap.exists) {
-                    payload.submissions = 1;
-                } else {
-                    payload.submissions = docSnap.data().submissions + 1;
-                }
-
-                transaction.set(submissionRef, { submitted: true });
-                transaction.set(docRef, payload);
+            Submission.create({
+                link: link,
+                submitter: username,
+                guildId: guildId,
+                channel: channel
+            }).then(() => {
+                console.log(`Submission registered: (${username}) ${link}`)
             });
         });
-    }).then(() => console.log(`Submission registered: (${message.author.username}) ${link}`))
-        .catch(console.error);
+    });
 }

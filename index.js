@@ -9,6 +9,8 @@ const longReadsListener = require('./longReadsListener.js');
 const Sequelize = require('sequelize');
 
 const sequelize = new Sequelize('sqlite:db.sqlite');
+const Submission = sequelize.import(__dirname + '/submission.js');
+Submission.sync();
 
 const Commando = require('discord.js-commando');
 

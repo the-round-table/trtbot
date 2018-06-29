@@ -7,7 +7,6 @@ const READING_TIME_THRESHOLD = 10;
 
 module.exports = (message) => {
     const link = utils.getPostedUrl(message);
-    console.log(link);
 
     if (!link) {
         return;
