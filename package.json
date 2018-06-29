@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js --delay 10"
+    "start": "nodemon index.js --delay 10",
+    "lint": "prettier --write --single-quote './**/*.js'"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,7 @@
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
     "node-fetch": "^2.1.2",
+    "prettier": "^1.13.7",
     "reading-time": "^1.1.2",
     "sequelize": "^4.38.0",
     "simple-youtube-api": "^5.0.2",

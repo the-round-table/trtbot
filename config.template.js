@@ -1,4 +1,4 @@
 module.exports = {
   DISCORD_TOKEN: '',
-  YOUTUBE_API_KEY: '',
-} 
+  YOUTUBE_API_KEY: ''
+};

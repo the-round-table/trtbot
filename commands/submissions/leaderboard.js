@@ -16,7 +16,7 @@
 
 //     async run(msg, args) {
 //         return this.dbRef.collection('submissions').orderBy('submissions', 'desc').get().then(snap => {
-//             var response = 'Top Submitters:\n'; 
+//             var response = 'Top Submitters:\n';
 //             snap.forEach(doc => {
 //                 response += `\t${doc.data().name}: ${doc.data().submissions}\n`
 //             });

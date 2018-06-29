@@ -26,10 +26,18 @@ client
   .on('warn', console.warn)
   .on('debug', console.log)
   .on('ready', () => {
-    console.log(`Client ready; logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
+    console.log(
+      `Client ready; logged in as ${client.user.username}#${
+        client.user.discriminator
+      } (${client.user.id})`
+    );
   })
-  .on('disconnect', () => { console.warn('Disconnected!'); })
-  .on('reconnecting', () => { console.warn('Reconnecting...'); })
+  .on('disconnect', () => {
+    console.warn('Disconnected!');
+  })
+  .on('reconnecting', () => {
+    console.warn('Reconnecting...');
+  })
   .on('commandError', (cmd, err) => {
     if (err instanceof Commando.FriendlyError) return;
     console.error(`Error in command ${cmd.groupID}:${cmd.memberName}`, err);
@@ -70,47 +78,55 @@ client
 //     commandState: false
 //   })
 //   .registerCommandsIn(path.join(__dirname, 'commands'));
-// 
+//
 
 const commandHelpers = {
   help: (channel, args) => {
-    channel.send('Unimplemented help')
+    channel.send('Unimplemented help');
   },
   add: (channel, args) => {
     const topic = args.join(' ');
-    database.collection('topics').add({
-      topic,
-      createdAt: new Date(),
-    }).then(() => {
-      channel.send('Topic saved!');
-    });
+    database
+      .collection('topics')
+      .add({
+        topic,
+        createdAt: new Date()
+      })
+      .then(() => {
+        channel.send('Topic saved!');
+      });
   },
   list: (channel, args) => {
     var message = 'Topics:\n';
-    database.collection('topics').get().then(snap => {
-      snap.docs.forEach(doc => {
-        const docData = doc.data();
-        message += `\t• ${docData.topic}\n`;
+    database
+      .collection('topics')
+      .get()
+      .then(snap => {
+        snap.docs.forEach(doc => {
+          const docData = doc.data();
+          message += `\t• ${docData.topic}\n`;
+        });
+        channel.send(message);
       });
-      channel.send(message);
-    });
   }
-}
+};
 
 const MESSAGE_LISTENERS = [
   youtubeListener,
   submissionListener(sequelize),
-  longReadsListener,
+  longReadsListener
 ];
 
 // The ready event is vital, it means that your bot will only start reacting to information
 // from Discord _after_ ready is emitted
-client.on('ready', () => {
-  client.user.setUsername("The Round Bot");
-  client.user.setPresence({ game: { name: 'The Cloud' }, status: 'online' })
-}).on('message', (message) => {
-  MESSAGE_LISTENERS.forEach(listener => listener(message));
-});
+client
+  .on('ready', () => {
+    client.user.setUsername('The Round Bot');
+    client.user.setPresence({ game: { name: 'The Cloud' }, status: 'online' });
+  })
+  .on('message', message => {
+    MESSAGE_LISTENERS.forEach(listener => listener(message));
+  });
 
 // Log our bot in
 client.login(config.DISCORD_TOKEN);
