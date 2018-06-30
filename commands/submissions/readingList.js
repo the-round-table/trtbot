@@ -19,8 +19,7 @@ module.exports = class ReadingListCommand extends commando.Command {
     const guildId = msg.guild ? msg.guild.id : undefined;
 
     msg.reply({
-      embed: await this.readingListGenerator.generate({guildId})
+      embed: await this.readingListGenerator.generate({ guildId })
     });
-
   }
 };

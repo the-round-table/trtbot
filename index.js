@@ -1,6 +1,5 @@
 const Discord = require('discord.js');
 const config = require('./config.js');
-const serviceAccount = require('./serviceAccount.json');
 const path = require('path');
 const oneLine = require('common-tags').oneLine;
 const Sequelize = require('sequelize');

@@ -19,7 +19,7 @@ class ReadingListGenerator {
       }
     };
 
-    if(options.guildId) {
+    if (options.guildId) {
       query.guildId = options.guildId;
     }
 
@@ -27,11 +27,12 @@ class ReadingListGenerator {
       where: query,
       order: ['createdAt']
     })).map(record => record.get({ plain: true }));
-      
-    const embed = new discord.RichEmbed()
-      .setTitle(`📚 Reading List for ${moment().format('MMMM D, YYYY')}`);
 
-    if(records.length === 0) {
+    const embed = new discord.RichEmbed().setTitle(
+      `📚 Reading List for ${moment().format('MMMM D, YYYY')}`
+    );
+
+    if (records.length === 0) {
       embed.setDescription('Nothing posted today. 😭');
       return embed;
     } else {
@@ -47,7 +48,9 @@ class ReadingListGenerator {
       .forEach(pair => {
         embed.addField(
           '#' + pair[0],
-          pair[1].map(sub => `- ${truncate(sub.title, 75)} (${sub.shortLink})`).join('\n')
+          pair[1]
+            .map(sub => `- ${truncate(sub.title, 75)} (${sub.shortLink})`)
+            .join('\n')
         );
       });
 
