@@ -4,6 +4,8 @@ const path = require('path');
 const oneLine = require('common-tags').oneLine;
 const Sequelize = require('sequelize');
 const Commando = require('discord.js-commando');
+var CronJob = require('cron').CronJob;
+const presenceGenerator = require('./actions/presenceGenerator.js');
 
 const youtubeListener = require('./listeners/youtubeListener.js');
 const submissionListener = require('./listeners/submissionListener.js');
@@ -127,7 +129,7 @@ const MESSAGE_LISTENERS = [
 client
   .on('ready', () => {
     client.user.setUsername('The Round Bot');
-    client.user.setPresence({ game: { name: 'The Cloud' }, status: 'online' });
+    client.user.setPresence({ game: { name: presenceGenerator() }, status: 'online' });
   })
   .on('message', message => {
     MESSAGE_LISTENERS.forEach(listener => listener(message));
@@ -135,3 +137,7 @@ client
 
 // Log our bot in
 client.login(config.DISCORD_TOKEN);
+
+new CronJob('0 * * * * *', () => {
+  client.user.setPresence({ game: { name: presenceGenerator() }, status: 'online' });
+});
