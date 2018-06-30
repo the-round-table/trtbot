@@ -4,6 +4,7 @@ const Op = Sequelize.Op;
 const _ = require('lodash');
 const discord = require('discord.js');
 const moment = require('moment');
+const truncate = require('truncate');
 
 module.exports = class ReadingListCommand extends commando.Command {
   constructor(client) {
@@ -32,6 +33,10 @@ module.exports = class ReadingListCommand extends commando.Command {
     })
       .map(record => record.get({ plain: true }))
       .then(records => {
+        if(records.length === 0) {
+          return message.reply('Nothing posted today. 😭');
+        }
+
         const embed = new discord.RichEmbed()
           .setTitle(`📚 Reading List for ${moment().format('MMMM D, YYYY')}`)
           .setDescription("Here's what was posted to the Discord today:");
@@ -45,7 +50,7 @@ module.exports = class ReadingListCommand extends commando.Command {
           .forEach(pair => {
             embed.addField(
               '#' + pair[0],
-              '- ' + pair[1].map(r => r.link).join('\n- ')
+              pair[1].map(sub => `- ${truncate(sub.title, 75)} (${sub.shortLink})`).join('\n')
             );
           });
         msg.reply({ embed });

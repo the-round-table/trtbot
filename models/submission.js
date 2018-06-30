@@ -4,6 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     link: DataTypes.STRING,
     channel: DataTypes.STRING,
     guildId: DataTypes.STRING,
+    title: DataTypes.STRING,
+    shortLink: DataTypes.STRING,
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,

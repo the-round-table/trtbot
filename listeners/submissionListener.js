@@ -1,12 +1,44 @@
 const utils = require('../utils');
+const config = require('../config.js');
 const Sequelize = require('sequelize');
+const fetch = require('node-fetch');
+const cheerio = require('cheerio');
+const BitlyClient = require('bitly').BitlyClient;
 const Op = Sequelize.Op;
 
-module.exports = (sequelize, Submissions) => message => {
+const bitly = new BitlyClient(config.BITLY_TOKEN, {});
+
+function getTitle(link) {
+  return new Promise((resolve, reject) => {
+    fetch(link)
+        .then(res => res.buffer())
+        .then(buf => cheerio.load(buf))
+        .then($ => {
+          const ogTitle = $('meta[property="og:title"]').attr('content');
+          const title = ogTitle || $("title").text();
+          resolve(title);
+        }).catch(reject);
+  });
+}
+
+module.exports = (sequelize, Submissions) => async function(message) {
   const link = utils.getPostedUrl(message);
 
   if (!link || !message.guild) {
     return;
+  }
+
+  const title = await getTitle(link);
+  if(!title) {
+    console.warning(`Skipping submission for ${link}. (No title)`);
+    return;
+  }
+
+  var shortLink;
+  try {
+    shortLink = (await bitly.shorten(link)).url;
+  } catch(e) {
+    shortLink = link;
   }
 
   return sequelize.transaction(t => {
@@ -31,10 +63,12 @@ module.exports = (sequelize, Submissions) => message => {
       }
 
       Submissions.create({
-        link: link,
         submitter: username,
-        guildId: guildId,
-        channel: channel
+        link,
+        guildId,
+        channel,
+        title,
+        shortLink
       }).then(() => {
         console.log(`Submission registered: (${username}) ${link}`);
       });
