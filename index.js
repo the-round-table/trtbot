@@ -5,12 +5,14 @@ const oneLine = require('common-tags').oneLine;
 const Sequelize = require('sequelize');
 const Commando = require('discord.js-commando');
 var CronJob = require('cron').CronJob;
-const presenceGenerator = require('./actions/presenceGenerator.js');
 
 const youtubeListener = require('./listeners/youtubeListener.js');
 const submissionListener = require('./listeners/submissionListener.js');
 const longReadsListener = require('./listeners/longReadsListener.js');
 const messageListener = require('./listeners/messageListener.js');
+
+const presenceGenerator = require('./actions/presenceGenerator.js');
+const ReadingListGenerator = require('./actions/readingListGenerator.js');
 
 const sequelize = new Sequelize('sqlite:db.sqlite', { logging: false });
 const Submissions = sequelize.import(__dirname + '/models/submission.js');
@@ -129,7 +131,10 @@ const MESSAGE_LISTENERS = [
 client
   .on('ready', () => {
     client.user.setUsername('The Round Bot');
-    client.user.setPresence({ game: { name: presenceGenerator() }, status: 'online' });
+    client.user.setPresence({
+      game: { name: presenceGenerator() },
+      status: 'online'
+    });
   })
   .on('message', message => {
     MESSAGE_LISTENERS.forEach(listener => listener(message));
@@ -138,6 +143,25 @@ client
 // Log our bot in
 client.login(config.DISCORD_TOKEN);
 
+// Periodically refresh the bot's presence
 new CronJob('0 * * * * *', () => {
-  client.user.setPresence({ game: { name: presenceGenerator() }, status: 'online' });
+  client.user.setPresence({
+    game: { name: presenceGenerator() },
+    status: 'online'
+  });
+});
+
+// Send a reading list every day at 7pm
+const readingListGenerator = new ReadingListGenerator(Submissions);
+new CronJob('0 19 * * * *', () => {
+  client.guilds.forEach(guild => {
+    guild.channels.forEach(async channel => {
+      if (channel.name === 'reading-list') {
+        const message = await readingListGenerator.generate({
+          guildId: guild.id
+        });
+        channel.send(message);
+      }
+    });
+  });
 });
