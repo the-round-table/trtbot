@@ -153,10 +153,10 @@ new CronJob('0 * * * * *', () => {
 
 // Send a reading list every day at 7pm
 const readingListGenerator = new ReadingListGenerator(Submissions);
-new CronJob('0 19 * * * *', () => {
+new CronJob('0 0 19 * * *', () => {
   client.guilds.forEach(guild => {
     guild.channels.forEach(async channel => {
-      if (channel.name === 'reading-list') {
+      if (channel.name === 'another-channel') {
         const message = await readingListGenerator.generate({
           guildId: guild.id
         });
@@ -164,4 +164,4 @@ new CronJob('0 19 * * * *', () => {
       }
     });
   });
-});
+}, null, true, 'America/Los_Angeles');
