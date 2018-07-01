@@ -29,6 +29,7 @@
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
     "node-fetch": "^2.1.2",
+    "pluralize": "^7.0.0",
     "prettier": "^1.13.7",
     "reading-time": "^1.1.2",
     "sequelize": "^4.38.0",

@@ -14,7 +14,7 @@ class ReadingListGenerator {
     const query = {
       createdAt: {
         [Op.gt]: moment()
-          .startOf('day')
+          .subtract(1, 'days')
           .toDate()
       }
     };

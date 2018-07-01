@@ -9,6 +9,7 @@ function getEmbedUrl(message) {
   });
   return link;
 }
+
 function getPostedUrl(message) {
   const embedUrl = getEmbedUrl(message);
   if (embedUrl) {
@@ -21,7 +22,18 @@ function getPostedUrl(message) {
   }
 }
 
+function postEmbedToChannel(guild, embed, channelName) {
+  guild.channels.forEach(async channel => {
+    if (channel.name === channelName) {
+      channel.send({ embed });
+      return;
+    }
+  });
+  console.error(`Couldn't find channel ${channelName} in guild ${guild.name}`);
+}
+
 module.exports = {
   getEmbedUrl,
-  getPostedUrl
+  getPostedUrl,
+  postEmbedToChannel
 };

@@ -4,6 +4,7 @@ const path = require('path');
 const oneLine = require('common-tags').oneLine;
 const Sequelize = require('sequelize');
 const Commando = require('discord.js-commando');
+const utils = require('./utils.js');
 var CronJob = require('cron').CronJob;
 
 const youtubeListener = require('./listeners/youtubeListener.js');
@@ -13,6 +14,8 @@ const messageListener = require('./listeners/messageListener.js');
 
 const presenceGenerator = require('./actions/presenceGenerator.js');
 const ReadingListGenerator = require('./actions/readingListGenerator.js');
+const StatsGenerator = require('./actions/statsGenerator.js');
+const DeadChannelCop = require('./actions/deadChannelCop.js');
 
 const sequelize = new Sequelize('sqlite:db.sqlite', { logging: false });
 const Submissions = sequelize.import(__dirname + '/models/submission.js');
@@ -21,6 +24,10 @@ const Messages = sequelize.import(__dirname + '/models/message.js');
 // Create database tables
 Submissions.sync();
 Messages.sync();
+
+const deadChannelCop = new DeadChannelCop(Messages);
+const readingListGenerator = new ReadingListGenerator(Submissions);
+const statsGenerator = new StatsGenerator(Messages);
 
 // Create an instance of a Discord client
 const client = new Commando.Client({
@@ -77,16 +84,15 @@ client
 		`);
   });
 
-// client.registry
-//   .registerDefaultTypes()
-//   .registerGroup('util', 'Utilities')
-//   .registerGroup('topics', 'Topics')
-//   .registerGroup('submissions', 'Submissions')
-//   .registerDefaultCommands({
-//     commandState: false
-//   })
-//   .registerCommandsIn(path.join(__dirname, 'commands'));
-//
+client.registry
+  .registerDefaultTypes()
+  .registerGroup('util', 'Utilities')
+  .registerGroup('topics', 'Topics')
+  .registerGroup('submissions', 'Submissions')
+  .registerDefaultCommands({
+    commandState: false
+  })
+  .registerCommandsIn(path.join(__dirname, 'commands'));
 
 const commandHelpers = {
   help: (channel, args) => {
@@ -143,25 +149,87 @@ client
 // Log our bot in
 client.login(config.DISCORD_TOKEN);
 
-// Periodically refresh the bot's presence
-new CronJob('0 * * * * *', () => {
-  client.user.setPresence({
-    game: { name: presenceGenerator() },
-    status: 'online'
-  });
-});
-
-// Send a reading list every day at 7pm
-const readingListGenerator = new ReadingListGenerator(Submissions);
-new CronJob('0 0 19 * * *', () => {
-  client.guilds.forEach(guild => {
-    guild.channels.forEach(async channel => {
-      if (channel.name === 'another-channel') {
-        const message = await readingListGenerator.generate({
+const SCHEDULE = [
+  // Periodically refresh the bot's presence
+  {
+    schedule: '0 30 * * * *', // Every hour
+    callback: () => {
+      client.user.setPresence({
+        game: { name: presenceGenerator() },
+        status: 'online'
+      });
+    }
+  },
+  // Post reading list
+  {
+    schedule: '0 0 6 * * *', // Every day at 6am
+    callback: () => {
+      console.log('Generating reading list');
+      client.guilds.forEach(async guild => {
+        const readingListMessage = await readingListGenerator.generate({
           guildId: guild.id
         });
-        channel.send(message);
-      }
-    });
-  });
-}, null, true, 'America/Los_Angeles');
+        utils.postEmbedToChannel(
+          guild,
+          readingListMessage,
+          config.READING_LIST_CHANNEL
+        );
+      });
+    }
+  },
+  // Post guild stats
+  {
+    schedule: '0 0 19 * * 0', // Every Sunday at 7pm
+    callback: () => {
+      console.log('Generating guild stats');
+      client.guilds.forEach(async guild => {
+        const channelStats = await statsGenerator.generateChannelMessageStats(
+          guild
+        );
+        utils.postEmbedToChannel(
+          guild,
+          channelStats,
+          config.ANNOUNCEMENTS_CHANNEL
+        );
+
+        const messageStats = await statsGenerator.generateUserMessageStats(
+          guild
+        );
+        utils.postEmbedToChannel(
+          guild,
+          messageStats,
+          config.ANNOUNCEMENTS_CHANNEL
+        );
+      });
+    }
+  },
+  // Post dead channel report
+  {
+    schedule: '30 0 6 * * 1', // Every Monday at 6:00:30am
+    callback: async () => {
+      console.log('Generating dead channels report');
+      client.guilds.forEach(async guild => {
+        const deadChannelReport = await deadChannelCop.generateDeadChannelReport(
+          guild
+        );
+        if (deadChannelReport) {
+          utils.postEmbedToChannel(
+            guild,
+            deadChannelReport,
+            config.ANNOUNCEMENTS_CHANNEL
+          );
+        }
+      });
+    }
+  }
+];
+
+SCHEDULE.forEach(scheduleItem => {
+  new CronJob(
+    scheduleItem.schedule,
+    scheduleItem.callback,
+    null,
+    true,
+    'America/Los_Angeles'
+  );
+});
