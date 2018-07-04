@@ -2,13 +2,43 @@ const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 const readingTime = require('reading-time');
 const utils = require('../utils.js');
+const URL = require('url').URL;
 
 const READING_TIME_THRESHOLD = 10;
+
+const BUCKETS = [
+  [0, 'short'],
+  [20, 'medium'],
+  [25, 'long-ish'],
+  [50, 'long'],
+  [75, 'very long']
+];
+
+const BLACKLISTED_SITES = [
+  'youtube.com',
+  'twitter.com',
+  'facebook.com',
+  'instagram.com',
+  'itunes.apple.com',
+];
+
+function determineLabelForRead(minutes) {
+  for(var i = BUCKETS.length - 1; i >= 0; i--) {
+    if(minutes >= BUCKETS[i][0]) {
+      return BUCKETS[i][1];
+    }
+  }
+}
+
+function isBlacklisted(url) {
+  const urlObj = new URL(url);
+  return BLACKLISTED_SITES.includes(urlObj.host);
+}
 
 module.exports = message => {
   const link = utils.getPostedUrl(message);
 
-  if (!link) {
+  if (!link || isBlacklisted(link)) {
     return;
   }
 
@@ -18,8 +48,9 @@ module.exports = message => {
     .then($ => {
       const content = $('body').text();
       const readingTimeAnalysis = readingTime(content);
-      if (readingTimeAnalysis.minutes >= READING_TIME_THRESHOLD) {
-        message.reply(`That's an estimated ${readingTimeAnalysis.text}`);
+      const minutes = readingTimeAnalysis.minutes;
+      if (minutes >= READING_TIME_THRESHOLD) {
+        message.reply(`I estimate that's a **${determineLabelForRead(minutes)}** read.`);
       }
     })
     .catch(console.error);
