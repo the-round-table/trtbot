@@ -20,9 +20,15 @@ const OPTIONS = [
   '🐛 Introducing Bugs',
   '₿ Trading Bitcoin',
   '🐦 Arguing on Twitter',
-  'Half Life 3️⃣',
+  'Half Life 3',
   '💡 Infecting IOT Devices',
-  '🤷‍♂️🤷‍♂️🤷‍♂️'
+  '🤷‍♂️🤷‍♂️🤷‍♂️',
+  '🔭 Exoplanet Discovery',
+  '🐛 Github Issues',
+  '👨‍🌾 Corn Harvest Simulator',
+  '🏦 Balancing the IL State Budget',
+  'Tuning Hyperparameters',
+  '♻️ Recycling Memes'
 ];
 
 module.exports = () => {
