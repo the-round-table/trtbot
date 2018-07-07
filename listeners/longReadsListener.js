@@ -20,6 +20,8 @@ const BLACKLISTED_SITES = [
   'facebook.com',
   'instagram.com',
   'itunes.apple.com',
+  'amazon.com',
+  'instagram.com',
 ];
 
 function determineLabelForRead(minutes) {
