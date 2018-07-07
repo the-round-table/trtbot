@@ -19,4 +19,6 @@ to install the dependencies to be able to run the bot.
 4. Add your discord token (and other tokens) to config.js
 
 5. Run 
-```npm start ```
+```
+npm start
+ ```
