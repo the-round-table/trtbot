@@ -1,7 +1,7 @@
 # trtbot
 🤖 Discord Bot
 
-# Dev Environment Setup
+### Dev Environment Setup
 
 1. Clone the repo
 ```
