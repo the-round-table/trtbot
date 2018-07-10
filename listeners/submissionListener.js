@@ -16,8 +16,8 @@ function getTitle(link) {
       .then($ => {
         const ogTitle = $('meta[property="og:title"]').attr('content');
         const title = ogTitle || $('title').text();
-        if(!title) {
-          reject("Unable to get title");
+        if (!title) {
+          reject('Unable to get title');
         }
         resolve(title);
       })
@@ -36,7 +36,7 @@ module.exports = (sequelize, Submissions) =>
     var title;
     try {
       title = await getTitle(link);
-    } catch(e) {
+    } catch (e) {
       console.error(`Skipping submission for ${link}. (No title)`);
       return;
     }
