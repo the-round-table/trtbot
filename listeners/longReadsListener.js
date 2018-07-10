@@ -3,6 +3,7 @@ const cheerio = require('cheerio');
 const readingTime = require('reading-time');
 const utils = require('../utils.js');
 const URL = require('url').URL;
+const _ = require('lodash');
 
 const READING_TIME_THRESHOLD = 10;
 
@@ -22,11 +23,12 @@ const BLACKLISTED_SITES = [
   'itunes.apple.com',
   'amazon.com',
   'instagram.com',
+  'wikipedia.org'
 ];
 
 function determineLabelForRead(minutes) {
-  for(var i = BUCKETS.length - 1; i >= 0; i--) {
-    if(minutes >= BUCKETS[i][0]) {
+  for (var i = BUCKETS.length - 1; i >= 0; i--) {
+    if (minutes >= BUCKETS[i][0]) {
       return BUCKETS[i][1];
     }
   }
@@ -34,7 +36,9 @@ function determineLabelForRead(minutes) {
 
 function isBlacklisted(url) {
   const urlObj = new URL(url);
-  return BLACKLISTED_SITES.includes(urlObj.host);
+  return _.some(BLACKLISTED_SITES, blacklist =>
+    _.endsWith(urlObj.host, blacklist)
+  );
 }
 
 module.exports = message => {
@@ -52,7 +56,9 @@ module.exports = message => {
       const readingTimeAnalysis = readingTime(content);
       const minutes = readingTimeAnalysis.minutes;
       if (minutes >= READING_TIME_THRESHOLD) {
-        message.reply(`I estimate that's a **${determineLabelForRead(minutes)}** read.`);
+        message.reply(
+          `I estimate that's a **${determineLabelForRead(minutes)}** read.`
+        );
       }
     })
     .catch(console.error);
