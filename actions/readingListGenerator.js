@@ -4,6 +4,24 @@ const _ = require('lodash');
 const discord = require('discord.js');
 const moment = require('moment');
 const truncate = require('truncate');
+const URL = require('url').URL;
+
+const BLACKLISTED_SITES = [
+  'giphy.com',
+  'twitter.com',
+  'facebook.com',
+  'instagram.com',
+  'itunes.apple.com',
+  'amazon.com',
+  'instagram.com'
+];
+
+function isBlacklisted(url) {
+  const urlObj = new URL(url);
+  return _.some(BLACKLISTED_SITES, blacklist =>
+    _.endsWith(urlObj.host, blacklist)
+  );
+}
 
 class ReadingListGenerator {
   constructor(Submissions) {
@@ -40,6 +58,7 @@ class ReadingListGenerator {
     }
 
     _.chain(records)
+      .filter(record => !isBlacklisted(record.link))
       .groupBy('channel')
       .toPairs()
       .sortBy(pair => pair[1].length)
