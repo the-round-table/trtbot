@@ -50,9 +50,6 @@ client
         client.user.discriminator
       } (${client.user.id})`
     );
-    client.guilds.forEach(async guild => {
-      channelRearranger.rearrangeByActivity(guild);
-    });
   })
   .on('disconnect', () => {
     console.warn('Disconnected!');
@@ -229,6 +226,21 @@ const SCHEDULE = [
           );
         }
       });
+    }
+  },
+  // Rearrange channels based on activity
+  {
+    schedule: '0 30 19 * * 0', // Every Sunday at 7:30pm
+    callback: async () => {
+      console.log('Rearranging channels');
+      client.guilds.forEach(async guild => {
+        channelRearranger.rearrangeByActivity(guild);
+      });
+      utils.postTextToChannel(
+        guild,
+        '🔄 Rearranged channels by activity',
+        config.ANNOUNCEMENTS_CHANNEL
+      );
     }
   }
 ];

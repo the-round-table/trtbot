@@ -18,8 +18,9 @@ module.exports = class RearrangeCommand extends commando.Command {
 
   async run(msg, args) {
     const guild = msg.guild;
-    await this.channelRearranger.rearrangeByActivity(guild);
 
-    msg.reply('Rearranged!');
+    msg.reply('🤔 Starting to rearrange channels...');
+    await this.channelRearranger.rearrangeByActivity(guild);
+    msg.reply('🔄 Finished rearranging!');
   }
 };

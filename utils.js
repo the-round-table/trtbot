@@ -22,18 +22,32 @@ function getPostedUrl(message) {
   }
 }
 
-function postEmbedToChannel(guild, embed, channelName) {
+function getChannel(guild, channelName) {
   guild.channels.forEach(async channel => {
     if (channel.name === channelName) {
-      channel.send({ embed });
-      return;
+      return channel;
     }
   });
   console.error(`Couldn't find channel ${channelName} in guild ${guild.name}`);
 }
 
+function postEmbedToChannel(guild, embed, channelName) {
+  const channel = getChannel(guild, channelName);
+  if (channel) {
+    channel.send({ embed });
+  }
+}
+
+function postTextToChannel(guild, text, channelName) {
+  const channel = getChannel(guild, channelName);
+  if (channel) {
+    channel.send(text);
+  }
+}
+
 module.exports = {
   getEmbedUrl,
   getPostedUrl,
-  postEmbedToChannel
+  postEmbedToChannel,
+  postTextToChannel
 };

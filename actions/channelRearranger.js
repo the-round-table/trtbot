@@ -1,6 +1,10 @@
 const moment = require('moment');
 const _ = require('lodash');
 
+async function sleep(millis) {
+  return new Promise(resolve => setTimeout(resolve, millis));
+}
+
 class ChannelRearranger {
   constructor(statsGenerator) {
     this.statsGenerator = statsGenerator;
@@ -45,14 +49,17 @@ class ChannelRearranger {
       const channelIdx = channelPositions.hasOwnProperty(channel.name)
         ? channelPositions[channel.name]
         : sortedCounts.length + 1;
-      channelUpdates.push({channel, channelIdx});
+      channelUpdates.push({ channel, channelIdx });
     });
 
-    await _.chain(channelUpdates).sortBy('channelIdx').value().forEach(async channelObj => {
-      const {channel, channelIdx} = channelObj;
+    for (var channelObj of _.chain(channelUpdates)
+      .sortBy('channelIdx')
+      .value()) {
+      const { channel, channelIdx } = channelObj;
       console.log(`Setting position of ${channel.name} to ${channelIdx}`);
-      await channel.setPosition(channelIdx);
-    })
+      const newChannel = await channel.setPosition(channelIdx);
+      await sleep(1000);
+    }
   }
 }
 
