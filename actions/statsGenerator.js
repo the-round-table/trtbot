@@ -24,12 +24,12 @@ class StatsGenerator {
     return moment().subtract(1, 'weeks');
   }
 
-  async generateChannelMessageStats(guild) {
+  async messageCountByChannel(guild, since) {
     const guildId = guild.id;
-    const messageCounts = (await this.Messages.findAll({
+    return (await this.Messages.findAll({
       where: {
         createdAt: {
-          [Op.gt]: this.startOfWeek().toDate()
+          [Op.gt]: since
         },
         guildId: guildId
       },
@@ -40,6 +40,13 @@ class StatsGenerator {
         [Sequelize.fn('COUNT', '*'), 'channelCount']
       ]
     })).map(record => record.get({ plain: true }));
+  }
+
+  async generateChannelMessageStats(guild) {
+    const messageCounts = await messageCountByChannel(
+      guild,
+      this.startOfWeek().toDate()
+    );
 
     const message = _.chain(messageCounts)
       .sortBy(record => record.channelCount)

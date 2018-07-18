@@ -17,6 +17,7 @@ const presenceGenerator = require('./actions/presenceGenerator.js');
 const ReadingListGenerator = require('./actions/readingListGenerator.js');
 const StatsGenerator = require('./actions/statsGenerator.js');
 const DeadChannelCop = require('./actions/deadChannelCop.js');
+const ChannelRearranger = require('./actions/channelRearranger.js');
 
 const sequelize = new Sequelize('sqlite:db.sqlite', { logging: false });
 const Submissions = sequelize.import(__dirname + '/models/submission.js');
@@ -29,6 +30,7 @@ Messages.sync();
 const deadChannelCop = new DeadChannelCop(Messages);
 const readingListGenerator = new ReadingListGenerator(Submissions);
 const statsGenerator = new StatsGenerator(Messages);
+const channelRearranger = new ChannelRearranger(statsGenerator);
 
 // Create an instance of a Discord client
 const client = new Commando.Client({
@@ -36,6 +38,7 @@ const client = new Commando.Client({
 });
 
 client.Submissions = Submissions;
+client.channelRearranger = channelRearranger;
 
 client
   .on('error', console.error)
@@ -47,6 +50,9 @@ client
         client.user.discriminator
       } (${client.user.id})`
     );
+    client.guilds.forEach(async guild => {
+      channelRearranger.rearrangeByActivity(guild);
+    });
   })
   .on('disconnect', () => {
     console.warn('Disconnected!');
@@ -90,6 +96,7 @@ client.registry
   .registerGroup('util', 'Utilities')
   .registerGroup('topics', 'Topics')
   .registerGroup('submissions', 'Submissions')
+  .registerGroup('moderation', 'Moderation')
   .registerDefaultCommands({
     commandState: false
   })
