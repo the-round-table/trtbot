@@ -20,6 +20,7 @@ module.exports = async message => {
     message.reply(
       stripIndents`\n${owner}/${repo}:
       ⭐ Stars: ${repo_data.data.stargazers_count.toLocaleString()}
+      🗣 Language: ${repo_data.data.language || "Unknown"}
       ⏰ Last Updated: ${moment(repo_data.data.updated_at).fromNow()}`
     );
   } catch (e) {
