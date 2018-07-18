@@ -16,14 +16,15 @@ const BUCKETS = [
 ];
 
 const BLACKLISTED_SITES = [
-  'youtube.com',
-  'twitter.com',
+  'amazon.com',
   'facebook.com',
+  'giphy.com',
+  'instagram.com',
   'instagram.com',
   'itunes.apple.com',
-  'amazon.com',
-  'instagram.com',
-  'wikipedia.org'
+  'twitter.com',
+  'wikipedia.org',
+  'youtube.com'
 ];
 
 function determineLabelForRead(minutes) {
