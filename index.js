@@ -11,6 +11,7 @@ const youtubeListener = require('./listeners/youtubeListener.js');
 const submissionListener = require('./listeners/submissionListener.js');
 const longReadsListener = require('./listeners/longReadsListener.js');
 const messageListener = require('./listeners/messageListener.js');
+const githubListener = require('./listeners/githubListener.js');
 
 const presenceGenerator = require('./actions/presenceGenerator.js');
 const ReadingListGenerator = require('./actions/readingListGenerator.js');
@@ -129,7 +130,8 @@ const MESSAGE_LISTENERS = [
   youtubeListener,
   submissionListener(sequelize, Submissions),
   longReadsListener,
-  messageListener(Messages)
+  messageListener(Messages),
+  githubListener
 ];
 
 // The ready event is vital, it means that your bot will only start reacting to information

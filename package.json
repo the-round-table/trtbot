@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/bcongdon/trtbot#readme",
   "dependencies": {
+    "@octokit/rest": "^15.9.4",
     "bitly": "^6.0.6",
     "cheerio": "^1.0.0-rc.2",
     "common-tags": "^1.8.0",
