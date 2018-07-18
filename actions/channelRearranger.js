@@ -36,7 +36,8 @@ class ChannelRearranger {
       channelPositions[record.channel] = idx;
     });
 
-    guild.channels.forEach(async channel => {
+    const channelUpdates = [];
+    await guild.channels.forEach(async channel => {
       if (channel.type != 'text') {
         return;
       }
@@ -44,9 +45,14 @@ class ChannelRearranger {
       const channelIdx = channelPositions.hasOwnProperty(channel.name)
         ? channelPositions[channel.name]
         : sortedCounts.length + 1;
+      channelUpdates.push({channel, channelIdx});
+    });
+
+    await _.chain(channelUpdates).sortBy('channelIdx').value().forEach(async channelObj => {
+      const {channel, channelIdx} = channelObj;
       console.log(`Setting position of ${channel.name} to ${channelIdx}`);
       await channel.setPosition(channelIdx);
-    });
+    })
   }
 }
 
