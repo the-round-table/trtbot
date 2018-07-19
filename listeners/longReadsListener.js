@@ -27,6 +27,8 @@ const BLACKLISTED_SITES = [
   'youtube.com'
 ];
 
+const IMAGE_LINK_REGEX = '\.(?:jpg|gif|png)$';
+
 function determineLabelForRead(minutes) {
   for (var i = BUCKETS.length - 1; i >= 0; i--) {
     if (minutes >= BUCKETS[i][0]) {
@@ -45,7 +47,7 @@ function isBlacklisted(url) {
 module.exports = message => {
   const link = utils.getPostedUrl(message);
 
-  if (!link || isBlacklisted(link)) {
+  if (!link || isBlacklisted(link) || link.match(IMAGE_LINK_REGEX)) {
     return;
   }
 
