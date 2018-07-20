@@ -99,37 +99,6 @@ client.registry
   })
   .registerCommandsIn(path.join(__dirname, 'commands'));
 
-const commandHelpers = {
-  help: (channel, args) => {
-    channel.send('Unimplemented help');
-  },
-  add: (channel, args) => {
-    const topic = args.join(' ');
-    database
-      .collection('topics')
-      .add({
-        topic,
-        createdAt: new Date()
-      })
-      .then(() => {
-        channel.send('Topic saved!');
-      });
-  },
-  list: (channel, args) => {
-    var message = 'Topics:\n';
-    database
-      .collection('topics')
-      .get()
-      .then(snap => {
-        snap.docs.forEach(doc => {
-          const docData = doc.data();
-          message += `\t• ${docData.topic}\n`;
-        });
-        channel.send(message);
-      });
-  }
-};
-
 const MESSAGE_LISTENERS = [
   youtubeListener,
   submissionListener(sequelize, Submissions),

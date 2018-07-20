@@ -27,7 +27,7 @@ const BLACKLISTED_SITES = [
   'youtube.com'
 ];
 
-const IMAGE_LINK_REGEX = '\.(?:jpg|gif|png)$';
+const IMAGE_LINK_REGEX = '.(?:jpg|gif|png)$';
 
 function determineLabelForRead(minutes) {
   for (var i = BUCKETS.length - 1; i >= 0; i--) {

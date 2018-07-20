@@ -23,11 +23,10 @@ function getPostedUrl(message) {
 }
 
 function getChannel(guild, channelName) {
-  guild.channels.forEach(async channel => {
-    if (channel.name === channelName) {
-      return channel;
-    }
-  });
+  const channel = guild.channels.find('name', channelName);
+  if (channel) {
+    return channel;
+  }
   console.error(`Couldn't find channel ${channelName} in guild ${guild.name}`);
 }
 
