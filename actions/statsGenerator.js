@@ -43,7 +43,7 @@ class StatsGenerator {
   }
 
   async generateChannelMessageStats(guild) {
-    const messageCounts = await messageCountByChannel(
+    const messageCounts = await this.messageCountByChannel(
       guild,
       this.startOfWeek().toDate()
     );

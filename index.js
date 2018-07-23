@@ -204,12 +204,12 @@ const SCHEDULE = [
       console.log('Rearranging channels');
       client.guilds.forEach(async guild => {
         channelRearranger.rearrangeByActivity(guild);
+        utils.postTextToChannel(
+          guild,
+          '🔄 Rearranged channels by activity',
+          config.ANNOUNCEMENTS_CHANNEL
+        );
       });
-      utils.postTextToChannel(
-        guild,
-        '🔄 Rearranged channels by activity',
-        config.ANNOUNCEMENTS_CHANNEL
-      );
     }
   }
 ];
