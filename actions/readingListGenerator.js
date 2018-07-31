@@ -59,6 +59,7 @@ class ReadingListGenerator {
 
     _.chain(records)
       .filter(record => !isBlacklisted(record.link))
+      .uniqBy(record => record.link)
       .groupBy('channel')
       .toPairs()
       .sortBy(pair => pair[1].length)
