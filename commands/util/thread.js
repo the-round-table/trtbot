@@ -15,12 +15,12 @@ module.exports = class ThreadCommand extends commando.Command {
       args: [
         {
           key: 'topic',
-          prompt: 'The topic of the thread',
+          prompt: 'What should the topic of the thread be?',
           type: 'string'
         },
         {
           key: 'users',
-          prompt: 'The users to include in the thread',
+          prompt: 'Who should be tagged in the thread? (Use @ tags please!)',
           type: 'user',
           infinite: true
         }
@@ -45,11 +45,13 @@ module.exports = class ThreadCommand extends commando.Command {
     const threadChannel = this.getThreadChannel(msg.guild);
 
     if (threadChannel) {
-      users.push(msg.author)
-      threadChannel.send(`Here's a place to discuss "${topic}": ${users.join(', ')}\n👇 👇 👇`)
-      msg.reply(`You got it! I setup a thread in ${threadChannel}`)
+      users.push(msg.author);
+      threadChannel.send(
+        `Here's a place to discuss "${topic}": ${users.join(', ')}\n👇 👇 👇`
+      );
+      msg.reply(`You got it! I setup a thread in ${threadChannel}`);
     } else {
-      msg.reply("Unable to find a channel to put the thread in!")
+      msg.reply('Unable to find a channel to put the thread in!');
     }
   }
 };

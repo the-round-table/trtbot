@@ -47,7 +47,7 @@ client
   .on('ready', () => {
     console.log(
       `Client ready; logged in as ${client.user.username}#${
-        client.user.discriminator
+      client.user.discriminator
       } (${client.user.id})`
     );
   })
@@ -94,6 +94,7 @@ client.registry
   .registerGroup('topics', 'Topics')
   .registerGroup('submissions', 'Submissions')
   .registerGroup('moderation', 'Moderation')
+  .registerGroup('reminder', 'Reminders')
   .registerDefaultCommands({
     commandState: false
   })
