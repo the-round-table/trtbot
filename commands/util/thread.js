@@ -47,6 +47,7 @@ module.exports = class ThreadCommand extends commando.Command {
     if (threadChannel) {
       users.push(msg.author)
       threadChannel.send(`Here's a place to discuss "${topic}": ${users.join(', ')}\n👇 👇 👇`)
+      msg.reply(`You got it! I setup a thread in ${threadChannel}`)
     } else {
       msg.reply("Unable to find a channel to put the thread in!")
     }
