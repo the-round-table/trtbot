@@ -28,10 +28,9 @@ module.exports = class GifCommand extends commando.Command {
   async run(msg, { query }) {
     let gif;
     if (query == NO_QUERY) {
-      gif = await giphy.random({ rating: 'pg' }).data;
+      gif = (await giphy.random({ rating: 'pg' })).data;
     } else {
       gif = _.sample((await giphy.search(query)).data);
-      console.log(gif)
     }
     msg.reply(gif.embed_url);
   }
