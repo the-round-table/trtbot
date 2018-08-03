@@ -10,8 +10,7 @@ module.exports = class GifCommand extends commando.Command {
       name: 'gif',
       memberName: 'gif',
       group: 'util',
-      description:
-        'Finds a gif for you',
+      description: 'Finds a gif for you',
       examples: ['gif', 'gif cats'],
       guildOnly: false,
       args: [
@@ -32,6 +31,11 @@ module.exports = class GifCommand extends commando.Command {
     } else {
       gif = _.sample((await giphy.search(query)).data);
     }
-    msg.reply(gif.embed_url);
+
+    if (!gif) {
+      msg.reply("Couldn't find a gif. 😞");
+    } else {
+      msg.reply(gif.embed_url);
+    }
   }
 };
