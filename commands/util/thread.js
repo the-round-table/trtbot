@@ -12,6 +12,7 @@ module.exports = class ThreadCommand extends commando.Command {
         'Finds an overflow room and creates a discussion there with the tagged members',
       examples: ['thread "some topic" @josh @ben'],
       guildOnly: true,
+      argsPromptLimit: 0,
       args: [
         {
           key: 'topic',
