@@ -118,7 +118,13 @@ client
     });
   })
   .on('message', message => {
-    MESSAGE_LISTENERS.forEach(listener => listener(message));
+    MESSAGE_LISTENERS.forEach(listener => {
+      try {
+        listener(message);
+      } catch (e) {
+        console.error(e);
+      }
+    });
   });
 
 // Log our bot in
