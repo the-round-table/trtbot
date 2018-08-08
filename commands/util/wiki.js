@@ -43,7 +43,7 @@ module.exports = class WikiCommand extends commando.Command {
     }
 
     const embed = new discord.RichEmbed()
-      .setTitle(`📖 Summary for "${query}"`)
+      .setTitle(`📖 Summary for "${page.raw.title}"`)
       .setDescription(truncate(summary, 1000));
     msg.reply({ embed });
   }
