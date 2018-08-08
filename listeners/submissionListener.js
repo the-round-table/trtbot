@@ -5,6 +5,8 @@ const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 const BitlyClient = require('bitly').BitlyClient;
 const Op = Sequelize.Op;
+const oneLine = require('common-tags').oneLine;
+const moment = require('moment');
 
 const bitly = new BitlyClient(config.BITLY_TOKEN, {});
 
@@ -53,7 +55,7 @@ module.exports = (sequelize, Submissions) =>
       const channel = message.channel.name;
       const guildId = message.guild.id;
 
-      Submissions.count({
+      Submissions.find({
         where: {
           link: link,
           guildId: guildId,
@@ -61,11 +63,15 @@ module.exports = (sequelize, Submissions) =>
           createdAt: {
             [Op.gt]: new Date(new Date() - 24 * 60 * 60 * 1000)
           }
-        }
+        },
+        limit: 1
       }).then(existing => {
         // Don't create duplicate submissions
         if (existing) {
           console.log('Duplicate submission!');
+          message.reply(oneLine`Heads up, that link was already posted by
+            **@${existing.submitter}** in **#${existing.channel}**
+            about ${moment(existing.createdAt).fromNow()}`);
           return;
         }
 
