@@ -20,6 +20,7 @@
   "homepage": "https://github.com/bcongdon/trtbot#readme",
   "dependencies": {
     "@octokit/rest": "^15.9.4",
+    "arxiv": "0.0.4",
     "bitly": "^6.0.8",
     "cheerio": "^1.0.0-rc.2",
     "common-tags": "^1.8.0",
