@@ -3,7 +3,7 @@ const octokit = require('@octokit/rest')();
 const stripIndents = require('common-tags').stripIndents;
 const utils = require('../utils.js');
 
-const GITHUB_REGEX = '(https?://)?github.com/(.*)/(.*)';
+const GITHUB_REGEX = /(https?:\/\/)?github\.com\/(.*)\/(.*)/;
 
 module.exports = async message => {
   const link = utils.getPostedUrl(message);
