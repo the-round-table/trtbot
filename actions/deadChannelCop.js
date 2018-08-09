@@ -1,6 +1,9 @@
 const _ = require('lodash');
 const discord = require('discord.js');
 const moment = require('moment');
+const config = require('../config.js');
+
+const BLACKLIST = config.DEAD_CHANNEL_BLACKLIST || [];
 
 const DEAD_CHANNEL_DAYS_THRESHOLD = 10;
 
@@ -30,6 +33,9 @@ class DeadChannelCop {
 
     for (let channelPair of guild.channels) {
       const channel = channelPair[1];
+      if (BLACKLIST.includes(channel.name)) {
+        continue;
+      }
       const lastUsed = await this.channelLastUsed(guild.id, channel.name);
       if (
         lastUsed &&
@@ -44,6 +50,9 @@ class DeadChannelCop {
       }
     }
 
+    const embed = new discord.RichEmbed().setTitle(
+      `💀 Dead Channel Report for ${moment().format('MMMM D, YYYY')}`
+    );
     if (warnings.length > 0) {
       const message = _(warnings)
         .sortBy(warning => warning.lastUsed)
@@ -57,14 +66,11 @@ class DeadChannelCop {
         )
         .value()
         .join('\n');
-      return new discord.RichEmbed()
-        .setTitle(
-          `💀 Dead Channel Report for ${moment().format('MMMM D, YYYY')}`
-        )
-        .setDescription(message);
+      embed.setDescription(message);
     } else {
-      return null;
+      embed.setDescription('No dead channels this week! 👏');
     }
+    return embed;
   }
 }
 

@@ -4,5 +4,8 @@ module.exports = {
   BITLY_TOKEN: '',
   READING_LIST_CHANNEL: 'general',
   ANNOUNCEMENTS_CHANNEL: 'general',
-  THREAD_CHANNEL_GROUP: ''
+  // Channel group that contains channels used for threads
+  THREAD_CHANNEL_GROUP: '',
+  // Names of channels not to include in the dead channel report
+  DEAD_CHANNEL_BLACKLIST: []
 };

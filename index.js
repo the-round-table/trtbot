@@ -39,6 +39,7 @@ const client = new Commando.Client({
 });
 
 client.Submissions = Submissions;
+client.Messages = Messages;
 client.channelRearranger = channelRearranger;
 
 client
