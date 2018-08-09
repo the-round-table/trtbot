@@ -8,9 +8,6 @@ const ARXIV_REGEX = /(https?:\/\/)arxiv\.org\/(pdf|abs)\/(\d{4}\.\d{5})/;
 
 module.exports = async message => {
   const link = utils.getPostedUrl(message);
-  if (link) {
-    console.log(link, ARXIV_REGEX, link.match(ARXIV_REGEX));
-  }
   if (!link || !link.match(ARXIV_REGEX)) {
     return;
   }
@@ -27,7 +24,6 @@ module.exports = async message => {
     }
 
     const article = results.items[0];
-    console.log(article);
     const embed = new discord.RichEmbed()
       .setTitle(`📄 [Arxiv] "${article.title}"`)
       .setDescription(truncate(article.summary, 1500))

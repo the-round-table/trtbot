@@ -24,7 +24,8 @@ const BLACKLISTED_SITES = [
   'itunes.apple.com',
   'twitter.com',
   'wikipedia.org',
-  'youtube.com'
+  'youtube.com',
+  'arxiv.org'
 ];
 
 const IMAGE_LINK_REGEX = '.(?:jpg|gif|png)$';

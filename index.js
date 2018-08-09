@@ -102,11 +102,11 @@ client.registry
 
 const MESSAGE_LISTENERS = [
   youtubeListener,
-  submissionListener(sequelize, Submissions),
-  longReadsListener,
-  messageListener(Messages),
   githubListener,
-  arxivListener
+  arxivListener,
+  longReadsListener,
+  submissionListener(sequelize, Submissions),
+  messageListener(Messages)
 ];
 
 // The ready event is vital, it means that your bot will only start reacting to information
@@ -119,14 +119,14 @@ client
       status: 'online'
     });
   })
-  .on('message', message => {
-    MESSAGE_LISTENERS.forEach(listener => {
+  .on('message', async message => {
+    for (let listener of MESSAGE_LISTENERS) {
       try {
-        listener(message);
+        await listener(message);
       } catch (e) {
         console.error(e);
       }
-    });
+    }
   });
 
 // Log our bot in
