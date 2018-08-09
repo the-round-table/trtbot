@@ -36,7 +36,8 @@ module.exports = async message => {
         article.authors.map(author => author.name).join(', ')
       )
       .addField('Published At', moment(article.published).format('LL'))
-      .addField('Last Updated', moment(article.updated).format('LL'));
+      .addField('Last Updated', moment(article.updated).format('LL'))
+      .addField('Read Here:', `https://www.arxiv-vanity.com/papers/${identifier}`);
     message.reply({ embed });
   });
 };
