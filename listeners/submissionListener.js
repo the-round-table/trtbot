@@ -61,7 +61,9 @@ module.exports = (sequelize, Submissions) =>
           guildId: guildId,
           // Created in last day
           createdAt: {
-            [Op.gt]: new Date(new Date() - 24 * 60 * 60 * 1000)
+            [Op.gt]: moment()
+              .subtract(3, 'days')
+              .toDate()
           }
         },
         limit: 1
