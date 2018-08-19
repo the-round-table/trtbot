@@ -9,7 +9,7 @@ module.exports = class FuckCommand extends commando.Command {
       group: 'util',
       description:
         'Interprets a line of brainfuck code.',
-      examples: ['fuck ++>+++[->+<]++++++++[<++++++>-]<.'],
+      examples: ['fuck ++>+++[<+>-]++++++++[<++++++>-]<.'],
       guildOnly: true,
       argsPromptLimit: 0,
       args: [
@@ -28,43 +28,47 @@ module.exports = class FuckCommand extends commando.Command {
     var out = "brainfuck> ";
     for (var i = 0; i < code.length; i++) {
       var c = code[i];
-      if (c == '>') {
+      if (c == ">") {
         ptr++;
-      } else if (c == '<') {
+      } else if (c == "<") {
         ptr--;
-      } else if (c == '+') {
+      } else if (c == "+") {
         arr[ptr]++;
-      } else if (c == '-') {
+      } else if (c == "-") {
         arr[ptr]--;
-      } else if (c == '.') {
+      } else if (c == ".") {
         out += String.fromCharCode(arr[ptr]);
-      } else if (c == ',') {
+      } else if (c == ",") {
         // don't know how to support user input yet
         continue;
-      } else if (c == '[') {
-        var loop = 1;
-        if (arr[ptr] == 0) {
-          while (loop != 0) {
-            i++;
-            if (code[i] == '[') {
-              loop++;
-            } else if (code[i] == ']') {
-              loop--;
-            }
-          }
-        }
-      } else if (c == ']' && arr[ptr] == 0) {
-        var loop = 1;
-        while (loop != 0) {
-          i--;
-          if (code[i] == '[') {
-            loop--;
-          } else if (code[i] == ']') {
+      } else if (c == "[" && arr[ptr] == 0) {
+        var loop = 0;
+        i++;
+        while (loop > 0 || code[i] != "]") {
+          if (code[i] == "[") {
             loop++;
           }
+          if (code[i] == "]") {
+            loop--;
+          }
+          i++;
         }
+      } else if (c == "]" && arr[ptr] != 0) {
+        var loop = 0;
+        i--;
+        while (loop > 0 || code[i] != "[") {
+          if (code[i] == "]") {
+            loop++;
+          }
+          if (code[i] == "[") {
+            loop--;
+          }
+          i--;
+        }
+        i--;
       }
     }
-    msg.reply(output);
+
+    msg.reply(out);
   }
 };
