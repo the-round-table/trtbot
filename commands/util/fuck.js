@@ -30,7 +30,7 @@ module.exports = class FuckCommand extends commando.Command {
 
     for (var i = 0; i < code.length; i++) {
       count++;
-      if (count > 5000) {
+      if (count > 5000000) {
         break;
       }
       var c = code[i];
@@ -50,7 +50,7 @@ module.exports = class FuckCommand extends commando.Command {
       } else if (c == "[" && arr[ptr] == 0) {
         var loop = 0;
         i++;
-        while (loop > 0 || loop < 5000 || code[i] != "]") {
+        while (loop > 0 || code[i] != "]") {
           if (code[i] == "[") {
             loop++;
           }
@@ -62,7 +62,7 @@ module.exports = class FuckCommand extends commando.Command {
       } else if (c == "]" && arr[ptr] != 0) {
         var loop = 0;
         i--;
-        while (loop > 0 || loop < 5000 || code[i] != "[") {
+        while (loop > 0 || code[i] != "[") {
           if (code[i] == "]") {
             loop++;
           }
