@@ -10,7 +10,7 @@ module.exports = class FuckCommand extends commando.Command {
       description:
         'Interprets a line of brainfuck code.',
       examples: ['fuck ++>+++[<+>-]++++++++[<++++++>-]<.'],
-      guildOnly: true,
+      guildOnly: false,
       argsPromptLimit: 0,
       args: [
         {
