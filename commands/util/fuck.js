@@ -26,7 +26,13 @@ module.exports = class FuckCommand extends commando.Command {
     var arr = new Array(50000).fill(0);;
     var ptr = 0;
     var out = "brainfuck> ";
+    var count = 0;
+
     for (var i = 0; i < code.length; i++) {
+      count++;
+      if (count > 5000) {
+        break;
+      }
       var c = code[i];
       if (c == ">") {
         ptr++;
@@ -67,6 +73,9 @@ module.exports = class FuckCommand extends commando.Command {
         }
         i--;
       }
+      console.log(ptr);
+      console.log(arr[ptr]);
+      console.log("-------");
     }
 
     msg.reply(out);
