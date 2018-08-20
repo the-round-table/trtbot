@@ -1,5 +1,4 @@
 const commando = require('discord.js-commando');
-const util = require('../../config.js');
 
 module.exports = class FuckCommand extends commando.Command {
   constructor(client) {
@@ -28,11 +27,7 @@ module.exports = class FuckCommand extends commando.Command {
     var out = "brainfuck> ";
     var count = 0;
 
-    for (var i = 0; i < code.length; i++) {
-      count++;
-      if (count > 5000000) {
-        break;
-      }
+    for (var i = 0; i < code.length && count++ < 5000000; i++) {
       var c = code[i];
       if (c == ">") {
         ptr++;
@@ -73,9 +68,6 @@ module.exports = class FuckCommand extends commando.Command {
         }
         i--;
       }
-      console.log(ptr);
-      console.log(arr[ptr]);
-      console.log("-------");
     }
 
     msg.reply(out);
