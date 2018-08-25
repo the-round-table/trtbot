@@ -3,6 +3,7 @@ const _ = require('lodash');
 const discord = require('discord.js');
 const Sequelize = require('sequelize');
 const pluralize = require('pluralize');
+const ChartjsNode = require('chartjs-node');
 const Op = Sequelize.Op;
 
 const AWARDS = ['🥇', '🥈', '🥉'];
@@ -48,11 +49,14 @@ class StatsGenerator {
       this.startOfWeek().toDate()
     );
 
-    const message = _.chain(messageCounts)
+    const sortedMessageCounts = _.chain(messageCounts)
       .sortBy(record => record.channelCount)
       .reverse()
+      .value();
+
+    const message = _.chain(sortedMessageCounts)
       .map(
-        (record, index, collection) =>
+        (record, index) =>
           `- ${getAwardEmoji(index)} #${record.channel} (${
             record.channelCount
           } ${pluralize('message', record.channelCount)})`
@@ -66,7 +70,8 @@ class StatsGenerator {
           'MMMM D, YYYY'
         )}`
       )
-      .setDescription(message);
+      .setDescription(message)
+      .attachFile(this.generateChannelUsageGraph(sortedMessageCounts));
   }
 
   async generateUserMessageStats(guild) {
@@ -105,6 +110,24 @@ class StatsGenerator {
         )}`
       )
       .setDescription(message);
+  }
+
+  async generateChannelUsageGraph(channelCounts) {
+    var chartNode = new ChartjsNode(800, 600);
+    const chartConfig = {
+      type: 'bar',
+      labels: channelCounts.map(c => c.channel),
+      datasets: [
+        {
+          label: 'Messages per Channel',
+          data: channelCounts.map(c => c.channelCount)
+        }
+      ]
+    };
+    return chartNode.then(() => {
+      chartNode.drawChart(chartConfig);
+      return chartNode.getImageStream('image/png');
+    });
   }
 }
 
