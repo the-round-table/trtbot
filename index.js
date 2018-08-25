@@ -13,6 +13,7 @@ const longReadsListener = require('./listeners/longReadsListener.js');
 const messageListener = require('./listeners/messageListener.js');
 const githubListener = require('./listeners/githubListener.js');
 const arxivListener = require('./listeners/arxivListener.js');
+const stockListener = require('./listeners/stockListener.js');
 
 const presenceGenerator = require('./actions/presenceGenerator.js');
 const ReadingListGenerator = require('./actions/readingListGenerator.js');
@@ -106,6 +107,7 @@ const MESSAGE_LISTENERS = [
   githubListener,
   arxivListener,
   longReadsListener,
+  stockListener,
   submissionListener(sequelize, Submissions),
   messageListener(Messages)
 ];

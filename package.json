@@ -38,6 +38,7 @@
     "sequelize": "^4.38.0",
     "simple-youtube-api": "^5.0.2",
     "sqlite3": "^4.0.2",
+    "stocks.js": "0.0.17",
     "truncate": "^2.0.1",
     "typescript": "^2.9.2",
     "wikijs": "^4.8.1"
