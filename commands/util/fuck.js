@@ -20,8 +20,8 @@ module.exports = class FuckCommand extends commando.Command {
       ]
     });
   }
-
-  async run(msg, { code }) {
+  
+  run(msg, { code }) {
     var arr = new Array(50000).fill(0);;
     var ptr = 0;
     var out = "brainfuck> ";
