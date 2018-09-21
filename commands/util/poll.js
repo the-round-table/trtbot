@@ -1,7 +1,7 @@
 const commando = require('discord.js-commando');
 const _ = require('lodash');
 
-const NO_QUERY = 'no_query';
+const NO_OPTS = 'no_opts';
 
 module.exports = class PollCommand extends commando.Command {
   constructor(client) {
