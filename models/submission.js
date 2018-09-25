@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     guildId: DataTypes.STRING,
     title: DataTypes.STRING,
     shortLink: DataTypes.STRING,
+    messageUrl: DataTypes.STRING,
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,

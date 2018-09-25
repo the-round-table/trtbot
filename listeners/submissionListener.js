@@ -51,8 +51,6 @@ module.exports = (sequelize, Submissions) =>
     }
 
     return sequelize.transaction(t => {
-      const username = message.author.username;
-      const channel = message.channel.name;
       const guildId = message.guild.id;
 
       Submissions.find({
@@ -77,13 +75,15 @@ module.exports = (sequelize, Submissions) =>
           return;
         }
 
+        const username = message.author.username;
         Submissions.create({
-          submitter: username,
-          link,
+          channelName: message.channel.name,
           guildId,
-          channel,
-          title,
-          shortLink
+          link,
+          messageUrl: message.url,
+          shortLink,
+          submitter: username,
+          title
         }).then(() => {
           console.log(`Submission registered: (${username}) ${link}`);
         });
