@@ -69,7 +69,7 @@ class ReadingListGenerator {
         embed.addField(
           '#' + pair[0],
           pair[1]
-            .map(sub => `- ${truncate(sub.title, 75)} (${sub.shortLink})`)
+            .map(sub => `- [${truncate(sub.title, 75)}](${sub.shortLink})`)
             .join('\n')
         );
       });
