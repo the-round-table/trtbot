@@ -11,8 +11,8 @@ class StocksClient {
 
     const dayData = symbolData[0];
     return {
-      'open': dayData['open'],
-      'close': dayData['close']
+      open: dayData['open'],
+      close: dayData['close']
     };
   }
 }

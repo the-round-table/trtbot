@@ -6,8 +6,7 @@ module.exports = class FuckCommand extends commando.Command {
       name: 'fuck',
       memberName: 'fuck',
       group: 'util',
-      description:
-        'Interprets a line of brainfuck code.',
+      description: 'Interprets a line of brainfuck code.',
       examples: ['fuck ++>+++[<+>-]++++++++[<++++++>-]<.'],
       guildOnly: false,
       argsPromptLimit: 0,
@@ -20,48 +19,48 @@ module.exports = class FuckCommand extends commando.Command {
       ]
     });
   }
-  
+
   run(msg, { code }) {
-    var arr = new Array(50000).fill(0);;
+    var arr = new Array(50000).fill(0);
     var ptr = 0;
-    var out = "brainfuck> ";
+    var out = 'brainfuck> ';
     var count = 0;
 
     for (var i = 0; i < code.length && count++ < 5000000; i++) {
       var c = code[i];
-      if (c == ">") {
+      if (c == '>') {
         ptr++;
-      } else if (c == "<") {
+      } else if (c == '<') {
         ptr--;
-      } else if (c == "+") {
+      } else if (c == '+') {
         arr[ptr]++;
-      } else if (c == "-") {
+      } else if (c == '-') {
         arr[ptr]--;
-      } else if (c == ".") {
+      } else if (c == '.') {
         out += String.fromCharCode(arr[ptr]);
-      } else if (c == ",") {
+      } else if (c == ',') {
         // don't know how to support user input yet
         continue;
-      } else if (c == "[" && arr[ptr] == 0) {
+      } else if (c == '[' && arr[ptr] == 0) {
         var loop = 0;
         i++;
-        while (loop > 0 || code[i] != "]") {
-          if (code[i] == "[") {
+        while (loop > 0 || code[i] != ']') {
+          if (code[i] == '[') {
             loop++;
           }
-          if (code[i] == "]") {
+          if (code[i] == ']') {
             loop--;
           }
           i++;
         }
-      } else if (c == "]" && arr[ptr] != 0) {
+      } else if (c == ']' && arr[ptr] != 0) {
         var loop = 0;
         i--;
-        while (loop > 0 || code[i] != "[") {
-          if (code[i] == "]") {
+        while (loop > 0 || code[i] != '[') {
+          if (code[i] == ']') {
             loop++;
           }
-          if (code[i] == "[") {
+          if (code[i] == '[') {
             loop--;
           }
           i--;
