@@ -5,6 +5,7 @@ const discord = require('discord.js');
 const moment = require('moment');
 const truncate = require('truncate');
 const URL = require('url').URL;
+const trim = require('trim-whitespace');
 
 const BLACKLISTED_SITES = [
   'giphy.com',
@@ -66,11 +67,18 @@ class ReadingListGenerator {
       .reverse()
       .value()
       .forEach(pair => {
+        let fieldChars = 0;
         embed.addField(
           '#' + pair[0],
-          pair[1]
-            .map(sub => `- [${truncate(sub.title, 75)}](${sub.shortLink})`)
-            .join('\n')
+          trim(
+            pair[1]
+              .map(sub => {
+                const line = `- [${truncate(sub.title, 75)}](${sub.shortLink})`;
+                fieldChars += line.length + 1;
+                return fieldChars <= 1024 ? line : '';
+              })
+              .join('\n')
+          )
         );
       });
 
