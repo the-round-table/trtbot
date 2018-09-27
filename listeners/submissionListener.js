@@ -7,8 +7,20 @@ const BitlyClient = require('bitly').BitlyClient;
 const Op = Sequelize.Op;
 const oneLine = require('common-tags').oneLine;
 const moment = require('moment');
+const _ = require('lodash');
 
 const bitly = new BitlyClient(config.BITLY_TOKEN, {});
+
+const BLACKLISTED_SITES = [
+  'oldschoolrunescape.wikia.com'
+];
+
+function isBlacklisted(url) {
+  const urlObj = new URL(url);
+  return _.some(BLACKLISTED_SITES, blacklist =>
+    _.endsWith(urlObj.host, blacklist)
+  );
+}
 
 function getTitle(link) {
   return new Promise((resolve, reject) => {
@@ -31,7 +43,7 @@ module.exports = (sequelize, Submissions) =>
   async function(message) {
     const link = utils.getPostedUrl(message);
 
-    if (!link || !message.guild) {
+    if (!link || isBlacklisted(link) || !message.guild) {
       return;
     }
 
