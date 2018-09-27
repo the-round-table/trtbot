@@ -25,7 +25,8 @@ const BLACKLISTED_SITES = [
   'twitter.com',
   'wikipedia.org',
   'youtube.com',
-  'arxiv.org'
+  'arxiv.org',
+  'oldschoolrunescape.wikia.com'
 ];
 
 const IMAGE_LINK_REGEX = '.(?:jpg|gif|png)$';
