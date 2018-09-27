@@ -28,8 +28,7 @@ module.exports = class GifCommand extends commando.Command {
     let id = ITEM_2_ID[query];
     if ( !id ) {
       const results = Object.keys(ITEM_2_ID)
-        .filter(name => fuzzysearch(query, name))
-        .splice(0, 5);
+        .filter(name => fuzzysearch(query, name.toLowerCase()));
 
       if ( results.length === 0 ) {
         msg.reply('Fuzzy search for ' + query + ' failed :-(')
