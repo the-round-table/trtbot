@@ -1,22 +1,25 @@
 const xpostRegex = /(x(-)?post)/;
-const channelRegex = /#([a-zA-Z]+)/igm;
+const channelRegex = /<#[^>]*>/igm;
+
+var buffer = null;
 
 module.exports = async message => {
-  if (!message.content.match(xpostRegex)) {
+  if (message.author.bot) {
+    return;
+  }
+  if (!message.content.match(xpostRegex) || !message.content.match(channelRegex)) {
+    buffer = message.content;
     return;
   }
   const msg = message.content;
   const guild = message.guild;
   const srcChannel = message.channel;
-  const poster = message.submitter;  
-
-  destChannelNames = message.content.match(channelRegex);
-  //Name has # preprended
-  destChannels = destChannelNames.map(d => guild.channels.find(d));
-  
-  for (destChannel of destChannels) {
-     destChannel.send(
-       `x-posted from ${srcChannel}:by ${poster}:\n>"${msg}"`
-     );
+  const poster = message.author;  
+    
+  destChannelIds = message.content.match(channelRegex);
+  for (destChannel of destChannelIds) {
+    guild.channels.get(destChannel.substring(2,destChannel.length-1)).send(
+      `Crossposted from ${srcChannel} by ${poster}:\n> ${buffer}`
+    );
   }
 }

@@ -69,7 +69,7 @@ module.exports = (sequelize, Submissions) =>
         limit: 1
       }).then(existing => {
         // Don't create duplicate submissions
-        if (existing) {
+        if (existing && !message.content.includes("Crossposted")) {
           console.log('Duplicate submission!');
           message.reply(oneLine`Heads up, that link was already posted by
             **@${existing.submitter}** in **#${existing.channel}**
