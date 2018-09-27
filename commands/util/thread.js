@@ -45,7 +45,8 @@ module.exports = class ThreadCommand extends commando.Command {
 
   async run(msg, { topic, users }) {
     const threadChannel = this.getThreadChannel(msg.guild);
-
+    threadChannel.setName(topic, `Here's a place to discuss "${topic}": ${users.join(', ')}\n👇 👇 👇`);
+      
     if (threadChannel) {
       users.push(msg.author);
       threadChannel.send(
