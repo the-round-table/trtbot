@@ -42,9 +42,20 @@ module.exports = class WikiCommand extends commando.Command {
       return;
     }
 
+    let mainImage;
+    try {
+      mainImage = await page.mainImage();
+    } catch (e) {
+      console.error(e);
+    }
+
     const embed = new discord.RichEmbed()
-      .setTitle(`📖 Summary for "${page.raw.title}"`)
-      .setDescription(truncate(summary, 1000));
+      .setTitle(`📖 ${page.raw.title}`)
+      .setURL(page.raw.fullurl)
+      .addField('Summary', truncate(summary, 1000));
+    if (mainImage) {
+      embed.setImage(mainImage);
+    }
     msg.reply({ embed });
   }
 };
