@@ -21,8 +21,8 @@ module.exports = async message => {
     return;
   }
 
-  destChannelIds = new Set(message.content.match(channelRegex));
-  for (destChannel of destChannelIds) {
+  const destChannelIds = new Set(message.content.match(channelRegex));
+  for (let destChannel of destChannelIds) {
     if (destChannel != srcChannel) {
       guild.channels
         .get(destChannel.substring(2, destChannel.length - 1))
