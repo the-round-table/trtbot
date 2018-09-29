@@ -18,7 +18,7 @@ module.exports = class GifCommand extends commando.Command {
           key: 'query',
           prompt: 'What item are you looking for?',
           type: 'string',
-          default: '',
+          default: ''
         }
       ]
     });
@@ -26,34 +26,33 @@ module.exports = class GifCommand extends commando.Command {
 
   async run(msg, { query }) {
     let id = ITEM_2_ID[query];
-    if ( !id ) {
-      const results = Object.keys(ITEM_2_ID)
-        .filter(name => fuzzysearch(query, name.toLowerCase()));
+    if (!id) {
+      const results = Object.keys(ITEM_2_ID).filter(name =>
+        fuzzysearch(query, name.toLowerCase())
+      );
 
-      if ( results.length === 0 ) {
-        msg.reply('Fuzzy search for ' + query + ' failed :-(')
-        return
+      if (results.length === 0) {
+        msg.reply('Fuzzy search for ' + query + ' failed :-(');
+        return;
       }
 
       msg.reply(
-        'No such item. Did you mean one of these?\n' +
-        results.join('\n')
+        'No such item. Did you mean one of these?\n' + results.join('\n')
       );
-      return
+      return;
     }
     try {
       let res = await fetch(
         'http://services.runescape.com/' +
-        'm=itemdb_oldschool/api/catalogue/detail.json?item=' + id
-      )
-      .then(res => res.json())
+          'm=itemdb_oldschool/api/catalogue/detail.json?item=' +
+          id
+      ).then(res => res.json());
 
       const item = res['item'];
       const embed = new discord.RichEmbed()
         .setTitle(`📖 ${query}`)
         .setURL(
-          'http://oldschoolrunescape.wikia.com/wiki/' +
-          query.replace(' ', '_')
+          'http://oldschoolrunescape.wikia.com/wiki/' + query.replace(' ', '_')
         )
         .setImage(item['icon_large'])
         .setDescription(item['description'])
@@ -65,7 +64,7 @@ module.exports = class GifCommand extends commando.Command {
         .addField('Price', item['current']['price'], true)
         .addField('Current Trend', item['current']['trend'], true)
         .addField(
-          'Today\'s Trend',
+          "Today's Trend",
           item['today']['trend'] + ' (' + item['today']['price'] + ')',
           true
         )
@@ -83,11 +82,10 @@ module.exports = class GifCommand extends commando.Command {
           '6-Month Trend',
           item['day180']['trend'] + ' (' + item['day180']['change'] + ')',
           true
-        )
-        msg.reply({ embed })
+        );
+      msg.reply({ embed });
     } catch (e) {
       console.log(e);
     }
-
   }
 };

@@ -12,9 +12,7 @@ const utils = require('../utils');
 const bitly = new BitlyClient(config.BITLY_TOKEN, {});
 const Op = Sequelize.Op;
 
-const BLACKLISTED_SITES = [
-  'oldschoolrunescape.wikia.com'
-];
+const BLACKLISTED_SITES = ['oldschoolrunescape.wikia.com'];
 
 function isBlacklisted(url) {
   const urlObj = new URL(url);
@@ -41,7 +39,7 @@ function getTitle(link) {
 }
 
 module.exports = (sequelize, Submissions) =>
-  async function (message) {
+  async function(message) {
     const link = utils.getPostedUrl(message);
 
     if (!link || isBlacklisted(link) || !message.guild) {
@@ -82,7 +80,7 @@ module.exports = (sequelize, Submissions) =>
         limit: 1
       }).then(existing => {
         // Don't create duplicate submissions
-        if (existing && !message.content.includes("Crossposted")) {
+        if (existing && !message.content.includes('Crossposted')) {
           console.log('Duplicate submission!');
           message.reply(oneLine`Heads up, that link was already posted by
             **@${existing.submitter}** in **#${existing.channel}**

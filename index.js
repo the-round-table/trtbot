@@ -109,7 +109,7 @@ const MESSAGE_LISTENERS = [
   arxivListener,
   longReadsListener,
   stockListener,
-  xpostListener,  
+  xpostListener,
   submissionListener(sequelize, Submissions),
   messageListener(Messages)
 ];
