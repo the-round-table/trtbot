@@ -30,13 +30,15 @@ module.exports = class RemindMeCommand extends commando.Command {
 
     const dueDate = parsedResults[0].start.date();
     await this.Reminders.create({
-      submitter: msg.author.username,
+      submitterId: msg.author.id,
       channelId: msg.channel.id,
-      guildId: msg.guild.id,
+      guildId: msg.guild ? msg.guild.id : null,
       originalMessageId: msg.id,
       messageText: query,
       dueDate,
     });
-    msg.reply(`⏰ Alright, I'll remind you ${moment(dueDate).fromNow()}`);
+    return msg.reply(
+      `⏰ Alright, I'll remind you ${moment(dueDate).fromNow()}.`
+    );
   }
 };

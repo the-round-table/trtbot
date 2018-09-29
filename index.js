@@ -20,6 +20,7 @@ const DeadChannelCop = require('./actions/deadChannelCop.js');
 const presenceGenerator = require('./actions/presenceGenerator.js');
 const ReadingListGenerator = require('./actions/readingListGenerator.js');
 const StatsGenerator = require('./actions/statsGenerator.js');
+const ReminderBot = require('./actions/reminderBot.js');
 
 const sequelize = new Sequelize('sqlite:db.sqlite', { logging: false });
 const Messages = sequelize.import(__dirname + '/models/message.js');
@@ -46,6 +47,8 @@ client.Messages = Messages;
 client.Reminders = Reminders;
 client.Submissions = Submissions;
 
+const reminderBot = new ReminderBot(client, Reminders);
+
 client
   .on('error', console.error)
   .on('warn', console.warn)
@@ -56,6 +59,8 @@ client
         client.user.discriminator
       } (${client.user.id})`
     );
+
+    setupSchedule();
   })
   .on('disconnect', () => {
     console.warn('Disconnected!');
@@ -228,15 +233,23 @@ const SCHEDULE = [
       });
     },
   },
+  {
+    schedule: '*/10 * * * * *', // Every 10 seconds
+    callback: async () => {
+      await reminderBot.pollReminders();
+    },
+  },
 ];
 
-SCHEDULE.forEach(
-  scheduleItem =>
-    new CronJob(
-      scheduleItem.schedule,
-      scheduleItem.callback,
-      null,
-      true,
-      'America/Los_Angeles'
-    )
-);
+function setupSchedule() {
+  SCHEDULE.forEach(
+    scheduleItem =>
+      new CronJob(
+        scheduleItem.schedule,
+        scheduleItem.callback,
+        null,
+        true,
+        'America/Los_Angeles'
+      )
+  );
+}

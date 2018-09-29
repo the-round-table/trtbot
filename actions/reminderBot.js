@@ -2,12 +2,13 @@ const Sequelize = require('sequelize');
 const discord = require('discord.js');
 const moment = require('moment');
 const truncate = require('truncate');
+const utils = require('../utils.js');
 
 const Op = Sequelize.Op;
 
 class ReminderBot {
   constructor(client, Reminders) {
-    this.cleint = client;
+    this.client = client;
     this.Reminders = Reminders;
   }
 
@@ -26,13 +27,27 @@ class ReminderBot {
     }
   }
 
-  alertOnReminder(reminder) {
-    const channel = this.client.channels.find(reminder.channelId);
-    const message = new discord.RichEmbed()
+  alertOnReminder(reminderInstance) {
+    const reminder = reminderInstance.get({
+      plain: true,
+    });
+    const channel = this.client.channels.get(reminder.channelId);
+    const messageLink = utils.getMessageLink(
+      reminder.guildId,
+      reminder.channelId,
+      reminder.originalMessageId
+    );
+    const embed = new discord.RichEmbed()
       .setTitle('⏰ Reminder')
-      .setDescription('You asked me to remind you about something:')
-      .addField('Original Message', truncate(reminder.messageText, 1000));
-    channel.send(message);
+      .addField('Reminder:', truncate(reminder.messageText, 1000));
+    if (reminder.guildId) {
+      embed.addField('Context:', `[Original Message](${messageLink})`);
+    }
+
+    channel.send('You asked me to remind you about something:', {
+      embed,
+      reply: reminder.submitterId,
+    });
   }
 }
 
