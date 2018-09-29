@@ -74,10 +74,10 @@ module.exports = (sequelize, Submissions) =>
           createdAt: {
             [Op.gt]: moment()
               .subtract(3, 'days')
-              .toDate()
-          }
+              .toDate(),
+          },
         },
-        limit: 1
+        limit: 1,
       }).then(existing => {
         // Don't create duplicate submissions
         if (existing && !message.content.includes('Crossposted')) {
@@ -94,7 +94,7 @@ module.exports = (sequelize, Submissions) =>
           guildId,
           channel,
           title,
-          shortLink
+          shortLink,
         }).then(() => {
           console.log(`Submission registered: (${username}) ${link}`);
         });

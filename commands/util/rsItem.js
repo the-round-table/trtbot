@@ -18,9 +18,9 @@ module.exports = class GifCommand extends commando.Command {
           key: 'query',
           prompt: 'What item are you looking for?',
           type: 'string',
-          default: ''
-        }
-      ]
+          default: '',
+        },
+      ],
     });
   }
 

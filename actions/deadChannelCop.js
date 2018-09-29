@@ -16,10 +16,10 @@ class DeadChannelCop {
     const records = (await this.Messages.findAll({
       where: {
         guildId,
-        channel
+        channel,
       },
       order: [['createdAt', 'DESC']],
-      limit: 1
+      limit: 1,
     })).map(record => record.get({ plain: true }));
 
     if (!records || records.length === 0) {
@@ -45,7 +45,7 @@ class DeadChannelCop {
       ) {
         warnings.push({
           channel: channel.name,
-          lastUsed: lastUsed
+          lastUsed: lastUsed,
         });
       }
     }

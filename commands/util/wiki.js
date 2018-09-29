@@ -17,9 +17,9 @@ module.exports = class WikiCommand extends commando.Command {
         {
           key: 'query',
           prompt: 'What page are you searching for?',
-          type: 'string'
-        }
-      ]
+          type: 'string',
+        },
+      ],
     });
   }
 

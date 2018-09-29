@@ -9,7 +9,7 @@ module.exports = class DeadChannelCommand extends commando.Command {
       group: 'submissions',
       description: `Lists the channels that haven't been used in the last week`,
       examples: ['deadchannels'],
-      guildOnly: true
+      guildOnly: true,
     });
 
     this.deadChannelCop = new DeadChannelCop(client.Messages);
@@ -17,7 +17,7 @@ module.exports = class DeadChannelCommand extends commando.Command {
 
   async run(msg) {
     msg.reply({
-      embed: await this.deadChannelCop.generateDeadChannelReport(msg.guild)
+      embed: await this.deadChannelCop.generateDeadChannelReport(msg.guild),
     });
   }
 };

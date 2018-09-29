@@ -2944,5 +2944,5 @@ module.exports = {
   'Ancient dragonhide set': 13171,
   'Partyhat set': 13173,
   'Halloween mask set': 13175,
-  'Old school bond': 13190
+  'Old school bond': 13190,
 };

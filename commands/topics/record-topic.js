@@ -15,9 +15,9 @@ module.exports = class RecordTopicCommand extends commando.Command {
           key: 'topic',
           label: 'topic',
           prompt: 'What topic do you want to record?',
-          type: 'string'
-        }
-      ]
+          type: 'string',
+        },
+      ],
     });
 
     this.dbRef = client.dbRef;
@@ -32,7 +32,7 @@ module.exports = class RecordTopicCommand extends commando.Command {
         topic,
         author: msg.author.id,
         channel: msg.channel.id,
-        msgId: msg.id
+        msgId: msg.id,
       })
       .then(() => msg.reply(`Topic Saved!`));
   }

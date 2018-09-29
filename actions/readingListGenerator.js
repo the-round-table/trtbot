@@ -14,7 +14,7 @@ const BLACKLISTED_SITES = [
   'instagram.com',
   'itunes.apple.com',
   'amazon.com',
-  'instagram.com'
+  'instagram.com',
 ];
 
 function isBlacklisted(url) {
@@ -34,8 +34,8 @@ class ReadingListGenerator {
       createdAt: {
         [Op.gt]: moment()
           .subtract(1, 'days')
-          .toDate()
-      }
+          .toDate(),
+      },
     };
 
     if (options.guildId) {
@@ -44,7 +44,7 @@ class ReadingListGenerator {
 
     const records = (await this.Submissions.findAll({
       where: query,
-      order: ['createdAt']
+      order: ['createdAt'],
     })).map(record => record.get({ plain: true }));
 
     const embed = new discord.RichEmbed().setTitle(

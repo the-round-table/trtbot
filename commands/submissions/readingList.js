@@ -9,7 +9,7 @@ module.exports = class ReadingListCommand extends commando.Command {
       group: 'submissions',
       description: 'List the stories that have been posted today',
       examples: ['readinglist'],
-      guildOnly: false
+      guildOnly: false,
     });
 
     this.readingListGenerator = new ReadingListGenerator(client.Submissions);
@@ -19,7 +19,7 @@ module.exports = class ReadingListCommand extends commando.Command {
     const guildId = msg.guild ? msg.guild.id : undefined;
 
     msg.reply({
-      embed: await this.readingListGenerator.generate({ guildId })
+      embed: await this.readingListGenerator.generate({ guildId }),
     });
   }
 };

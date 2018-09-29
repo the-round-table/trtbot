@@ -37,7 +37,7 @@ const channelRearranger = new ChannelRearranger(statsGenerator);
 
 // Create an instance of a Discord client
 const client = new Commando.Client({
-  commandPrefix: 'trt'
+  commandPrefix: 'trt',
 });
 
 client.Submissions = Submissions;
@@ -62,7 +62,7 @@ client
     console.warn('Reconnecting...');
   })
   .on('commandError', (cmd, err) => {
-    if (err instanceof Commando.FriendlyError) return;
+    if (err instanceof Commando.FriendlyError) {return;}
     console.error(`Error in command ${cmd.groupID}:${cmd.memberName}`, err);
   })
   .on('commandBlocked', (msg, reason) => {
@@ -99,7 +99,7 @@ client.registry
   .registerGroup('submissions', 'Submissions')
   .registerGroup('moderation', 'Moderation')
   .registerDefaultCommands({
-    commandState: false
+    commandState: false,
   })
   .registerCommandsIn(path.join(__dirname, 'commands'));
 
@@ -111,7 +111,7 @@ const MESSAGE_LISTENERS = [
   stockListener,
   xpostListener,
   submissionListener(sequelize, Submissions),
-  messageListener(Messages)
+  messageListener(Messages),
 ];
 
 // The ready event is vital, it means that your bot will only start reacting to information
@@ -121,7 +121,7 @@ client
     client.user.setUsername('The Round Bot');
     client.user.setPresence({
       game: { name: presenceGenerator() },
-      status: 'online'
+      status: 'online',
     });
   })
   .on('message', async message => {
@@ -144,9 +144,9 @@ const SCHEDULE = [
     callback: () => {
       client.user.setPresence({
         game: { name: presenceGenerator() },
-        status: 'online'
+        status: 'online',
       });
-    }
+    },
   },
   // Post reading list
   {
@@ -155,7 +155,7 @@ const SCHEDULE = [
       console.log('Generating reading list');
       client.guilds.forEach(async guild => {
         const readingListMessage = await readingListGenerator.generate({
-          guildId: guild.id
+          guildId: guild.id,
         });
         utils.postEmbedToChannel(
           guild,
@@ -163,7 +163,7 @@ const SCHEDULE = [
           config.READING_LIST_CHANNEL
         );
       });
-    }
+    },
   },
   // Post guild stats
   {
@@ -189,7 +189,7 @@ const SCHEDULE = [
           config.ANNOUNCEMENTS_CHANNEL
         );
       });
-    }
+    },
   },
   // Post dead channel report
   {
@@ -208,7 +208,7 @@ const SCHEDULE = [
           );
         }
       });
-    }
+    },
   },
   // Rearrange channels based on activity
   {
@@ -223,8 +223,8 @@ const SCHEDULE = [
           config.ANNOUNCEMENTS_CHANNEL
         );
       });
-    }
-  }
+    },
+  },
 ];
 
 SCHEDULE.forEach(scheduleItem => {

@@ -14,9 +14,9 @@ module.exports = class FuckCommand extends commando.Command {
         {
           key: 'code',
           prompt: 'The brainfuck code you want to execute',
-          type: 'string'
-        }
-      ]
+          type: 'string',
+        },
+      ],
     });
   }
 

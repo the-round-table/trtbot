@@ -12,7 +12,7 @@ const BUCKETS = [
   [20, 'medium'],
   [25, 'long-ish'],
   [50, 'long'],
-  [75, 'very long']
+  [75, 'very long'],
 ];
 
 const BLACKLISTED_SITES = [
@@ -26,7 +26,7 @@ const BLACKLISTED_SITES = [
   'wikipedia.org',
   'youtube.com',
   'arxiv.org',
-  'oldschoolrunescape.wikia.com'
+  'oldschoolrunescape.wikia.com',
 ];
 
 const IMAGE_LINK_REGEX = '.(?:jpg|gif|png)$';

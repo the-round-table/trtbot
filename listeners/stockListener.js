@@ -21,8 +21,8 @@ module.exports = async message => {
       (
         ${changeSymbol}${Math.abs(percentChange).toFixed(2)}%;
         ${changeSymbol}$${Math.abs(symbolData.close - symbolData.open).toFixed(
-      2
-    )}
+  2
+)}
       )`);
   }
 };

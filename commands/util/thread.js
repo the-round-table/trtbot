@@ -18,16 +18,16 @@ module.exports = class ThreadCommand extends commando.Command {
         {
           key: 'topic',
           prompt: 'The topic of the thread',
-          type: 'string'
+          type: 'string',
         },
         {
           key: 'users',
           prompt: 'The users to include in the thread',
           type: 'user',
           infinite: true,
-          default: msg => [msg.author]
-        }
-      ]
+          default: msg => [msg.author],
+        },
+      ],
     });
   }
 

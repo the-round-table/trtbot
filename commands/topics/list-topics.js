@@ -8,7 +8,7 @@ module.exports = class ListTopicsCommand extends commando.Command {
       memberName: 'list-topics',
       description: 'List known topics',
       examples: ['user-info @Crawl#3208', 'user-info Crawl'],
-      guildOnly: false
+      guildOnly: false,
     });
 
     this.dbRef = client.dbRef;

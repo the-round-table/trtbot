@@ -7,5 +7,5 @@ module.exports = {
   // Channel group that contains channels used for threads
   THREAD_CHANNEL_GROUP: '',
   // Names of channels not to include in the dead channel report
-  DEAD_CHANNEL_BLACKLIST: []
+  DEAD_CHANNEL_BLACKLIST: [],
 };
