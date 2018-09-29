@@ -32,17 +32,21 @@ class ReminderBot {
       plain: true,
     });
     const channel = this.client.channels.get(reminder.channelId);
-    const messageLink = utils.getMessageLink(
-      reminder.guildId,
-      reminder.channelId,
-      reminder.originalMessageId
-    );
+
+    let details = `**Created at:** ${moment(reminder.createdAt).calendar()}`;
+    if (reminder.guildId) {
+      const messageLink = utils.getMessageLink(
+        reminder.guildId,
+        reminder.channelId,
+        reminder.originalMessageId
+      );
+      details += `\n**Context:** [Original Message](${messageLink})`;
+    }
+
     const embed = new discord.RichEmbed()
       .setTitle('⏰ Reminder')
-      .addField('Reminder:', truncate(reminder.messageText, 1000));
-    if (reminder.guildId) {
-      embed.addField('Context:', `[Original Message](${messageLink})`);
-    }
+      .addField('Reminder:', truncate(reminder.messageText, 1000))
+      .addField('Details:', details);
 
     channel.send('You asked me to remind you about something:', {
       embed,
