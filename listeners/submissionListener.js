@@ -1,15 +1,16 @@
-const utils = require('../utils');
-const config = require('../config.js');
-const Sequelize = require('sequelize');
-const fetch = require('node-fetch');
-const cheerio = require('cheerio');
-const BitlyClient = require('bitly').BitlyClient;
-const Op = Sequelize.Op;
-const oneLine = require('common-tags').oneLine;
-const moment = require('moment');
 const _ = require('lodash');
+const BitlyClient = require('bitly').BitlyClient;
+const cheerio = require('cheerio');
+const config = require('../config.js');
+const fetch = require('node-fetch');
+const moment = require('moment');
+const oneLine = require('common-tags').oneLine;
+const Sequelize = require('sequelize');
+const URL = require('url').URL;
+const utils = require('../utils');
 
 const bitly = new BitlyClient(config.BITLY_TOKEN, {});
+const Op = Sequelize.Op;
 
 const BLACKLISTED_SITES = [
   'oldschoolrunescape.wikia.com'
@@ -40,7 +41,7 @@ function getTitle(link) {
 }
 
 module.exports = (sequelize, Submissions) =>
-  async function(message) {
+  async function (message) {
     const link = utils.getPostedUrl(message);
 
     if (!link || isBlacklisted(link) || !message.guild) {
