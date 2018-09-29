@@ -21,13 +21,14 @@ module.exports = class FuckCommand extends commando.Command {
   }
 
   run(msg, { code }) {
-    var arr = new Array(50000).fill(0);
-    var ptr = 0;
-    var out = 'brainfuck> ';
-    var count = 0;
+    let arr = new Array(50000).fill(0);
+    let ptr = 0;
+    let out = 'brainfuck> ';
+    let count = 0;
+    let loop = 0;
 
-    for (var i = 0; i < code.length && count++ < 5000000; i++) {
-      var c = code[i];
+    for (let i = 0; i < code.length && count++ < 5000000; i++) {
+      let c = code[i];
       if (c == '>') {
         ptr++;
       } else if (c == '<') {
@@ -42,7 +43,7 @@ module.exports = class FuckCommand extends commando.Command {
         // don't know how to support user input yet
         continue;
       } else if (c == '[' && arr[ptr] == 0) {
-        var loop = 0;
+        loop = 0;
         i++;
         while (loop > 0 || code[i] != ']') {
           if (code[i] == '[') {
@@ -54,7 +55,7 @@ module.exports = class FuckCommand extends commando.Command {
           i++;
         }
       } else if (c == ']' && arr[ptr] != 0) {
-        var loop = 0;
+        loop = 0;
         i--;
         while (loop > 0 || code[i] != '[') {
           if (code[i] == ']') {

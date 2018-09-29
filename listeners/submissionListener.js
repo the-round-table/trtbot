@@ -61,7 +61,7 @@ module.exports = (sequelize, Submissions) =>
       shortLink = link;
     }
 
-    return sequelize.transaction(t => {
+    await sequelize.transaction(() => {
       const username = message.author.username;
       const channel = message.channel.name;
       const guildId = message.guild.id;

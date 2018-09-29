@@ -1,0 +1,12 @@
+{
+  "extends": "fbjs",
+  "rules": {
+    "no-console": "off",
+    "max-len": [
+      "warn",
+      {
+        "ignoreStrings": true
+      }
+    ]
+  }
+}

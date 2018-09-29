@@ -42,6 +42,7 @@ module.exports = class ThreadCommand extends commando.Command {
     if (categoryChannel) {
       return _.sample(categoryChannel.children.array());
     }
+    return null;
   }
 
   async run(msg, { topic, users }) {

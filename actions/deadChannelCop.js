@@ -2,6 +2,7 @@ const _ = require('lodash');
 const discord = require('discord.js');
 const moment = require('moment');
 const config = require('../config.js');
+const oneLine = require('common-tags').oneLine;
 
 const BLACKLIST = config.DEAD_CHANNEL_BLACKLIST || [];
 
@@ -58,11 +59,7 @@ class DeadChannelCop {
         .sortBy(warning => warning.lastUsed)
         .map(
           warning =>
-            `- #${
-              warning.channel
-            } was last used ${warning.lastUsed.fromNow()} (${warning.lastUsed.format(
-              'MMMM D, YYYY'
-            )})`
+            this.formatDeadChannelWarning(warning.channel, warning.lastUsed)
         )
         .value()
         .join('\n');
@@ -71,6 +68,12 @@ class DeadChannelCop {
       embed.setDescription('No dead channels this week! 👏');
     }
     return embed;
+  }
+
+  formatDeadChannelWarning(channel, lastUsedDate) {
+    return oneLine`- #${channel} was last used
+      ${lastUsedDate.fromNow()}
+      (${lastUsedDate.format('MMMM D, YYYY')})`;
   }
 }
 

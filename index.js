@@ -1,4 +1,3 @@
-const Discord = require('discord.js');
 const config = require('./config.js');
 const path = require('path');
 const oneLine = require('common-tags').oneLine;
@@ -7,20 +6,20 @@ const Commando = require('discord.js-commando');
 const utils = require('./utils.js');
 var CronJob = require('cron').CronJob;
 
-const youtubeListener = require('./listeners/youtubeListener.js');
-const submissionListener = require('./listeners/submissionListener.js');
+const arxivListener = require('./listeners/arxivListener.js');
+const githubListener = require('./listeners/githubListener.js');
 const longReadsListener = require('./listeners/longReadsListener.js');
 const messageListener = require('./listeners/messageListener.js');
-const githubListener = require('./listeners/githubListener.js');
-const arxivListener = require('./listeners/arxivListener.js');
 const stockListener = require('./listeners/stockListener.js');
+const submissionListener = require('./listeners/submissionListener.js');
 const xpostListener = require('./listeners/xpostListener.js');
+const youtubeListener = require('./listeners/youtubeListener.js');
 
+const ChannelRearranger = require('./actions/channelRearranger.js');
+const DeadChannelCop = require('./actions/deadChannelCop.js');
 const presenceGenerator = require('./actions/presenceGenerator.js');
 const ReadingListGenerator = require('./actions/readingListGenerator.js');
 const StatsGenerator = require('./actions/statsGenerator.js');
-const DeadChannelCop = require('./actions/deadChannelCop.js');
-const ChannelRearranger = require('./actions/channelRearranger.js');
 
 const sequelize = new Sequelize('sqlite:db.sqlite', { logging: false });
 const Submissions = sequelize.import(__dirname + '/models/submission.js');
@@ -62,7 +61,7 @@ client
     console.warn('Reconnecting...');
   })
   .on('commandError', (cmd, err) => {
-    if (err instanceof Commando.FriendlyError) {return;}
+    if (err instanceof Commando.FriendlyError) { return; }
     console.error(`Error in command ${cmd.groupID}:${cmd.memberName}`, err);
   })
   .on('commandBlocked', (msg, reason) => {
@@ -95,7 +94,6 @@ client
 client.registry
   .registerDefaultTypes()
   .registerGroup('util', 'Utilities')
-  .registerGroup('topics', 'Topics')
   .registerGroup('submissions', 'Submissions')
   .registerGroup('moderation', 'Moderation')
   .registerDefaultCommands({
@@ -114,8 +112,8 @@ const MESSAGE_LISTENERS = [
   messageListener(Messages),
 ];
 
-// The ready event is vital, it means that your bot will only start reacting to information
-// from Discord _after_ ready is emitted
+// The ready event is vital, it means that your bot will only start reacting to
+// information from Discord _after_ ready is emitted
 client
   .on('ready', () => {
     client.user.setUsername('The Round Bot');
@@ -197,9 +195,10 @@ const SCHEDULE = [
     callback: async () => {
       console.log('Generating dead channels report');
       client.guilds.forEach(async guild => {
-        const deadChannelReport = await deadChannelCop.generateDeadChannelReport(
-          guild
-        );
+        const deadChannelReport =
+          await deadChannelCop.generateDeadChannelReport(
+            guild
+          );
         if (deadChannelReport) {
           utils.postEmbedToChannel(
             guild,
@@ -227,12 +226,12 @@ const SCHEDULE = [
   },
 ];
 
-SCHEDULE.forEach(scheduleItem => {
+SCHEDULE.forEach(scheduleItem =>
   new CronJob(
     scheduleItem.schedule,
     scheduleItem.callback,
     null,
     true,
     'America/Los_Angeles'
-  );
-});
+  )
+);

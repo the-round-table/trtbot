@@ -20,6 +20,8 @@ function getPostedUrl(message) {
   if (urlSet.size > 0) {
     return urlSet.values().next().value;
   }
+
+  return null;
 }
 
 function getChannel(guild, channelName) {
@@ -27,7 +29,9 @@ function getChannel(guild, channelName) {
   if (channel) {
     return channel;
   }
-  console.error(`Couldn't find channel ${channelName} in guild ${guild.name}`);
+  throw new Error(
+    `Couldn't find channel ${channelName} in guild ${guild.name}`
+  );
 }
 
 function postEmbedToChannel(guild, embed, channelName) {

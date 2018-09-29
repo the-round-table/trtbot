@@ -37,6 +37,8 @@ function determineLabelForRead(minutes) {
       return BUCKETS[i][1];
     }
   }
+  // Unreachable
+  return 'insanely long';
 }
 
 function isBlacklisted(url) {

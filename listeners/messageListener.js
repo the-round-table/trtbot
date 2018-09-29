@@ -1,7 +1,3 @@
-const utils = require('../utils');
-const Sequelize = require('sequelize');
-const Op = Sequelize.Op;
-
 module.exports = Messages => message => {
   if (!message.guild) {
     return;
