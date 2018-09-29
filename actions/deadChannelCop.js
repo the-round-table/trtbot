@@ -57,9 +57,8 @@ class DeadChannelCop {
     if (warnings.length > 0) {
       const message = _(warnings)
         .sortBy(warning => warning.lastUsed)
-        .map(
-          warning =>
-            this.formatDeadChannelWarning(warning.channel, warning.lastUsed)
+        .map(warning =>
+          this.formatDeadChannelWarning(warning.channel, warning.lastUsed)
         )
         .value()
         .join('\n');
