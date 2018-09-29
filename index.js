@@ -20,14 +20,17 @@ const DeadChannelCop = require('./actions/deadChannelCop.js');
 const presenceGenerator = require('./actions/presenceGenerator.js');
 const ReadingListGenerator = require('./actions/readingListGenerator.js');
 const StatsGenerator = require('./actions/statsGenerator.js');
+const ReminderBot = require('./actions/reminderBot.js');
 
 const sequelize = new Sequelize('sqlite:db.sqlite', { logging: false });
-const Submissions = sequelize.import(__dirname + '/models/submission.js');
 const Messages = sequelize.import(__dirname + '/models/message.js');
+const Reminders = sequelize.import(__dirname + '/models/reminder.js');
+const Submissions = sequelize.import(__dirname + '/models/submission.js');
 
 // Create database tables
-Submissions.sync();
 Messages.sync();
+Reminders.sync();
+Submissions.sync();
 
 const deadChannelCop = new DeadChannelCop(Messages);
 const readingListGenerator = new ReadingListGenerator(Submissions);
@@ -39,9 +42,12 @@ const client = new Commando.Client({
   commandPrefix: 'trt',
 });
 
-client.Submissions = Submissions;
-client.Messages = Messages;
 client.channelRearranger = channelRearranger;
+client.Messages = Messages;
+client.Reminders = Reminders;
+client.Submissions = Submissions;
+
+const reminderBot = new ReminderBot(client, Reminders);
 
 client
   .on('error', console.error)
@@ -53,6 +59,8 @@ client
         client.user.discriminator
       } (${client.user.id})`
     );
+
+    setupSchedule();
   })
   .on('disconnect', () => {
     console.warn('Disconnected!');
@@ -61,7 +69,9 @@ client
     console.warn('Reconnecting...');
   })
   .on('commandError', (cmd, err) => {
-    if (err instanceof Commando.FriendlyError) { return; }
+    if (err instanceof Commando.FriendlyError) {
+      return;
+    }
     console.error(`Error in command ${cmd.groupID}:${cmd.memberName}`, err);
   })
   .on('commandBlocked', (msg, reason) => {
@@ -195,10 +205,9 @@ const SCHEDULE = [
     callback: async () => {
       console.log('Generating dead channels report');
       client.guilds.forEach(async guild => {
-        const deadChannelReport =
-          await deadChannelCop.generateDeadChannelReport(
-            guild
-          );
+        const deadChannelReport = await deadChannelCop.generateDeadChannelReport(
+          guild
+        );
         if (deadChannelReport) {
           utils.postEmbedToChannel(
             guild,
@@ -224,14 +233,23 @@ const SCHEDULE = [
       });
     },
   },
+  {
+    schedule: '*/10 * * * * *', // Every 10 seconds
+    callback: async () => {
+      await reminderBot.pollReminders();
+    },
+  },
 ];
 
-SCHEDULE.forEach(scheduleItem =>
-  new CronJob(
-    scheduleItem.schedule,
-    scheduleItem.callback,
-    null,
-    true,
-    'America/Los_Angeles'
-  )
-);
+function setupSchedule() {
+  SCHEDULE.forEach(
+    scheduleItem =>
+      new CronJob(
+        scheduleItem.schedule,
+        scheduleItem.callback,
+        null,
+        true,
+        'America/Los_Angeles'
+      )
+  );
+}

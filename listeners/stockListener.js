@@ -16,13 +16,11 @@ module.exports = async message => {
     const percentChange =
       ((symbolData.close - symbolData.open) / symbolData.open) * 100;
     const changeSymbol = percentChange > 0 ? '+' : '-';
-    message.reply(oneLine`${symbol}:
-      ${symbolData.close}
-      (
-        ${changeSymbol}${Math.abs(percentChange).toFixed(2)}%;
-        ${changeSymbol}$${Math.abs(symbolData.close - symbolData.open).toFixed(
-  2
-)}
-      )`);
+    const absChange = Math.abs(symbolData.close - symbolData.open);
+
+    let response = `${symbol}: `;
+    response += `(${changeSymbol}${Math.abs(percentChange).toFixed(2)}%; `;
+    response += `${changeSymbol} $${absChange.toFixed(2)})`;
+    message.reply(response);
   }
 };

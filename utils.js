@@ -48,9 +48,14 @@ function postTextToChannel(guild, text, channelName) {
   }
 }
 
+function getMessageLink(guildId, channelId, messageId) {
+  return `https://discordapp.com/channels/${guildId}/${channelId}/${messageId}`;
+}
+
 module.exports = {
   getEmbedUrl,
   getPostedUrl,
   postEmbedToChannel,
   postTextToChannel,
+  getMessageLink,
 };
