@@ -1,4 +1,5 @@
 const commando = require('discord.js-commando');
+const truncate = require('truncate');
 const util = require('../../config.js');
 const _ = require('lodash');
 
@@ -45,7 +46,7 @@ module.exports = class ThreadCommand extends commando.Command {
 
   async run(msg, { topic, users }) {
     const threadChannel = this.getThreadChannel(msg.guild);
-    threadChannel.setName(topic);
+    threadChannel.setName(truncate(topic, 100));
 
     if (threadChannel) {
       users.push(msg.author);
