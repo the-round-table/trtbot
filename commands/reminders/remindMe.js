@@ -1,13 +1,14 @@
 const commando = require('discord.js-commando');
 const chrono = require('chrono-node');
 const moment = require('moment');
+const oneLine = require('common-tags').oneLine;
 
 module.exports = class RemindMeCommand extends commando.Command {
   constructor(client) {
     super(client, {
       name: 'remindme',
       memberName: 'remindme',
-      group: 'util',
+      group: 'reminders',
       description: 'Sets up a reminder',
       guildOnly: false,
       args: [
@@ -25,7 +26,11 @@ module.exports = class RemindMeCommand extends commando.Command {
     const parsedResults = chrono.parse(query);
 
     if (parsedResults.length == 0) {
-      return msg.reply("Sorry, I couldn't parse a date from your input.");
+      return msg.reply(
+        oneLine`Sorry, I couldn't parse a date from your input.
+          Make sure that your message has a date expression like "_in_ 1 week"
+          or "_on_ Friday".`
+      );
     }
 
     const dueDate = parsedResults[0].start.date();

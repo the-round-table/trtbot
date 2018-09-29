@@ -106,6 +106,7 @@ client.registry
   .registerGroup('util', 'Utilities')
   .registerGroup('submissions', 'Submissions')
   .registerGroup('moderation', 'Moderation')
+  .registerGroup('reminders', 'Reminders')
   .registerDefaultCommands({
     commandState: false,
   })
