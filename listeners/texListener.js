@@ -4,7 +4,7 @@ const fs = require("fs");
 
 mathjax.config({
   MathJax: {
-  }
+  },
 });
 mathjax.start();
 
