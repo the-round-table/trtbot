@@ -12,6 +12,7 @@ const longReadsListener = require('./listeners/longReadsListener.js');
 const messageListener = require('./listeners/messageListener.js');
 const stockListener = require('./listeners/stockListener.js');
 const submissionListener = require('./listeners/submissionListener.js');
+const texListener = require('./listeners/texListener.js');
 const xpostListener = require('./listeners/xpostListener.js');
 const youtubeListener = require('./listeners/youtubeListener.js');
 
@@ -118,6 +119,7 @@ const MESSAGE_LISTENERS = [
   arxivListener,
   longReadsListener,
   stockListener,
+  texListener,
   xpostListener,
   submissionListener(sequelize, Submissions),
   messageListener(Messages),
