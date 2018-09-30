@@ -12,14 +12,14 @@ const TEX_REGEX = /\$\$(.*?)\$\$/sg;
 const TEX_TAG = /\$\$/sg;
 
 async function renderMath(m) {
-  hashid = new Hashids();
-  hash = hashid.encode(Date.now());
+  var hashid = new Hashids();
+  var hash = hashid.encode(Date.now());
   var data = await mathjax.typeset({
     math: m,
-    format: "TeX",
+    format: 'TeX',
     png:true
   });
-  var base64Data = data.png.replace(/^data:image\/png;base64,/, "");
+  var base64Data = data.png.replace(/^data:image\/png;base64,/, '');
   fs.writeFileSync(`/tmp/${hash}.png`,  base64Data, 'base64');
   return hash;
 }
@@ -41,7 +41,9 @@ module.exports = async message => {
     return;
   }
 
-  tex_str = msg.match(TEX_REGEX);
-  tex_math = tex_str.map(s => s.replace(TEX_TAG, ''));
-  tex_math.map(m => renderMath(m).then(h => sendImage(srcChannel, h)).catch(err => {console.log(err);}));
+  var tex_str = msg.match(TEX_REGEX);
+  var tex_math = tex_str.map(s => s.replace(TEX_TAG, ''));
+  tex_math.map(m => renderMath(m)
+    .then(h => sendImage(srcChannel, h))
+    .catch(err => {console.log(err);}));
 };
