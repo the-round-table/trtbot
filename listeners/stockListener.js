@@ -19,7 +19,8 @@ module.exports = async message => {
     const absChange = Math.abs(symbolData.close - symbolData.open);
 
     let response = `${symbol}: `;
-    response += `(${changeSymbol}${Math.abs(percentChange).toFixed(2)}%; `;
+    response += `(${symbolData.close.toFixed(2)}; `;
+    response += `${changeSymbol}${Math.abs(percentChange).toFixed(2)}%; `;
     response += `${changeSymbol} $${absChange.toFixed(2)})`;
     message.reply(response);
   }
