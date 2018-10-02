@@ -33,7 +33,7 @@ module.exports = class PollCommand extends commando.Command {
       var emotes = [`one`, `two`, `three`, `four`, `five`, `six`, `seven`, `eight`, `nine`, `ten`]; 
       var emoji_ind = 0;
       for each (var option in opt_data) {
-        poll_data = poll_data + `:${emotes[emoji_ind}: ${option}\n`;
+        poll_data = poll_data + `:${emotes[emoji_ind]}: ${option}\n`;
         emoji_ind = emoji_ind + 1;
       }
     }
