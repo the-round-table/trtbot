@@ -6,8 +6,7 @@ module.exports = class FuckCommand extends commando.Command {
       name: 'fuck',
       memberName: 'fuck',
       group: 'util',
-      description:
-        'Interprets a line of brainfuck code.',
+      description: 'Interprets a line of brainfuck code.',
       examples: ['fuck ++>+++[<+>-]++++++++[<++++++>-]<.'],
       guildOnly: false,
       argsPromptLimit: 0,
@@ -15,53 +14,54 @@ module.exports = class FuckCommand extends commando.Command {
         {
           key: 'code',
           prompt: 'The brainfuck code you want to execute',
-          type: 'string'
-        }
-      ]
+          type: 'string',
+        },
+      ],
     });
   }
-  
-  run(msg, { code }) {
-    var arr = new Array(50000).fill(0);;
-    var ptr = 0;
-    var out = "brainfuck> ";
-    var count = 0;
 
-    for (var i = 0; i < code.length && count++ < 5000000; i++) {
-      var c = code[i];
-      if (c == ">") {
+  run(msg, { code }) {
+    let arr = new Array(50000).fill(0);
+    let ptr = 0;
+    let out = 'brainfuck> ';
+    let count = 0;
+    let loop = 0;
+
+    for (let i = 0; i < code.length && count++ < 5000000; i++) {
+      let c = code[i];
+      if (c == '>') {
         ptr++;
-      } else if (c == "<") {
+      } else if (c == '<') {
         ptr--;
-      } else if (c == "+") {
+      } else if (c == '+') {
         arr[ptr]++;
-      } else if (c == "-") {
+      } else if (c == '-') {
         arr[ptr]--;
-      } else if (c == ".") {
+      } else if (c == '.') {
         out += String.fromCharCode(arr[ptr]);
-      } else if (c == ",") {
+      } else if (c == ',') {
         // don't know how to support user input yet
         continue;
-      } else if (c == "[" && arr[ptr] == 0) {
-        var loop = 0;
+      } else if (c == '[' && arr[ptr] == 0) {
+        loop = 0;
         i++;
-        while (loop > 0 || code[i] != "]") {
-          if (code[i] == "[") {
+        while (loop > 0 || code[i] != ']') {
+          if (code[i] == '[') {
             loop++;
           }
-          if (code[i] == "]") {
+          if (code[i] == ']') {
             loop--;
           }
           i++;
         }
-      } else if (c == "]" && arr[ptr] != 0) {
-        var loop = 0;
+      } else if (c == ']' && arr[ptr] != 0) {
+        loop = 0;
         i--;
-        while (loop > 0 || code[i] != "[") {
-          if (code[i] == "]") {
+        while (loop > 0 || code[i] != '[') {
+          if (code[i] == ']') {
             loop++;
           }
-          if (code[i] == "[") {
+          if (code[i] == '[') {
             loop--;
           }
           i--;

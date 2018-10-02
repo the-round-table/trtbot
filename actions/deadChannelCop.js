@@ -2,6 +2,7 @@ const _ = require('lodash');
 const discord = require('discord.js');
 const moment = require('moment');
 const config = require('../config.js');
+const oneLine = require('common-tags').oneLine;
 
 const BLACKLIST = config.DEAD_CHANNEL_BLACKLIST || [];
 
@@ -16,10 +17,10 @@ class DeadChannelCop {
     const records = (await this.Messages.findAll({
       where: {
         guildId,
-        channel
+        channel,
       },
       order: [['createdAt', 'DESC']],
-      limit: 1
+      limit: 1,
     })).map(record => record.get({ plain: true }));
 
     if (!records || records.length === 0) {
@@ -45,7 +46,7 @@ class DeadChannelCop {
       ) {
         warnings.push({
           channel: channel.name,
-          lastUsed: lastUsed
+          lastUsed: lastUsed,
         });
       }
     }
@@ -56,13 +57,8 @@ class DeadChannelCop {
     if (warnings.length > 0) {
       const message = _(warnings)
         .sortBy(warning => warning.lastUsed)
-        .map(
-          warning =>
-            `- #${
-              warning.channel
-            } was last used ${warning.lastUsed.fromNow()} (${warning.lastUsed.format(
-              'MMMM D, YYYY'
-            )})`
+        .map(warning =>
+          this.formatDeadChannelWarning(warning.channel, warning.lastUsed)
         )
         .value()
         .join('\n');
@@ -71,6 +67,12 @@ class DeadChannelCop {
       embed.setDescription('No dead channels this week! 👏');
     }
     return embed;
+  }
+
+  formatDeadChannelWarning(channel, lastUsedDate) {
+    return oneLine`- #${channel} was last used
+      ${lastUsedDate.fromNow()}
+      (${lastUsedDate.format('MMMM D, YYYY')})`;
   }
 }
 

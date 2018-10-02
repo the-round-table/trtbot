@@ -1,6 +1,5 @@
 const _ = require('lodash');
-const oneLine = require('common-tags').oneLine;
-const symbolRegex = /(\$[A-Z]{1,4})($|\W)/gi;
+const symbolRegex = /((^)|(\s+))(\$[A-Z]{1,4})($|\W)/gi;
 const StocksClient = require('../actions/stocks.js');
 
 module.exports = async message => {
@@ -10,16 +9,31 @@ module.exports = async message => {
     .map(symbol => symbol.substr(1))
     .value();
 
-  const client = new StocksClient;
+  const client = new StocksClient();
+
+  let reacted = false;
   for (let symbol of symbols) {
-    const symbolData = await client.getSymbol(symbol);
-    const percentChange = (symbolData.close - symbolData.open) / symbolData.open * 100;
+    let symbolData;
+    try {
+      symbolData = await client.getSymbol(symbol);
+    } catch (error) {
+      continue;
+    }
+
+    if (!reacted) {
+      message.react('📊');
+      reacted = true;
+    }
+
+    const percentChange =
+      ((symbolData.close - symbolData.open) / symbolData.open) * 100;
     const changeSymbol = percentChange > 0 ? '+' : '-';
-    message.reply(oneLine`${symbol}:
-      ${symbolData.close}
-      (
-        ${changeSymbol}${Math.abs(percentChange).toFixed(2)}%;
-        ${changeSymbol}$${Math.abs(symbolData.close - symbolData.open).toFixed(2)}
-      )`);
+    const absChange = Math.abs(symbolData.close - symbolData.open);
+
+    let response = `${symbol}: `;
+    response += `($${symbolData.close.toFixed(2)}; `;
+    response += `${changeSymbol}${Math.abs(percentChange).toFixed(2)}%; `;
+    response += `${changeSymbol} $${absChange.toFixed(2)})`;
+    message.reply(response);
   }
 };

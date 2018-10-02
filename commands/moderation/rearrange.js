@@ -10,7 +10,7 @@ module.exports = class RearrangeCommand extends commando.Command {
       examples: ['rearrange'],
       guildOnly: true,
       userPermissions: ['MANAGE_CHANNELS'],
-      clientPermissions: ['MANAGE_CHANNELS']
+      clientPermissions: ['MANAGE_CHANNELS'],
     });
 
     this.channelRearranger = client.channelRearranger;

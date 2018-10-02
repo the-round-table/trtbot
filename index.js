@@ -1,33 +1,39 @@
-const Discord = require('discord.js');
 const config = require('./config.js');
 const path = require('path');
 const oneLine = require('common-tags').oneLine;
 const Sequelize = require('sequelize');
 const Commando = require('discord.js-commando');
 const utils = require('./utils.js');
+const fs = require('fs');
+const glob = require('glob');
 var CronJob = require('cron').CronJob;
 
-const youtubeListener = require('./listeners/youtubeListener.js');
-const submissionListener = require('./listeners/submissionListener.js');
+const arxivListener = require('./listeners/arxivListener.js');
+const githubListener = require('./listeners/githubListener.js');
 const longReadsListener = require('./listeners/longReadsListener.js');
 const messageListener = require('./listeners/messageListener.js');
-const githubListener = require('./listeners/githubListener.js');
-const arxivListener = require('./listeners/arxivListener.js');
 const stockListener = require('./listeners/stockListener.js');
+const submissionListener = require('./listeners/submissionListener.js');
+const texListener = require('./listeners/texListener.js');
+const xpostListener = require('./listeners/xpostListener.js');
+const youtubeListener = require('./listeners/youtubeListener.js');
 
+const ChannelRearranger = require('./actions/channelRearranger.js');
+const DeadChannelCop = require('./actions/deadChannelCop.js');
 const presenceGenerator = require('./actions/presenceGenerator.js');
 const ReadingListGenerator = require('./actions/readingListGenerator.js');
 const StatsGenerator = require('./actions/statsGenerator.js');
-const DeadChannelCop = require('./actions/deadChannelCop.js');
-const ChannelRearranger = require('./actions/channelRearranger.js');
+const ReminderBot = require('./actions/reminderBot.js');
 
 const sequelize = new Sequelize('sqlite:db.sqlite', { logging: false });
-const Submissions = sequelize.import(__dirname + '/models/submission.js');
 const Messages = sequelize.import(__dirname + '/models/message.js');
+const Reminders = sequelize.import(__dirname + '/models/reminder.js');
+const Submissions = sequelize.import(__dirname + '/models/submission.js');
 
 // Create database tables
-Submissions.sync();
 Messages.sync();
+Reminders.sync();
+Submissions.sync();
 
 const deadChannelCop = new DeadChannelCop(Messages);
 const readingListGenerator = new ReadingListGenerator(Submissions);
@@ -36,12 +42,15 @@ const channelRearranger = new ChannelRearranger(statsGenerator);
 
 // Create an instance of a Discord client
 const client = new Commando.Client({
-  commandPrefix: 'trt'
+  commandPrefix: 'trt',
 });
 
-client.Submissions = Submissions;
-client.Messages = Messages;
 client.channelRearranger = channelRearranger;
+client.Messages = Messages;
+client.Reminders = Reminders;
+client.Submissions = Submissions;
+
+const reminderBot = new ReminderBot(client, Reminders);
 
 client
   .on('error', console.error)
@@ -53,6 +62,8 @@ client
         client.user.discriminator
       } (${client.user.id})`
     );
+
+    setupSchedule();
   })
   .on('disconnect', () => {
     console.warn('Disconnected!');
@@ -61,7 +72,9 @@ client
     console.warn('Reconnecting...');
   })
   .on('commandError', (cmd, err) => {
-    if (err instanceof Commando.FriendlyError) return;
+    if (err instanceof Commando.FriendlyError) {
+      return;
+    }
     console.error(`Error in command ${cmd.groupID}:${cmd.memberName}`, err);
   })
   .on('commandBlocked', (msg, reason) => {
@@ -94,11 +107,11 @@ client
 client.registry
   .registerDefaultTypes()
   .registerGroup('util', 'Utilities')
-  .registerGroup('topics', 'Topics')
   .registerGroup('submissions', 'Submissions')
   .registerGroup('moderation', 'Moderation')
+  .registerGroup('reminders', 'Reminders')
   .registerDefaultCommands({
-    commandState: false
+    commandState: false,
   })
   .registerCommandsIn(path.join(__dirname, 'commands'));
 
@@ -108,18 +121,20 @@ const MESSAGE_LISTENERS = [
   arxivListener,
   longReadsListener,
   stockListener,
+  texListener,
+  xpostListener,
   submissionListener(sequelize, Submissions),
-  messageListener(Messages)
+  messageListener(Messages),
 ];
 
-// The ready event is vital, it means that your bot will only start reacting to information
-// from Discord _after_ ready is emitted
+// The ready event is vital, it means that your bot will only start reacting to
+// information from Discord _after_ ready is emitted
 client
   .on('ready', () => {
     client.user.setUsername('The Round Bot');
     client.user.setPresence({
       game: { name: presenceGenerator() },
-      status: 'online'
+      status: 'online',
     });
   })
   .on('message', async message => {
@@ -142,9 +157,9 @@ const SCHEDULE = [
     callback: () => {
       client.user.setPresence({
         game: { name: presenceGenerator() },
-        status: 'online'
+        status: 'online',
       });
-    }
+    },
   },
   // Post reading list
   {
@@ -153,7 +168,7 @@ const SCHEDULE = [
       console.log('Generating reading list');
       client.guilds.forEach(async guild => {
         const readingListMessage = await readingListGenerator.generate({
-          guildId: guild.id
+          guildId: guild.id,
         });
         utils.postEmbedToChannel(
           guild,
@@ -161,7 +176,7 @@ const SCHEDULE = [
           config.READING_LIST_CHANNEL
         );
       });
-    }
+    },
   },
   // Post guild stats
   {
@@ -187,7 +202,7 @@ const SCHEDULE = [
           config.ANNOUNCEMENTS_CHANNEL
         );
       });
-    }
+    },
   },
   // Post dead channel report
   {
@@ -206,7 +221,7 @@ const SCHEDULE = [
           );
         }
       });
-    }
+    },
   },
   // Rearrange channels based on activity
   {
@@ -221,16 +236,43 @@ const SCHEDULE = [
           config.ANNOUNCEMENTS_CHANNEL
         );
       });
-    }
-  }
+    },
+  },
+  // Delete old equations
+  {
+    schedule: '0 30 19 * * 0', // Every Sunday at 7:30pm
+    callback: async () => {
+      console.log('Deleting old equation images');
+      var files = glob('/tmp/*.png', null, (err, files) => {
+        if (!err) {
+          for (let f in files) {
+            fs.unlink(f).catch(er => {
+              console.log(`Failed to delete file ${f}: ${er}`);
+            });
+          }
+        } else {
+          console.log(err);
+        }
+      });
+    },
+  },
+  {
+    schedule: '*/10 * * * * *', // Every 10 seconds
+    callback: async () => {
+      await reminderBot.pollReminders();
+    },
+  },
 ];
 
-SCHEDULE.forEach(scheduleItem => {
-  new CronJob(
-    scheduleItem.schedule,
-    scheduleItem.callback,
-    null,
-    true,
-    'America/Los_Angeles'
+function setupSchedule() {
+  SCHEDULE.forEach(
+    scheduleItem =>
+      new CronJob(
+        scheduleItem.schedule,
+        scheduleItem.callback,
+        null,
+        true,
+        'America/Los_Angeles'
+      )
   );
-});
+}

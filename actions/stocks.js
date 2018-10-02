@@ -6,13 +6,13 @@ class StocksClient {
     const symbolData = await stocks.timeSeries({
       symbol: symbol,
       interval: 'daily',
-      amount: 1
+      amount: 1,
     });
 
     const dayData = symbolData[0];
     return {
-      'open': dayData['open'],
-      'close': dayData['close']
+      open: dayData['open'],
+      close: dayData['close'],
     };
   }
 }

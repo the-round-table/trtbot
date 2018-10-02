@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     guildId: DataTypes.STRING,
     id: {
       type: DataTypes.STRING,
-      primaryKey: true
-    }
+      primaryKey: true,
+    },
   });
 };

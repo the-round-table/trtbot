@@ -55,7 +55,7 @@ const OPTIONS = [
   '⛹️‍♀️ Basketball with Sundar',
   '🙄 Reading the comments',
   '👀 Watching You',
-  '👑 Game of Thrones'
+  '👑 Game of Thrones',
 ];
 
 module.exports = () => {

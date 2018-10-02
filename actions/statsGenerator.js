@@ -29,16 +29,16 @@ class StatsGenerator {
     return (await this.Messages.findAll({
       where: {
         createdAt: {
-          [Op.gt]: since
+          [Op.gt]: since,
         },
-        guildId: guildId
+        guildId: guildId,
       },
       group: ['channel', 'guildId'],
       attributes: [
         'channel',
         'guildId',
-        [Sequelize.fn('COUNT', '*'), 'channelCount']
-      ]
+        [Sequelize.fn('COUNT', '*'), 'channelCount'],
+      ],
     })).map(record => record.get({ plain: true }));
   }
 
@@ -74,16 +74,16 @@ class StatsGenerator {
     const messageCounts = (await this.Messages.findAll({
       where: {
         createdAt: {
-          [Op.gt]: this.startOfWeek().toDate()
+          [Op.gt]: this.startOfWeek().toDate(),
         },
-        guildId: guildId
+        guildId: guildId,
       },
       group: ['submitter', 'guildId'],
       attributes: [
         'submitter',
         'guildId',
-        [Sequelize.fn('COUNT', '*'), 'submitterCount']
-      ]
+        [Sequelize.fn('COUNT', '*'), 'submitterCount'],
+      ],
     })).map(record => record.get({ plain: true }));
 
     const message = _.chain(messageCounts)

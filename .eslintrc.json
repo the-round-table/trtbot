@@ -1,0 +1,6 @@
+{
+  "extends": "fbjs",
+  "rules": {
+    "no-console": "off"
+  }
+}

@@ -5,6 +5,7 @@ const discord = require('discord.js');
 const moment = require('moment');
 const truncate = require('truncate');
 const URL = require('url').URL;
+const trim = require('trim-whitespace');
 
 const BLACKLISTED_SITES = [
   'giphy.com',
@@ -13,7 +14,7 @@ const BLACKLISTED_SITES = [
   'instagram.com',
   'itunes.apple.com',
   'amazon.com',
-  'instagram.com'
+  'instagram.com',
 ];
 
 function isBlacklisted(url) {
@@ -33,8 +34,8 @@ class ReadingListGenerator {
       createdAt: {
         [Op.gt]: moment()
           .subtract(1, 'days')
-          .toDate()
-      }
+          .toDate(),
+      },
     };
 
     if (options.guildId) {
@@ -43,7 +44,7 @@ class ReadingListGenerator {
 
     const records = (await this.Submissions.findAll({
       where: query,
-      order: ['createdAt']
+      order: ['createdAt'],
     })).map(record => record.get({ plain: true }));
 
     const embed = new discord.RichEmbed().setTitle(
@@ -66,11 +67,18 @@ class ReadingListGenerator {
       .reverse()
       .value()
       .forEach(pair => {
+        let fieldChars = 0;
         embed.addField(
           '#' + pair[0],
-          pair[1]
-            .map(sub => `- ${truncate(sub.title, 75)} (${sub.shortLink})`)
-            .join('\n')
+          trim(
+            pair[1]
+              .map(sub => {
+                const line = `- [${truncate(sub.title, 75)}](${sub.shortLink})`;
+                fieldChars += line.length + 1;
+                return fieldChars <= 1024 ? line : '';
+              })
+              .join('\n')
+          )
         );
       });
 

@@ -10,17 +10,6 @@ class ChannelRearranger {
     this.statsGenerator = statsGenerator;
   }
 
-  async setChannelPosition(guild, channel, position) {
-    guild.channels.forEach(channel => {
-      if (channel.name == channelName) {
-        console.log(`Setting position of ${channelName} to ${position}`);
-        channel.setPosition(position);
-        return;
-      }
-    });
-    console.error('Unable to find channel: ' + channelName);
-  }
-
   async rearrangeByActivity(guild) {
     console.log('Beginning to reorganize channels');
     const channelCounts = await this.statsGenerator.messageCountByChannel(
@@ -57,7 +46,7 @@ class ChannelRearranger {
       .value()) {
       const { channel, channelIdx } = channelObj;
       console.log(`Setting position of ${channel.name} to ${channelIdx}`);
-      const newChannel = await channel.setPosition(channelIdx);
+      await channel.setPosition(channelIdx);
       await sleep(1000);
     }
   }

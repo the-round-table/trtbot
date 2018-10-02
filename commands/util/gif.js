@@ -18,9 +18,9 @@ module.exports = class GifCommand extends commando.Command {
           key: 'query',
           prompt: 'What type of gif would you like?',
           type: 'string',
-          default: NO_QUERY
-        }
-      ]
+          default: NO_QUERY,
+        },
+      ],
     });
   }
 
