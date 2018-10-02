@@ -4,6 +4,8 @@ const oneLine = require('common-tags').oneLine;
 const Sequelize = require('sequelize');
 const Commando = require('discord.js-commando');
 const utils = require('./utils.js');
+const fs = require("fs");
+const glob = require("glob");
 var CronJob = require('cron').CronJob;
 
 const arxivListener = require('./listeners/arxivListener.js');
@@ -233,6 +235,23 @@ const SCHEDULE = [
           '🔄 Rearranged channels by activity',
           config.ANNOUNCEMENTS_CHANNEL
         );
+      });
+    },
+  },
+  // Delete old equations
+  {
+    schedule: '0 30 19 * * 0', // Every Sunday at 7:30pm
+    callback: async () => {
+      console.log('Deleting old equation images');
+      var files = glob("/tmp/*.png", null, (err, files) => {
+        if (!err) {
+          for (f in files) {
+            fs.unlink(f)
+              .catch(er => {console.log(`Failed to delete file ${f}: ${er}`)});
+          }
+        } else {
+          console.log(err);
+        }
       });
     },
   },

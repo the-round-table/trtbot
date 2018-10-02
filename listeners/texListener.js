@@ -1,4 +1,5 @@
 const Hashids = require('hashids');
+const {MessageAttachment} = require('discord.js');
 const mathjax = require('mathjax-node-svg2png');
 const fs = require("fs");
 
@@ -25,7 +26,6 @@ async function renderMath(m) {
 }
 
 async function sendImage(srcChannel, hash) {
-  await hash;
   srcChannel.send({files: [{ 
     attachment: `/tmp/${hash}.png`, 
     name: `/tmp/${hash}.png` }]}).catch(err => {console.log(err);});
@@ -43,7 +43,8 @@ module.exports = async message => {
 
   var tex_str = msg.match(TEX_REGEX);
   var tex_math = tex_str.map(s => s.replace(TEX_TAG, ''));
-  tex_math.map(m => renderMath(m)
-    .then(h => sendImage(srcChannel, h))
-    .catch(err => {console.log(err);}));
+  tex_math.map(async (m) => {
+    const hash = await renderMath(m);
+    sendImage(srcChannel, hash);
+ });
 };
