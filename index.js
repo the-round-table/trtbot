@@ -4,6 +4,8 @@ const oneLine = require('common-tags').oneLine;
 const Sequelize = require('sequelize');
 const Commando = require('discord.js-commando');
 const utils = require('./utils.js');
+const fs = require("fs");
+const glob = require("glob");
 var CronJob = require('cron').CronJob;
 
 const arxivListener = require('./listeners/arxivListener.js');
@@ -12,6 +14,7 @@ const longReadsListener = require('./listeners/longReadsListener.js');
 const messageListener = require('./listeners/messageListener.js');
 const stockListener = require('./listeners/stockListener.js');
 const submissionListener = require('./listeners/submissionListener.js');
+const texListener = require('./listeners/texListener.js');
 const xpostListener = require('./listeners/xpostListener.js');
 const youtubeListener = require('./listeners/youtubeListener.js');
 
@@ -118,6 +121,7 @@ const MESSAGE_LISTENERS = [
   arxivListener,
   longReadsListener,
   stockListener,
+  texListener,
   xpostListener,
   submissionListener(sequelize, Submissions),
   messageListener(Messages),
@@ -231,6 +235,23 @@ const SCHEDULE = [
           '🔄 Rearranged channels by activity',
           config.ANNOUNCEMENTS_CHANNEL
         );
+      });
+    },
+  },
+  // Delete old equations
+  {
+    schedule: '0 30 19 * * 0', // Every Sunday at 7:30pm
+    callback: async () => {
+      console.log('Deleting old equation images');
+      var files = glob("/tmp/*.png", null, (err, files) => {
+        if (!err) {
+          for (let f in files) {
+            fs.unlink(f)
+              .catch(er => {console.log(`Failed to delete file ${f}: ${er}`);});
+          }
+        } else {
+          console.log(err);
+        }
       });
     },
   },
