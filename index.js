@@ -245,9 +245,9 @@ const SCHEDULE = [
       console.log('Deleting old equation images');
       var files = glob("/tmp/*.png", null, (err, files) => {
         if (!err) {
-          for (f in files) {
+          for (let f in files) {
             fs.unlink(f)
-              .catch(er => {console.log(`Failed to delete file ${f}: ${er}`)});
+              .catch(er => {console.log(`Failed to delete file ${f}: ${er}`);});
           }
         } else {
           console.log(err);
