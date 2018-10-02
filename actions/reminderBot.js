@@ -32,6 +32,10 @@ class ReminderBot {
       plain: true,
     });
     const channel = this.client.channels.get(reminder.channelId);
+    if (!channel) {
+      console.error("Can't find channel: " + reminder.channelId);
+      return;
+    }
 
     let details = `**Created at:** ${moment(reminder.createdAt).calendar()}`;
     if (reminder.guildId) {

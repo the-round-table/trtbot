@@ -22,3 +22,10 @@ to install the dependencies to be able to run the bot.
 ```
 npm start
  ```
+
+
+### Miscelaneous
+
+- Packages needed for Latex rendering:
+  - `bzip2`
+  - `libfontconfig`

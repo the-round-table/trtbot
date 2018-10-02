@@ -1,5 +1,4 @@
 const _ = require('lodash');
-const oneLine = require('common-tags').oneLine;
 const symbolRegex = /((^)|(\s+))(\$[A-Z]{1,4})($|\W)/gi;
 const StocksClient = require('../actions/stocks.js');
 
@@ -11,8 +10,21 @@ module.exports = async message => {
     .value();
 
   const client = new StocksClient();
+
+  let reacted = false;
   for (let symbol of symbols) {
-    const symbolData = await client.getSymbol(symbol);
+    let symbolData;
+    try {
+      symbolData = await client.getSymbol(symbol);
+    } catch (error) {
+      continue;
+    }
+
+    if (!reacted) {
+      message.react('📊');
+      reacted = true;
+    }
+
     const percentChange =
       ((symbolData.close - symbolData.open) / symbolData.open) * 100;
     const changeSymbol = percentChange > 0 ? '+' : '-';
