@@ -8,15 +8,15 @@ const fs = require('fs');
 const glob = require('glob');
 var CronJob = require('cron').CronJob;
 
-const arxivListener = require('./listeners/arxivListener.js');
-const githubListener = require('./listeners/githubListener.js');
-const longReadsListener = require('./listeners/longReadsListener.js');
-const messageListener = require('./listeners/messageListener.js');
-const stockListener = require('./listeners/stockListener.js');
-const submissionListener = require('./listeners/submissionListener.js');
-const texListener = require('./listeners/texListener.js');
-const xpostListener = require('./listeners/xpostListener.js');
-const youtubeListener = require('./listeners/youtubeListener.js');
+const ArxivListener = require('./listeners/arxivListener.js');
+const GithubListener = require('./listeners/githubListener.js');
+const LongReadsListener = require('./listeners/longReadsListener.js');
+const TextMessageListener = require('./listeners/textMessageListener.js');
+const StockListener = require('./listeners/stockListener.js');
+const SubmissionListener = require('./listeners/submissionListener.js');
+const TexListener = require('./listeners/texListener.js');
+const XpostListener = require('./listeners/xpostListener.js');
+const YoutubeListener = require('./listeners/youtubeListener.js');
 
 const ChannelRearranger = require('./actions/channelRearranger.js');
 const DeadChannelCop = require('./actions/deadChannelCop.js');
@@ -116,25 +116,24 @@ client
 
 client.registry
   .registerDefaultTypes()
+  .registerDefaultGroups()
+  .registerDefaultCommands()
   .registerGroup('util', 'Utilities')
   .registerGroup('submissions', 'Submissions')
   .registerGroup('moderation', 'Moderation')
   .registerGroup('reminders', 'Reminders')
-  .registerDefaultCommands({
-    commandState: false,
-  })
   .registerCommandsIn(path.join(__dirname, 'commands'));
 
 const MESSAGE_LISTENERS = [
-  youtubeListener,
-  githubListener,
-  arxivListener,
-  longReadsListener,
-  stockListener,
-  texListener,
-  xpostListener,
-  submissionListener(sequelize, Submissions),
-  messageListener(Messages),
+  new YoutubeListener(),
+  new GithubListener(),
+  new ArxivListener(),
+  new LongReadsListener(),
+  new StockListener(),
+  new TexListener(),
+  new XpostListener(),
+  new SubmissionListener(sequelize, Submissions),
+  new TextMessageListener(Messages),
 ];
 
 // The ready event is vital, it means that your bot will only start reacting to
@@ -150,7 +149,7 @@ client
   .on('message', async message => {
     for (let listener of MESSAGE_LISTENERS) {
       try {
-        await listener(message);
+        await listener.handleMessage(message);
       } catch (e) {
         console.error(e);
       }
