@@ -45,6 +45,16 @@ const client = new Commando.Client({
   commandPrefix: 'trt',
 });
 
+const sqlite = require('sqlite');
+
+client
+  .setProvider(
+    sqlite
+      .open(path.join(__dirname, 'commando.sqlite'))
+      .then(db => new Commando.SQLiteProvider(db))
+  )
+  .catch(console.error);
+
 client.channelRearranger = channelRearranger;
 client.Messages = Messages;
 client.Reminders = Reminders;
