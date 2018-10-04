@@ -33,7 +33,7 @@ module.exports = class PollCommand extends commando.Command {
       poll_data = `React with one of the following emotes\n`;
       var opt_data = opts.split(" "); 
       for (let emoji_ind = 0; emoji_ind < opt_data.length; emoji_ind++) {
-        poll_data += `:${POLL_EMOTES[emoji_ind]}: ${option}\n`;
+        poll_data += `:${POLL_EMOTES[emoji_ind]}: ${opt_data[emoji_ind]}\n`;
       }
     }
 
