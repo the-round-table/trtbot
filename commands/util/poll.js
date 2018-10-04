@@ -2,6 +2,7 @@ const commando = require('discord.js-commando');
 const _ = require('lodash');
 
 const NO_OPTS = 'no_opts';
+const POLL_EMOTES = [`one`, `two`, `three`, `four`, `five`, `six`, `seven`, `eight`, `nine`, `ten`];
 
 module.exports = class PollCommand extends commando.Command {
   constructor(client) {
@@ -17,6 +18,7 @@ module.exports = class PollCommand extends commando.Command {
           key: 'opts',
           prompt: 'What poll options do you want?',
           type: 'string',
+          infinite: true,
           default: NO_OPTS
         }
       ]
@@ -29,11 +31,9 @@ module.exports = class PollCommand extends commando.Command {
       poll_data = "No options provided";
     } else {
       poll_data = "React with one of the following emotes\n";
-      var opt_data = opts.split(" ");
-      var emotes = [`one`, `two`, `three`, `four`, `five`, `six`, `seven`, `eight`, `nine`, `ten`]; 
-      var emoji_ind = 0;
-      for each (var option in opt_data) {
-        poll_data = poll_data + `:${emotes[emoji_ind]}: ${option}\n`;
+      var opt_data = opts.split(" "); 
+      for (let emoji_ind = 0; emoji_ind < opt_data.length; emoji_ind++) {
+        poll_data = poll_data + `:${POLL_EMOTES[emoji_ind]}: ${option}\n`;
         emoji_ind = emoji_ind + 1;
       }
     }
@@ -41,7 +41,10 @@ module.exports = class PollCommand extends commando.Command {
     if (!poll) {
       msg.reply("Couldn't create poll.");
     } else {
-      msg.reply(poll_data);
+      let resp_msg = msg.reply(poll_data);
+      for (let emoji_ind = 0; emoji_ind < opt_data.length; emoji_ind++) {
+        resp_msg.react(`:${POLL_EMOTES[emoji_ind]}:`);
+      }
     }
   }
 };
