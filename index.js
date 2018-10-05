@@ -16,6 +16,7 @@ const stockListener = require('./listeners/stockListener.js');
 const submissionListener = require('./listeners/submissionListener.js');
 const texListener = require('./listeners/texListener.js');
 const xpostListener = require('./listeners/xpostListener.js');
+const protipListener = require('./listeners/protipListener.js');
 const youtubeListener = require('./listeners/youtubeListener.js');
 
 const ChannelRearranger = require('./actions/channelRearranger.js');
@@ -133,6 +134,7 @@ const MESSAGE_LISTENERS = [
   stockListener,
   texListener,
   xpostListener,
+  protipListener,
   submissionListener(sequelize, Submissions),
   messageListener(Messages),
 ];
