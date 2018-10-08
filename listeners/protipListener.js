@@ -1,5 +1,6 @@
 const BaseMessageListener = require('./baseMessageListener.js');
 const config = require('../config.js');
+const discord = require('discord.js');
 
 const proTipRegex = /^(pro-?tip\b)|(#?til\b)/gi;
 
@@ -38,7 +39,12 @@ class ProTipListener extends BaseMessageListener {
       console.error('Could not find channel: ' + config.PROTIP_CHANNEL_ID);
       return;
     }
-    await channel.send(`ProTip #${proTipId} from ${poster} > ${msg}`);
+    const embed = new discord.RichEmbed()
+      .setTitle(`Protip #${proTipId}`)
+      .setDescription(msg)
+      .addField('Submitter', poster);
+    await channel.send(embed);
+    await message.reply("I've recorded that as a new protip!");
   }
 }
 
