@@ -1,6 +1,6 @@
 const Hashids = require('hashids');
 const mathjax = require('mathjax-node-svg2png');
-const fs = require('fs');
+const discord = require('discord.js');
 const BaseMessageListener = require('./baseMessageListener.js');
 
 mathjax.config({
@@ -12,28 +12,17 @@ const TEX_REGEX = /\$\$(.*?)\$\$/gs;
 const TEX_TAG = /\$\$/gs;
 
 async function renderMath(m) {
-  var hashid = new Hashids();
-  var hash = hashid.encode(Date.now());
   var data = await mathjax.typeset({
     math: m,
     format: 'TeX',
     png: true,
   });
-  var base64Data = data.png.replace(/^data:image\/png;base64,/, '');
-  fs.writeFileSync(`/tmp/${hash}.png`, base64Data, 'base64');
-  return hash;
+  return data.png.replace(/^data:image\/png;base64,/, '');
 }
 
-async function sendImage(srcChannel, hash) {
+async function sendImage(srcChannel, base64Data) {
   srcChannel
-    .send({
-      files: [
-        {
-          attachment: `/tmp/${hash}.png`,
-          name: `/tmp/${hash}.png`,
-        },
-      ],
-    })
+    .send(new discord.Attachment(Buffer.from(base64Data, 'base64'), 'tex.png'))
     .catch(err => {
       console.log(err);
     });
@@ -53,8 +42,8 @@ class TexListener extends BaseMessageListener {
     const tex_str = msg.match(TEX_REGEX);
     const tex_math = tex_str.map(s => s.replace(TEX_TAG, ''));
     tex_math.map(async m => {
-      const hash = await renderMath(m);
-      sendImage(srcChannel, hash);
+      const base64Data = await renderMath(m);
+      sendImage(srcChannel, base64Data);
     });
   }
 }

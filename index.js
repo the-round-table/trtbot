@@ -252,24 +252,6 @@ const SCHEDULE = [
       });
     },
   },
-  // Delete old equations
-  {
-    schedule: '0 30 19 * * 0', // Every Sunday at 7:30pm
-    callback: async () => {
-      console.log('Deleting old equation images');
-      var files = glob('/tmp/*.png', null, (err, files) => {
-        if (!err) {
-          for (let f in files) {
-            fs.unlink(f).catch(er => {
-              console.log(`Failed to delete file ${f}: ${er}`);
-            });
-          }
-        } else {
-          console.log(err);
-        }
-      });
-    },
-  },
   {
     schedule: '*/10 * * * * *', // Every 10 seconds
     callback: async () => {
