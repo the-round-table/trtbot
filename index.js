@@ -30,11 +30,13 @@ const sequelize = new Sequelize('sqlite:db.sqlite', { logging: false });
 const Messages = sequelize.import(__dirname + '/models/message.js');
 const Reminders = sequelize.import(__dirname + '/models/reminder.js');
 const Submissions = sequelize.import(__dirname + '/models/submission.js');
+const ProTips = sequelize.import(__dirname + '/models/protip.js');
 
 // Create database tables
 Messages.sync();
 Reminders.sync();
 Submissions.sync();
+ProTips.sync();
 
 const deadChannelCop = new DeadChannelCop(Messages);
 const readingListGenerator = new ReadingListGenerator(Submissions);
@@ -60,6 +62,7 @@ client.channelRearranger = channelRearranger;
 client.Messages = Messages;
 client.Reminders = Reminders;
 client.Submissions = Submissions;
+client.ProTips = ProTips;
 
 const reminderBot = new ReminderBot(client, Reminders);
 
@@ -70,7 +73,7 @@ client
   .on('ready', () => {
     console.log(
       `Client ready; logged in as ${client.user.username}#${
-      client.user.discriminator
+        client.user.discriminator
       } (${client.user.id})`
     );
 
@@ -135,7 +138,7 @@ const MESSAGE_LISTENERS = [
   new XpostListener(),
   new SubmissionListener(sequelize, Submissions),
   new TextMessageListener(Messages),
-  new ProTipListener(),
+  new ProTipListener(ProTips),
 ];
 
 // The ready event is vital, it means that your bot will only start reacting to

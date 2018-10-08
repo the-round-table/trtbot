@@ -1,11 +1,21 @@
 const BaseMessageListener = require('./baseMessageListener.js');
-const fs = require('fs');
+const config = require('../config.js');
 
-const proTipRegex = /^Pro-?Tip/gi;
+const proTipRegex = /^(pro-?tip\b)|(#?til\b)/gi;
 
 class ProTipListener extends BaseMessageListener {
+  constructor(ProTips) {
+    super();
+    this.ProTips = ProTips;
+  }
+
   async onMessage(message) {
-    if (message.author.bot || !message.content.match(proTipRegex)) {
+    if (
+      !message.guild ||
+      message.author.bot ||
+      !message.content.match(proTipRegex) ||
+      !config.PROTIP_CHANNEL_ID
+    ) {
       return;
     }
 
@@ -13,19 +23,22 @@ class ProTipListener extends BaseMessageListener {
     const guild = message.guild;
     const poster = message.author;
 
-    var number = 1;
-    if (fs.existsSync('.protip')) {
-      try {
-        number = parseInt(fs.readFileSync('.protip', 'utf8'));
-      } catch (error) {
-        console.log('cannot read protip number, resetting count');
-      }
-    }
+    const proTip = await this.ProTips.create({
+      submitter: poster.username,
+      submitterId: poster.id,
+      messageText: msg,
+      channelId: message.channel.id,
+      guildId: message.guild.id,
+    });
 
-    guild.channels
-      .get('494715921181442074')
-      .send(`ProTip #${number} from ${poster} > ${msg}`);
-    await fs.writeFile('.protip', number + 1, 'utf8');
+    const proTipId = proTip.get({ plain: true }).id;
+
+    const channel = guild.channels.get(config.PROTIP_CHANNEL_ID);
+    if (!channel) {
+      console.error('Could not find channel: ' + config.PROTIP_CHANNEL_ID);
+      return;
+    }
+    await channel.send(`ProTip #${proTipId} from ${poster} > ${msg}`);
   }
 }
 

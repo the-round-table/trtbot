@@ -10,4 +10,5 @@ module.exports = {
   THREAD_CHANNEL_GROUP: '',
   // Names of channels not to include in the dead channel report
   DEAD_CHANNEL_BLACKLIST: [],
+  PROTIP_CHANNEL_ID: '',
 };
