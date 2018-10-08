@@ -15,12 +15,13 @@ module.exports = class FeatureRequestCommand extends commando.Command {
     super(client, {
       name: 'feature',
       memberName: 'feature_request',
-      group: 'util',
+      group: 'github',
+      aliases: ['featurerequest', 'feature-request'],
       description:
         'Adds a Github Issue to the bot repo for a feature to be added to the bot',
       examples: [
-        'feature request make a polling command - make a command that makes a poll',
-        'feature request make a protip listener - make something that listens for protips',
+        'feature Make a polling command - make a command that makes a poll',
+        'feature Make a protip listener - make something that listens for protips',
       ],
       guildOnly: false,
       args: [

@@ -15,12 +15,13 @@ module.exports = class BugReportCommand extends commando.Command {
     super(client, {
       name: 'bug',
       memberName: 'bug_report',
-      group: 'util',
+      group: 'github',
+      aliases: ['bugreport', 'fileanissue', 'bug-report'],
       description:
         'Adds a Github Issue to the bot repo for a bug to be investigated',
       examples: [
-        'Reading list misses links - Links in overflow channels are not tracked in the reading list',
-        'Polling runs ouf of options - We need support for more than 10 options in polls',
+        'bug Reading list misses links - Links in overflow channels are not tracked in the reading list',
+        'bug Polling runs out of options - We need support for more than 10 options in polls',
       ],
       guildOnly: false,
       args: [

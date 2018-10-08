@@ -126,6 +126,7 @@ client.registry
   .registerGroup('submissions', 'Submissions')
   .registerGroup('moderation', 'Moderation')
   .registerGroup('reminders', 'Reminders')
+  .registerGroup('github', 'Github')
   .registerCommandsIn(path.join(__dirname, 'commands'));
 
 const MESSAGE_LISTENERS = [
