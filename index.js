@@ -135,6 +135,7 @@ const MESSAGE_LISTENERS = [
   new XpostListener(),
   new SubmissionListener(sequelize, Submissions),
   new TextMessageListener(Messages),
+  new ProTipListener(),
 ];
 
 // The ready event is vital, it means that your bot will only start reacting to
