@@ -36,7 +36,7 @@ module.exports = class BugReportCommand extends commando.Command {
   }
 
   async run(msg, { bug }) {
-    var [title, body] = bug.split('-');
+    let [title, body] = bug.split('-');
     if (!body || title === '' || body === '') {
       msg.reply(oneLine`Sorry I was unable to understand your bug or you did not include a title or 
         a detailed description of your issue which the developers need to address your request, 
@@ -44,6 +44,10 @@ module.exports = class BugReportCommand extends commando.Command {
         e.g. **Reading list misses links - Links in overflow channels are not tracked in the reading list**`);
       return;
     }
+
+    title = title.trim();
+    body = body.trim();
+
     var [owner, repo] = config.GITHUB_REPO.split('/');
     const result = await octokit.issues.create({
       owner: owner,
@@ -57,6 +61,7 @@ module.exports = class BugReportCommand extends commando.Command {
         but, there might be something wrong with me, if you see continued failures, notify your server admin`);
     }
     msg.reply(oneLine`I succesfully added your bug report for **${title}**, 
-      a maintainer will triage the bug and address it as soon as they can`);
+      a maintainer will triage the bug and address it as soon as they can.
+      Here is the created issue: ${result.data.html_url}`);
   }
 };
