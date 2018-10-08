@@ -11,10 +11,11 @@ var CronJob = require('cron').CronJob;
 const ArxivListener = require('./listeners/arxivListener.js');
 const GithubListener = require('./listeners/githubListener.js');
 const LongReadsListener = require('./listeners/longReadsListener.js');
-const TextMessageListener = require('./listeners/textMessageListener.js');
+const ProTipListener = require('./listeners/protipListener');
 const StockListener = require('./listeners/stockListener.js');
 const SubmissionListener = require('./listeners/submissionListener.js');
 const TexListener = require('./listeners/texListener.js');
+const TextMessageListener = require('./listeners/textMessageListener.js');
 const XpostListener = require('./listeners/xpostListener.js');
 const YoutubeListener = require('./listeners/youtubeListener.js');
 
@@ -29,11 +30,13 @@ const sequelize = new Sequelize('sqlite:db.sqlite', { logging: false });
 const Messages = sequelize.import(__dirname + '/models/message.js');
 const Reminders = sequelize.import(__dirname + '/models/reminder.js');
 const Submissions = sequelize.import(__dirname + '/models/submission.js');
+const ProTips = sequelize.import(__dirname + '/models/protip.js');
 
 // Create database tables
 Messages.sync();
 Reminders.sync();
 Submissions.sync();
+ProTips.sync();
 
 const deadChannelCop = new DeadChannelCop(Messages);
 const readingListGenerator = new ReadingListGenerator(Submissions);
@@ -59,6 +62,7 @@ client.channelRearranger = channelRearranger;
 client.Messages = Messages;
 client.Reminders = Reminders;
 client.Submissions = Submissions;
+client.ProTips = ProTips;
 
 const reminderBot = new ReminderBot(client, Reminders);
 
@@ -134,6 +138,7 @@ const MESSAGE_LISTENERS = [
   new XpostListener(),
   new SubmissionListener(sequelize, Submissions),
   new TextMessageListener(Messages),
+  new ProTipListener(ProTips),
 ];
 
 // The ready event is vital, it means that your bot will only start reacting to
