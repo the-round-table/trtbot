@@ -1,4 +1,3 @@
-const Hashids = require('hashids');
 const mathjax = require('mathjax-node-svg2png');
 const discord = require('discord.js');
 const BaseMessageListener = require('./baseMessageListener.js');

@@ -4,8 +4,6 @@ const oneLine = require('common-tags').oneLine;
 const Sequelize = require('sequelize');
 const Commando = require('discord.js-commando');
 const utils = require('./utils.js');
-const fs = require('fs');
-const glob = require('glob');
 var CronJob = require('cron').CronJob;
 
 const ArxivListener = require('./listeners/arxivListener.js');
