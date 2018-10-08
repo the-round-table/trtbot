@@ -62,4 +62,8 @@ typings/
 config.js
 serviceAccount.json
 db.sqlite
+<<<<<<< HEAD
 .protip
+=======
+commando.sqlite
+>>>>>>> 6445c0d5b47f18564428ba0b41169f3fb9e11bb5

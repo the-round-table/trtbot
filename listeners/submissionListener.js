@@ -8,6 +8,7 @@ const oneLine = require('common-tags').oneLine;
 const Sequelize = require('sequelize');
 const URL = require('url').URL;
 const utils = require('../utils');
+const BaseMessageListener = require('./baseMessageListener.js');
 
 const bitly = new BitlyClient(config.BITLY_TOKEN, {});
 const Op = Sequelize.Op;
@@ -38,8 +39,14 @@ function getTitle(link) {
   });
 }
 
-module.exports = (sequelize, Submissions) =>
-  async function(message) {
+class SubmissionListener extends BaseMessageListener {
+  constructor(sequelize, Submissions) {
+    super();
+    this.sequelize = sequelize;
+    this.Submissions = Submissions;
+  }
+
+  async onMessage(message) {
     const link = utils.getPostedUrl(message);
 
     if (!link || isBlacklisted(link) || !message.guild) {
@@ -61,12 +68,12 @@ module.exports = (sequelize, Submissions) =>
       shortLink = link;
     }
 
-    await sequelize.transaction(() => {
+    await this.sequelize.transaction(() => {
       const username = message.author.username;
       const channel = message.channel.name;
       const guildId = message.guild.id;
 
-      Submissions.find({
+      this.Submissions.find({
         where: {
           link: link,
           guildId: guildId,
@@ -88,7 +95,7 @@ module.exports = (sequelize, Submissions) =>
           return;
         }
 
-        Submissions.create({
+        this.Submissions.create({
           submitter: username,
           link,
           guildId,
@@ -100,4 +107,7 @@ module.exports = (sequelize, Submissions) =>
         });
       });
     });
-  };
+  }
+}
+
+module.exports = SubmissionListener;

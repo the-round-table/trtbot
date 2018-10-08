@@ -4,6 +4,7 @@ const readingTime = require('reading-time');
 const utils = require('../utils.js');
 const URL = require('url').URL;
 const _ = require('lodash');
+const BaseMessageListener = require('./baseMessageListener.js');
 
 const READING_TIME_THRESHOLD = 10;
 
@@ -48,25 +49,29 @@ function isBlacklisted(url) {
   );
 }
 
-module.exports = message => {
-  const link = utils.getPostedUrl(message);
+class LongReadsListener extends BaseMessageListener {
+  async onMessage(message) {
+    const link = utils.getPostedUrl(message);
 
-  if (!link || isBlacklisted(link) || link.match(IMAGE_LINK_REGEX)) {
-    return;
+    if (!link || isBlacklisted(link) || link.match(IMAGE_LINK_REGEX)) {
+      return;
+    }
+
+    fetch(link)
+      .then(res => res.buffer())
+      .then(buf => cheerio.load(buf))
+      .then($ => {
+        const content = $('body').text();
+        const readingTimeAnalysis = readingTime(content);
+        const minutes = readingTimeAnalysis.minutes;
+        if (minutes >= READING_TIME_THRESHOLD) {
+          message.reply(
+            `I estimate that's a **${determineLabelForRead(minutes)}** read.`
+          );
+        }
+      })
+      .catch(console.error);
   }
+}
 
-  fetch(link)
-    .then(res => res.buffer())
-    .then(buf => cheerio.load(buf))
-    .then($ => {
-      const content = $('body').text();
-      const readingTimeAnalysis = readingTime(content);
-      const minutes = readingTimeAnalysis.minutes;
-      if (minutes >= READING_TIME_THRESHOLD) {
-        message.reply(
-          `I estimate that's a **${determineLabelForRead(minutes)}** read.`
-        );
-      }
-    })
-    .catch(console.error);
-};
+module.exports = LongReadsListener;

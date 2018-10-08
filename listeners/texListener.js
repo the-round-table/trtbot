@@ -1,6 +1,7 @@
 const Hashids = require('hashids');
 const mathjax = require('mathjax-node-svg2png');
 const fs = require('fs');
+const BaseMessageListener = require('./baseMessageListener.js');
 
 mathjax.config({
   MathJax: {},
@@ -38,20 +39,24 @@ async function sendImage(srcChannel, hash) {
     });
 }
 
-module.exports = async message => {
-  const msg = message.content;
-  const srcChannel = message.channel;
+class TexListener extends BaseMessageListener {
+  async onMessage(message) {
+    const msg = message.content;
+    const srcChannel = message.channel;
 
-  if (!msg.match(TEX_REGEX)) {
-    return;
+    if (!msg.match(TEX_REGEX)) {
+      return;
+    }
+
+    await message.react('🔢');
+
+    const tex_str = msg.match(TEX_REGEX);
+    const tex_math = tex_str.map(s => s.replace(TEX_TAG, ''));
+    tex_math.map(async m => {
+      const hash = await renderMath(m);
+      sendImage(srcChannel, hash);
+    });
   }
+}
 
-  await message.react('🔢');
-
-  const tex_str = msg.match(TEX_REGEX);
-  const tex_math = tex_str.map(s => s.replace(TEX_TAG, ''));
-  tex_math.map(async m => {
-    const hash = await renderMath(m);
-    sendImage(srcChannel, hash);
-  });
-};
+module.exports = TexListener;
