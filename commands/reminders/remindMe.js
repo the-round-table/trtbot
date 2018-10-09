@@ -31,7 +31,9 @@ module.exports = class RemindMeCommand extends commando.Command {
   }
 
   async run(msg, { query }) {
-    const parsedResults = chrono.parse(query);
+    const parsedResults = chrono.parse(query, new Date(), {
+      forwardDate: true,
+    });
 
     if (parsedResults.length == 0) {
       return msg.reply(
