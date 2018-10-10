@@ -2,7 +2,8 @@ const BaseMessageListener = require('./baseMessageListener.js');
 const config = require('../config.js');
 const discord = require('discord.js');
 
-const proTipRegex = /^(pro-?tip\b)|(#?til\b)/gi;
+const proTipRegex = /^(pro-?tip\b)/i;
+const tilRegex = /^((#?TIL)|(#til))\b/;
 
 class ProTipListener extends BaseMessageListener {
   constructor(ProTips) {
@@ -14,7 +15,7 @@ class ProTipListener extends BaseMessageListener {
     if (
       !message.guild ||
       message.author.bot ||
-      !message.content.match(proTipRegex) ||
+      !(message.content.match(proTipRegex) || message.content.match(tilRegex)) ||
       !config.PROTIP_CHANNEL_ID
     ) {
       return;
