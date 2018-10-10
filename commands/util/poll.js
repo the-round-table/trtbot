@@ -2,7 +2,18 @@ const commando = require('discord.js-commando');
 const _ = require('lodash');
 
 const NO_OPTS = 'no_opts';
-const POLL_EMOTES = [`1️⃣`, `2️⃣`, `3️⃣`, `4️⃣`, `5️⃣`, `6️⃣`, `7️⃣`, `8️⃣`, `9️⃣`];
+const POLL_EMOTES = [
+  `1⃣`,
+  `2⃣`,
+  `3⃣`,
+  `4⃣`,
+  `5⃣`,
+  `6⃣`,
+  `7⃣`,
+  `8⃣`,
+  `9⃣`,
+  `🔟`,
+];
 
 module.exports = class PollCommand extends commando.Command {
   constructor(client) {
@@ -29,8 +40,10 @@ module.exports = class PollCommand extends commando.Command {
     let poll_data;
     if (opts == NO_OPTS) {
       poll_data = `No options provided`;
+    } else if (opts.length > POLL_EMOTES.length) {
+      poll_data = `Too many options provided`;
     } else {
-      poll_data = `React with one of the following emotes\n`;
+      poll_data = `React with one of the following emotes:\n`;
       for (let emoji_ind = 0; emoji_ind < opts.length; emoji_ind++) {
         poll_data += `${POLL_EMOTES[emoji_ind]} ${opts[emoji_ind]}\n`;
       }
@@ -41,7 +54,7 @@ module.exports = class PollCommand extends commando.Command {
     } else {
       let resp_msg = await msg.reply(poll_data);
       for (let emoji_ind = 0; emoji_ind < opts.length; emoji_ind++) {
-        resp_msg.react(`${POLL_EMOTES[emoji_ind]}`);
+        await resp_msg.react(`${POLL_EMOTES[emoji_ind]}`);
       }
     }
   }
