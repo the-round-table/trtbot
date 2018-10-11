@@ -39,7 +39,7 @@ class ReminderBot {
 
     let details = `**Created at:** ${moment(reminder.createdAt).calendar()}`;
     if (reminder.guildId) {
-      const messageLink = utils.getMessageLink(
+      const messageLink = utils.buildMessageLink(
         reminder.guildId,
         reminder.channelId,
         reminder.originalMessageId

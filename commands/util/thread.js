@@ -1,4 +1,5 @@
 const commando = require('discord.js-commando');
+const discord = require('discord.js');
 const truncate = require('truncate');
 const util = require('../../config.js');
 const _ = require('lodash');
@@ -51,8 +52,11 @@ module.exports = class ThreadCommand extends commando.Command {
 
     if (threadChannel) {
       users.push(msg.author);
+      const embed = new discord.RichEmbed();
       threadChannel.send(
-        `Here's a place to discuss "${topic}": ${users.join(', ')}\n👇 👇 👇`
+        `Here's a place to discuss "${topic}": ${users.join(', ')}.`, {
+          embed
+        }
       );
       msg.reply(`You got it! I setup a thread in ${threadChannel}`);
     } else {
