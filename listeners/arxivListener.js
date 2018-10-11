@@ -8,6 +8,12 @@ const BaseMessageListener = require('./baseMessageListener.js');
 const ARXIV_REGEX = /(https?:\/\/)arxiv\.org\/(pdf|abs)\/(\d{4}\.\d{5})/;
 
 class ArxivListener extends BaseMessageListener {
+  constructor() {
+    super({
+      name: 'arxiv',
+    });
+  }
+
   async onMessage(message) {
     const link = utils.getPostedUrl(message);
     if (!link || !link.match(ARXIV_REGEX)) {

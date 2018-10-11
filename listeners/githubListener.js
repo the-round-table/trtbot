@@ -7,6 +7,12 @@ const BaseMessageListener = require('./baseMessageListener.js');
 const GITHUB_REGEX = /(https?:\/\/)?github\.com\/(.*)\/(.*)/;
 
 class GithubListener extends BaseMessageListener {
+  constructor() {
+    super({
+      name: 'github',
+    });
+  }
+
   async onMessage(message) {
     const link = utils.getPostedUrl(message);
     if (!link || !link.match(GITHUB_REGEX)) {

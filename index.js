@@ -17,6 +17,8 @@ const TextMessageListener = require('./listeners/textMessageListener.js');
 const XpostListener = require('./listeners/xpostListener.js');
 const YoutubeListener = require('./listeners/youtubeListener.js');
 
+const ListenerRegistry = require('./listeners/listenerRegistry.js');
+
 const ChannelRearranger = require('./actions/channelRearranger.js');
 const DeadChannelCop = require('./actions/deadChannelCop.js');
 const presenceGenerator = require('./actions/presenceGenerator.js');
@@ -71,7 +73,7 @@ client
   .on('ready', () => {
     console.log(
       `Client ready; logged in as ${client.user.username}#${
-        client.user.discriminator
+      client.user.discriminator
       } (${client.user.id})`
     );
 
@@ -139,6 +141,10 @@ const MESSAGE_LISTENERS = [
   new TextMessageListener(Messages),
   new ProTipListener(ProTips),
 ];
+
+for (let listener of MESSAGE_LISTENERS) {
+  ListenerRegistry.registerListener(listener);
+}
 
 // The ready event is vital, it means that your bot will only start reacting to
 // information from Discord _after_ ready is emitted

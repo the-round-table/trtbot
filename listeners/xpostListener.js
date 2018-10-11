@@ -5,7 +5,7 @@ const channelRegex = /<#[^>]*>/gim;
 
 class XPostListener extends BaseMessageListener {
   constructor() {
-    super();
+    super({ name: 'cross_post' });
     this.buffer = {};
   }
 

@@ -6,7 +6,7 @@ const DURATION_REPORT_THRESHOLD = 300; // 5 minutes
 
 class YoutubeListener extends BaseMessageListener {
   constructor() {
-    super();
+    super({ name: 'youtube' });
     this.youtubeClient = new Youtube(config.YOUTUBE_API_KEY);
   }
 

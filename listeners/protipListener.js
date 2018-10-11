@@ -6,7 +6,9 @@ const proTipRegex = /^(pro-?tip\b)/i;
 
 class ProTipListener extends BaseMessageListener {
   constructor(ProTips) {
-    super();
+    super({
+      name: 'protips',
+    });
     this.ProTips = ProTips;
   }
 

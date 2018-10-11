@@ -4,6 +4,11 @@ const StocksClient = require('../actions/stocks.js');
 const BaseMessageListener = require('./baseMessageListener.js');
 
 class StockListener extends BaseMessageListener {
+  constructor() {
+    super({
+      name: 'stocks',
+    });
+  }
   async onMessage(message) {
     const symbols = _.chain(message.content.match(symbolRegex))
       .map(_.trim)

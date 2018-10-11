@@ -2,7 +2,7 @@ const BaseMessageListener = require('./baseMessageListener.js');
 
 class TextMessageListener extends BaseMessageListener {
   constructor(Messages) {
-    super();
+    super({ name: 'messages' });
     this.Messages = Messages;
   }
 

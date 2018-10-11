@@ -1,4 +1,10 @@
 class BaseMessageListener {
+  constructor(opts) {
+    opts = opts || {};
+    this.name = opts.name;
+    this.description = opts.description;
+  }
+
   async handleMessage(message) {
     // TODO: Check if the listener is enabled
     if (true) {

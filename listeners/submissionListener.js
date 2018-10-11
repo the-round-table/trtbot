@@ -41,7 +41,7 @@ function getTitle(link) {
 
 class SubmissionListener extends BaseMessageListener {
   constructor(sequelize, Submissions) {
-    super();
+    super({ name: 'submissions' });
     this.sequelize = sequelize;
     this.Submissions = Submissions;
   }

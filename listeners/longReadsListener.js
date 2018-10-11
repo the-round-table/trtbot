@@ -50,6 +50,12 @@ function isBlacklisted(url) {
 }
 
 class LongReadsListener extends BaseMessageListener {
+  constructor() {
+    super({
+      name: 'long_reads',
+    });
+  }
+
   async onMessage(message) {
     const link = utils.getPostedUrl(message);
 

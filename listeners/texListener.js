@@ -28,6 +28,12 @@ async function sendImage(srcChannel, base64Data) {
 }
 
 class TexListener extends BaseMessageListener {
+  constructor() {
+    super({
+      name: 'tex',
+    });
+  }
+
   async onMessage(message) {
     const msg = message.content;
     const srcChannel = message.channel;
