@@ -2,6 +2,10 @@ const commando = require('discord.js-commando');
 const config = require('../../config.js');
 const octokit = require('@octokit/rest')();
 const oneLine = require('common-tags').oneLine;
+const {
+  INVALID_COMMAND_FORMAT,
+  generateIssueContext,
+} = require('./githubUtils.js');
 
 if (config.GITHUB_TOKEN) {
   octokit.authenticate({
@@ -38,10 +42,7 @@ module.exports = class BugReportCommand extends commando.Command {
   async run(msg, { bug }) {
     let [title, body] = bug.split('-');
     if (!body || title === '' || body === '') {
-      msg.reply(oneLine`Sorry I was unable to understand your bug or you did not include a title or 
-        a detailed description of your issue which the developers need to address your request, 
-        please make the request in the format \`[NAME or SHORT DESCRIPTION] - [DETAIL]\`
-        e.g. **Reading list misses links - Links in overflow channels are not tracked in the reading list**`);
+      msg.reply(INVALID_COMMAND_FORMAT);
       return;
     }
 
@@ -54,7 +55,7 @@ module.exports = class BugReportCommand extends commando.Command {
       repo: repo,
       title: title,
       labels: ['Bug - Unverifed'],
-      body: body,
+      body: body + '\n' + generateIssueContext(msg),
     });
     if (result.status != 201) {
       msg.reply(oneLine`Sorry I was unable to put in your bug report, you can try again 
