@@ -24,7 +24,7 @@ npm start
  ```
 
 
-### Miscelaneous
+### Miscellaneous
 
 - Packages needed for Latex rendering:
   - `bzip2`
