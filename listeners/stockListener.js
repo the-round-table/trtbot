@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const symbolRegex = /((^)|(\s+))(\$[A-Z]{1,5})($|\W)/gi;
+const symbolRegex = /(\$[A-Z]{1,5})/gi;
 const StocksClient = require('../actions/stocks.js');
 const BaseMessageListener = require('./baseMessageListener.js');
 const discord = require('discord.js');
@@ -20,6 +20,7 @@ class StockListener extends BaseMessageListener {
       try {
         symbolData = await client.getSymbol(symbol);
       } catch (error) {
+        console.error(error);
         continue;
       }
 
@@ -37,12 +38,12 @@ class StockListener extends BaseMessageListener {
 
       let responseText = '';
       responseText += symbolData.link
-        ? `${symbol}:`
-        : `[${symbol}](${symbolData.link}): `;
+        ? `[${symbol}](${symbolData.link}): `
+        : `${symbol}: `;
       responseText += `($${symbolData.close.toFixed(2)}; `;
       responseText += `${changeSymbol}${Math.abs(percentChange).toFixed(2)}%; `;
       responseText += `${changeSymbol} $${absChange.toFixed(2)})`;
-      message.reply(response.setDescription(responseText));
+      await message.reply(response.setDescription(responseText));
     }
   }
 }

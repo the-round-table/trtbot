@@ -47,6 +47,9 @@ class StocksClient {
             return reject(err);
           }
           body = JSON.parse(body);
+          if (!body) {
+            reject(body);
+          }
           const data = body['Time Series (Digital Currency Daily)'];
           const dayData = Object.values(data)[0];
           resolve({
