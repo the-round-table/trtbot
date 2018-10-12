@@ -13,7 +13,7 @@ const BaseMessageListener = require('./baseMessageListener.js');
 const bitly = new BitlyClient(config.BITLY_TOKEN, {});
 const Op = Sequelize.Op;
 
-const BLACKLISTED_SITES = ['oldschoolrunescape.wikia.com'];
+const BLACKLISTED_SITES = ['oldschoolrunescape.wikia.com', 'giphy.com'];
 
 function isBlacklisted(url) {
   const urlObj = new URL(url);
