@@ -2,6 +2,7 @@ const _ = require('lodash');
 const symbolRegex = /((^)|(\s+))(\$[A-Z]{1,5})($|\W)/gi;
 const StocksClient = require('../actions/stocks.js');
 const BaseMessageListener = require('./baseMessageListener.js');
+const discord = require('discord.js');
 
 class StockListener extends BaseMessageListener {
   async onMessage(message) {
@@ -32,11 +33,13 @@ class StockListener extends BaseMessageListener {
       const changeSymbol = percentChange > 0 ? '+' : '-';
       const absChange = Math.abs(symbolData.close - symbolData.open);
 
-      let response = `${symbol}: `;
-      response += `($${symbolData.close.toFixed(2)}; `;
-      response += `${changeSymbol}${Math.abs(percentChange).toFixed(2)}%; `;
-      response += `${changeSymbol} $${absChange.toFixed(2)})`;
-      message.reply(response);
+      let response = new discord.RichEmbed();
+
+      let responseText = `[${symbol}](${symbolData.link}): `;
+      responseText += `($${symbolData.close.toFixed(2)}; `;
+      responseText += `${changeSymbol}${Math.abs(percentChange).toFixed(2)}%; `;
+      responseText += `${changeSymbol} $${absChange.toFixed(2)})`;
+      message.reply(response.setDescription(responseText));
     }
   }
 }

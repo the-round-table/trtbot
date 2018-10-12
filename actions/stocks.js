@@ -13,7 +13,12 @@ class StocksClient {
     return {
       open: dayData['open'],
       close: dayData['close'],
+      link: this.getInfoLink(symbol),
     };
+  }
+
+  getInfoLink(symbol) {
+    return `https://finance.yahoo.com/quote/${symbol}`;
   }
 }
 
