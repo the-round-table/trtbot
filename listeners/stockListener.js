@@ -35,7 +35,10 @@ class StockListener extends BaseMessageListener {
 
       let response = new discord.RichEmbed();
 
-      let responseText = `[${symbol}](${symbolData.link}): `;
+      let responseText = '';
+      responseText += symbolData.link
+        ? `${symbol}:`
+        : `[${symbol}](${symbolData.link}): `;
       responseText += `($${symbolData.close.toFixed(2)}; `;
       responseText += `${changeSymbol}${Math.abs(percentChange).toFixed(2)}%; `;
       responseText += `${changeSymbol} $${absChange.toFixed(2)})`;
