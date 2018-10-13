@@ -37,7 +37,7 @@ class StocksClient {
 
     let chart;
     try {
-      chart = await this._getStockChart(symbolData);
+      chart = await this._getStockChart(symbol, symbolData);
     } catch (err) {
       console.error(err);
     }
@@ -86,9 +86,9 @@ class StocksClient {
     return `https://finance.yahoo.com/quote/${symbol}`;
   }
 
-  async _getStockChart(symbolData) {
+  async _getStockChart(symbol, symbolData) {
     const chartData = symbolData.map(day => {
-      return { t: new Date(day.date), y: day.close };
+      return { t: moment.utc(day.date), y: day.close };
     });
 
     const color = _.first(chartData).y < _.last(chartData).y ? RED : GREEN;
@@ -96,11 +96,10 @@ class StocksClient {
     var chartConfig = {
       type: 'line',
       data: {
-        // labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
         datasets: [
           {
             backgroundColor: color,
-            label: `Closing prices`,
+            label: `${symbol}`,
             data: chartData,
             borderWidth: 1,
             pointRadius: 0,
@@ -132,6 +131,13 @@ class StocksClient {
         },
         tooltips: {
           mode: 'label',
+        },
+      },
+      plugins: {
+        beforeDraw: function(chart) {
+          var ctx = chart.chart.ctx;
+          ctx.fillStyle = 'white';
+          ctx.fillRect(0, 0, chart.chart.width, chart.chart.height);
         },
       },
     };
