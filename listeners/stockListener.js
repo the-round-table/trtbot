@@ -43,7 +43,14 @@ class StockListener extends BaseMessageListener {
       responseText += `($${symbolData.close.toFixed(2)}; `;
       responseText += `${changeSymbol}${Math.abs(percentChange).toFixed(2)}%; `;
       responseText += `${changeSymbol} $${absChange.toFixed(2)})`;
-      await message.reply(response.setDescription(responseText));
+
+      const attachments = symbolData.chart
+        ? [new discord.Attachment(symbolData.chart, 'chart.png')]
+        : [];
+      await message.reply({
+        embed: response.setDescription(responseText),
+        files: attachments,
+      });
     }
   }
 }
