@@ -1,7 +1,7 @@
 const commando = require('discord.js-commando');
 
 module.exports = class RearrangeCommand extends commando.Command {
-  constructor(client, channelRearranger) {
+  constructor(client) {
     super(client, {
       name: 'rearrange',
       memberName: 'rearrange',
@@ -16,7 +16,7 @@ module.exports = class RearrangeCommand extends commando.Command {
     this.channelRearranger = client.channelRearranger;
   }
 
-  async run(msg, args) {
+  async run(msg) {
     const guild = msg.guild;
 
     msg.reply('🤔 Starting to rearrange channels...');

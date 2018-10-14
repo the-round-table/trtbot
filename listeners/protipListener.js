@@ -15,7 +15,9 @@ class ProTipListener extends BaseMessageListener {
     if (
       !message.guild ||
       message.author.bot ||
-      !(message.content.match(proTipRegex) || message.content.match(tilRegex)) ||
+      !(
+        message.content.match(proTipRegex) || message.content.match(tilRegex)
+      ) ||
       !config.PROTIP_CHANNEL_ID
     ) {
       return;
