@@ -53,6 +53,7 @@ class LongReadsListener extends BaseMessageListener {
   constructor() {
     super({
       name: 'long_reads',
+      description: 'Responds to articles with an estimated reading time',
     });
   }
 

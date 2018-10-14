@@ -2,11 +2,15 @@ const _ = require('lodash');
 const symbolRegex = /(^|\s)(\$[A-Z]{1,5})\b/i;
 const StocksClient = require('../actions/stocks.js');
 const BaseMessageListener = require('./baseMessageListener.js');
+const oneLine = require('common-tags').oneLine;
 
 class StockListener extends BaseMessageListener {
   constructor() {
     super({
       name: 'stocks',
+      description: oneLine`Responds to messages that contain a stock symbol
+        (in the format $symbol, i.e. $AAPL) with a daily stock history graph,
+        and the daily stock movement.`,
     });
   }
   async onMessage(message) {

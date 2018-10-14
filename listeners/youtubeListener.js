@@ -1,12 +1,17 @@
 const Youtube = require('simple-youtube-api');
 const config = require('../config.js');
 const BaseMessageListener = require('./baseMessageListener.js');
+const oneLine = require('common-tags').oneLine;
 
 const DURATION_REPORT_THRESHOLD = 300; // 5 minutes
 
 class YoutubeListener extends BaseMessageListener {
   constructor() {
-    super({ name: 'youtube' });
+    super({
+      name: 'youtube',
+      description: oneLine`Responds to Youtube links with the video's duration
+        for videos over 5 minutes in length`,
+    });
     this.youtubeClient = new Youtube(config.YOUTUBE_API_KEY);
   }
 

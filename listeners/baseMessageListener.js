@@ -7,11 +7,13 @@ class BaseMessageListener {
     }
     this.name = opts.name;
     this.description = opts.description || 'No description set';
+    this.ignoreBotMessages =
+      opts.ignoreBotMessages != null ? opts.ignoreBotMessages : true;
   }
 
   async handleMessage(message) {
     // TODO: Check if the listener is enabled
-    if (true) {
+    if (!(this.ignoreBotMessages && message.author.bot)) {
       return await this.onMessage(message);
     }
   }

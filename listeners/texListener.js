@@ -1,6 +1,7 @@
 const mathjax = require('mathjax-node-svg2png');
 const discord = require('discord.js');
 const BaseMessageListener = require('./baseMessageListener.js');
+const oneLine = require('common-tags').oneLine;
 
 mathjax.config({
   MathJax: {},
@@ -31,6 +32,8 @@ class TexListener extends BaseMessageListener {
   constructor() {
     super({
       name: 'tex',
+      description: oneLine`Renders inline Latex markdown. Anything inside
+        double $'s will be rendered. (i.e. $$y = x^2$$)`,
     });
   }
 

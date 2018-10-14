@@ -2,7 +2,10 @@ const BaseMessageListener = require('./baseMessageListener.js');
 
 class TextMessageListener extends BaseMessageListener {
   constructor(Messages) {
-    super({ name: 'messages' });
+    super({
+      name: 'messages',
+      description: 'Records messages for weekly channel stats',
+    });
     this.Messages = Messages;
   }
 

@@ -3,6 +3,7 @@ const octokit = require('@octokit/rest')();
 const stripIndents = require('common-tags').stripIndents;
 const utils = require('../utils.js');
 const BaseMessageListener = require('./baseMessageListener.js');
+const oneLine = require('common-tags').oneLine;
 
 const GITHUB_REGEX = /(https?:\/\/)?github\.com\/(.*)\/(.*)/;
 
@@ -10,6 +11,8 @@ class GithubListener extends BaseMessageListener {
   constructor() {
     super({
       name: 'github',
+      description: oneLine`Responds to Github links with repository info (stars
+        language, and last updated time)`,
     });
   }
 

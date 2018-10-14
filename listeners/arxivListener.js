@@ -3,6 +3,7 @@ const utils = require('../utils.js');
 const discord = require('discord.js');
 const truncate = require('truncate');
 const moment = require('moment');
+const oneLine = require('common-tags').oneLine;
 const BaseMessageListener = require('./baseMessageListener.js');
 
 const ARXIV_REGEX = /(https?:\/\/)arxiv\.org\/(pdf|abs)\/(\d{4}\.\d{5})/;
@@ -11,6 +12,8 @@ class ArxivListener extends BaseMessageListener {
   constructor() {
     super({
       name: 'arxiv',
+      description: oneLine`Responds to Arxiv links with metadata about the
+        paper, the paper's abstract, and an Arxiv-Vanity link.`,
     });
   }
 
