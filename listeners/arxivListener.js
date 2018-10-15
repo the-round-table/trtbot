@@ -1,5 +1,4 @@
 const arxiv = require('arxiv');
-const utils = require('../utils.js');
 const discord = require('discord.js');
 const truncate = require('truncate');
 const moment = require('moment');
@@ -14,15 +13,11 @@ class ArxivListener extends BaseMessageListener {
       name: 'arxiv',
       description: oneLine`Responds to Arxiv links with metadata about the
         paper, the paper's abstract, and an Arxiv-Vanity link.`,
+      linkRegex: ARXIV_REGEX,
     });
   }
 
-  async onMessage(message) {
-    const link = utils.getPostedUrl(message);
-    if (!link || !link.match(ARXIV_REGEX)) {
-      return;
-    }
-
+  async onMessage(message, { link }) {
     const match = link.match(ARXIV_REGEX);
     const identifier = match[3];
 

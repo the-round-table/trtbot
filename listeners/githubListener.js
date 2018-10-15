@@ -1,7 +1,6 @@
 const moment = require('moment');
 const octokit = require('@octokit/rest')();
 const stripIndents = require('common-tags').stripIndents;
-const utils = require('../utils.js');
 const BaseMessageListener = require('./baseMessageListener.js');
 const oneLine = require('common-tags').oneLine;
 
@@ -13,15 +12,11 @@ class GithubListener extends BaseMessageListener {
       name: 'github',
       description: oneLine`Responds to Github links with repository info (stars
         language, and last updated time)`,
+      linkRegex: GITHUB_REGEX,
     });
   }
 
-  async onMessage(message) {
-    const link = utils.getPostedUrl(message);
-    if (!link || !link.match(GITHUB_REGEX)) {
-      return;
-    }
-
+  async onMessage(message, { link }) {
     const match = link.match(GITHUB_REGEX);
     const owner = match[2];
     const repo = match[3];

@@ -1,7 +1,6 @@
 const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 const readingTime = require('reading-time');
-const utils = require('../utils.js');
 const URL = require('url').URL;
 const _ = require('lodash');
 const BaseMessageListener = require('./baseMessageListener.js');
@@ -54,16 +53,12 @@ class LongReadsListener extends BaseMessageListener {
     super({
       name: 'long_reads',
       description: 'Responds to articles with an estimated reading time',
+      linkValidator: link =>
+        !isBlacklisted(link) && !link.match(IMAGE_LINK_REGEX),
     });
   }
 
-  async onMessage(message) {
-    const link = utils.getPostedUrl(message);
-
-    if (!link || isBlacklisted(link) || link.match(IMAGE_LINK_REGEX)) {
-      return;
-    }
-
+  async onMessage(message, { link }) {
     fetch(link)
       .then(res => res.buffer())
       .then(buf => cheerio.load(buf))
