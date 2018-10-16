@@ -11,6 +11,7 @@ class YoutubeListener extends BaseMessageListener {
       name: 'youtube',
       description: oneLine`Responds to Youtube links with the video's duration
         for videos over 5 minutes in length`,
+      linkValidator: () => true, // Accept only posts that have links
     });
     this.youtubeClient = new Youtube(config.YOUTUBE_API_KEY);
   }

@@ -10,21 +10,15 @@ class ProTipListener extends BaseMessageListener {
     super({
       name: 'protips',
       description: oneLine`Records protips to a protip channel for messages
-        with the prefix "protip" or "#TIL"`,
+        with the prefix "protip"`,
+      ignoreBotMessages: true,
+      messageRegex: proTipRegex,
+      allowedInPM: false,
     });
     this.ProTips = ProTips;
   }
 
   async onMessage(message) {
-    if (
-      !message.guild ||
-      message.author.bot ||
-      !message.content.match(proTipRegex) ||
-      !config.PROTIP_CHANNEL_ID
-    ) {
-      return;
-    }
-
     const msg = message.content;
     const guild = message.guild;
     const poster = message.author;
@@ -39,6 +33,9 @@ class ProTipListener extends BaseMessageListener {
 
     const proTipId = proTip.get({ plain: true }).id;
 
+    if (!config.PROTIP_CHANNEL_ID) {
+      return;
+    }
     const channel = guild.channels.get(config.PROTIP_CHANNEL_ID);
     if (!channel) {
       console.error('Could not find channel: ' + config.PROTIP_CHANNEL_ID);

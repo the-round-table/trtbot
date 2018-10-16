@@ -10,6 +10,7 @@ class XPostListener extends BaseMessageListener {
       name: 'cross_post',
       description: oneLine`Listens for "xpost #channelname", and crossposts
         the previous message in the listed channel(s)`,
+      silent: true,
     });
     this.buffer = {};
   }

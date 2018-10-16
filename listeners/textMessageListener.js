@@ -5,6 +5,7 @@ class TextMessageListener extends BaseMessageListener {
     super({
       name: 'messages',
       description: 'Records messages for weekly channel stats',
+      silent: true,
     });
     this.Messages = Messages;
   }

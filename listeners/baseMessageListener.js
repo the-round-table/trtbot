@@ -15,6 +15,10 @@ class BaseMessageListener {
     this.linkRegex = opts.linkRegex || null;
     this.linkValidator = opts.linkValidator || null;
     this.validator = opts.validator || null;
+    this.allowedInPM = opts.allowedInPM != null ? opts.allowedInPM : true;
+    this.allowedInGuild =
+      opts.allowedInGuild != null ? opts.allowedInGuild : true;
+    this.silent = opts.silent || false;
   }
 
   async handleMessage(message) {
@@ -23,6 +27,14 @@ class BaseMessageListener {
       (this.ignoreBotMessages && message.author.bot) ||
       (this.messageRegex && !message.content.match(this.messageRegex)) ||
       (this.validator && !this.validator(message.content))
+    ) {
+      return;
+    }
+
+    const messageInGuild = message.guild !== null;
+    if (
+      (messageInGuild && !this.allowedInGuild) ||
+      (!messageInGuild && !this.allowedInPM)
     ) {
       return;
     }
@@ -38,6 +50,9 @@ class BaseMessageListener {
       return;
     }
 
+    if (!this.silent) {
+      console.log(`Running listener ${this.name}.`);
+    }
     await this.onMessage(message, { link });
   }
 

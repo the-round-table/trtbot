@@ -34,16 +34,13 @@ class TexListener extends BaseMessageListener {
       name: 'tex',
       description: oneLine`Renders inline Latex markdown. Anything inside
         double $'s will be rendered. (i.e. $$y = x^2$$)`,
+      messageRegex: TEX_REGEX,
     });
   }
 
   async onMessage(message) {
     const msg = message.content;
     const srcChannel = message.channel;
-
-    if (!msg.match(TEX_REGEX)) {
-      return;
-    }
 
     await message.react('🔢');
 

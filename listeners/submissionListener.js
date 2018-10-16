@@ -7,7 +7,6 @@ const moment = require('moment');
 const oneLine = require('common-tags').oneLine;
 const Sequelize = require('sequelize');
 const URL = require('url').URL;
-const utils = require('../utils');
 const BaseMessageListener = require('./baseMessageListener.js');
 
 const bitly = new BitlyClient(config.BITLY_TOKEN, {});
@@ -44,18 +43,15 @@ class SubmissionListener extends BaseMessageListener {
     super({
       name: 'submissions',
       description: 'Records submitted links for the reading list',
+      allowedInPM: false,
+      ignoreBotMessages: true,
+      linkValidator: link => !isBlacklisted(link),
     });
     this.sequelize = sequelize;
     this.Submissions = Submissions;
   }
 
-  async onMessage(message) {
-    const link = utils.getPostedUrl(message);
-
-    if (!link || isBlacklisted(link) || !message.guild) {
-      return;
-    }
-
+  async onMessage(message, { link }) {
     var title;
     try {
       title = await getTitle(link);

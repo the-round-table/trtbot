@@ -7,6 +7,7 @@ class ListenerRegistry {
 
   registerListener(listener) {
     this.listeners.set(listener.name, listener);
+    console.log(`Registered listener ${listener.name}.`);
   }
 
   registerListeners(...listeners) {

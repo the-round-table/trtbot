@@ -11,6 +11,7 @@ class StockListener extends BaseMessageListener {
       description: oneLine`Responds to messages that contain a stock symbol
         (in the format $symbol, i.e. $AAPL) with a daily stock history graph,
         and the daily stock movement.`,
+      messageRegex: symbolRegex,
     });
   }
   async onMessage(message) {
