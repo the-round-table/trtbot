@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const symbolRegex = /(\$[A-Z]{1,5})/gi;
+const symbolRegex = /(^|\s)(\$[A-Z]{1,5})\b/i;
 const StocksClient = require('../actions/stocks.js');
 const BaseMessageListener = require('./baseMessageListener.js');
 
