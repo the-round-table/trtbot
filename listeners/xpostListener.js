@@ -1,11 +1,17 @@
 const BaseMessageListener = require('./baseMessageListener.js');
+const oneLine = require('common-tags').oneLine;
 
 const xpostRegex = /(x(-)?post)/i;
 const channelRegex = /<#[^>]*>/gim;
 
 class XPostListener extends BaseMessageListener {
   constructor() {
-    super();
+    super({
+      name: 'cross_post',
+      description: oneLine`Listens for "xpost #channelname", and crossposts
+        the previous message in the listed channel(s)`,
+      silent: true,
+    });
     this.buffer = {};
   }
 

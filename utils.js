@@ -1,4 +1,5 @@
 const getUrls = require('get-urls');
+const discord = require('discord.js');
 
 function getEmbedUrl(message) {
   var link = undefined;
@@ -11,12 +12,15 @@ function getEmbedUrl(message) {
 }
 
 function getPostedUrl(message) {
-  const embedUrl = getEmbedUrl(message);
-  if (embedUrl) {
-    return embedUrl;
+  if (message instanceof discord.Message) {
+    const embedUrl = getEmbedUrl(message);
+    if (embedUrl) {
+      return embedUrl;
+    }
   }
 
-  const urlSet = getUrls(message.content);
+  const text = message instanceof discord.Message ? message.content : message;
+  const urlSet = getUrls(text);
   if (urlSet.size > 0) {
     return urlSet.values().next().value;
   }

@@ -1,6 +1,7 @@
 const mathjax = require('mathjax-node-svg2png');
 const discord = require('discord.js');
 const BaseMessageListener = require('./baseMessageListener.js');
+const oneLine = require('common-tags').oneLine;
 
 mathjax.config({
   MathJax: {},
@@ -28,13 +29,18 @@ async function sendImage(srcChannel, base64Data) {
 }
 
 class TexListener extends BaseMessageListener {
+  constructor() {
+    super({
+      name: 'tex',
+      description: oneLine`Renders inline Latex markdown. Anything inside
+        double $'s will be rendered. (i.e. $$y = x^2$$)`,
+      messageRegex: TEX_REGEX,
+    });
+  }
+
   async onMessage(message) {
     const msg = message.content;
     const srcChannel = message.channel;
-
-    if (!msg.match(TEX_REGEX)) {
-      return;
-    }
 
     await message.react('🔢');
 

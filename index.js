@@ -17,6 +17,8 @@ const TextMessageListener = require('./listeners/textMessageListener.js');
 const XpostListener = require('./listeners/xpostListener.js');
 const YoutubeListener = require('./listeners/youtubeListener.js');
 
+const ListenerRegistry = require('./listeners/listenerRegistry.js');
+
 const ChannelRearranger = require('./actions/channelRearranger.js');
 const DeadChannelCop = require('./actions/deadChannelCop.js');
 const presenceGenerator = require('./actions/presenceGenerator.js');
@@ -41,6 +43,8 @@ const readingListGenerator = new ReadingListGenerator(Submissions);
 const statsGenerator = new StatsGenerator(Messages);
 const channelRearranger = new ChannelRearranger(statsGenerator);
 
+const listenerRegistry = new ListenerRegistry();
+
 // Create an instance of a Discord client
 const client = new Commando.Client({
   commandPrefix: 'trt',
@@ -61,6 +65,8 @@ client.Messages = Messages;
 client.Reminders = Reminders;
 client.Submissions = Submissions;
 client.ProTips = ProTips;
+
+client.listenerRegistry = listenerRegistry;
 
 const reminderBot = new ReminderBot(client, Reminders);
 
@@ -125,9 +131,10 @@ client.registry
   .registerGroup('moderation', 'Moderation')
   .registerGroup('reminders', 'Reminders')
   .registerGroup('github', 'Github')
+  .registerGroup('listeners', 'Listeners')
   .registerCommandsIn(path.join(__dirname, 'commands'));
 
-const MESSAGE_LISTENERS = [
+listenerRegistry.registerListeners(
   new YoutubeListener(),
   new GithubListener(),
   new ArxivListener(),
@@ -137,8 +144,8 @@ const MESSAGE_LISTENERS = [
   new XpostListener(),
   new SubmissionListener(sequelize, Submissions),
   new TextMessageListener(Messages),
-  new ProTipListener(ProTips),
-];
+  new ProTipListener(ProTips)
+);
 
 // The ready event is vital, it means that your bot will only start reacting to
 // information from Discord _after_ ready is emitted
@@ -151,7 +158,7 @@ client
     });
   })
   .on('message', async message => {
-    for (let listener of MESSAGE_LISTENERS) {
+    for (let listener of listenerRegistry.getListeners()) {
       try {
         await listener.handleMessage(message);
       } catch (e) {
