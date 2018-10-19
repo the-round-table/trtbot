@@ -41,8 +41,11 @@ class TexListener extends BaseMessageListener {
     const tex_str = msg.match(TEX_REGEX);
     const tex_math = tex_str.map(s => s.replace(TEX_TAG, ''));
     tex_math.map(async m => {
+      if (m.trim().length === 0) {
+        return;
+      }
       const base64Data = await renderMath(m);
-      sendImage(srcChannel, base64Data);
+      await sendImage(srcChannel, base64Data);
     });
   }
 }
