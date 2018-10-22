@@ -49,11 +49,15 @@ module.exports = class StockCommand extends commando.Command {
       const padding = 'padding' in opts ? opts.padding : 0;
       const selector = opts.selector;
 
-      if (!selector) { throw Error('Please provide a selector.'); }
+      if (!selector) {
+        throw Error('Please provide a selector.');
+      }
 
       const rect = await page.evaluate(selector => {
         const element = document.querySelector(selector);
-        if (!element) { return null; }
+        if (!element) {
+          return null;
+        }
         const { x, y, width, height } = element.getBoundingClientRect();
         return { left: x, top: y, width, height, id: element.id };
       }, selector);

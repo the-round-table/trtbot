@@ -12,6 +12,7 @@ const LongReadsListener = require('./listeners/longReadsListener.js');
 const ProTipListener = require('./listeners/protipListener');
 const StockListener = require('./listeners/stockListener.js');
 const SubmissionListener = require('./listeners/submissionListener.js');
+const SubredditListener = require('./listeners/subredditListener.js');
 const TexListener = require('./listeners/texListener.js');
 const TextMessageListener = require('./listeners/textMessageListener.js');
 const XpostListener = require('./listeners/xpostListener.js');
@@ -144,7 +145,8 @@ listenerRegistry.registerListeners(
   new XpostListener(),
   new SubmissionListener(sequelize, Submissions),
   new TextMessageListener(Messages),
-  new ProTipListener(ProTips)
+  new ProTipListener(ProTips),
+  new SubredditListener()
 );
 
 // The ready event is vital, it means that your bot will only start reacting to
