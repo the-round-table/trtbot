@@ -30,7 +30,9 @@ module.exports = class StockCommand extends commando.Command {
 
   async run(msg, { chart_type }) {
     await msg.react('📈');
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
     const page = await browser.newPage();
     // Adjustments particular to this page to ensure we hit desktop breakpoint.
     page.setViewport({ width: 1000, height: 600, deviceScaleFactor: 1 });
