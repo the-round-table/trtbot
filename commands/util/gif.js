@@ -29,7 +29,7 @@ module.exports = class GifCommand extends commando.Command {
     if (query == NO_QUERY) {
       gif = (await giphy.random({ rating: 'pg' })).data;
     } else {
-      gif = _.sample((await giphy.search(query)).data);
+      gif = _.sample((await giphy.search({ q: query, limit: 5 })).data);
     }
 
     if (!gif) {
