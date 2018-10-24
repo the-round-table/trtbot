@@ -40,10 +40,15 @@ module.exports = class BugReportCommand extends commando.Command {
   }
 
   async run(msg, { bug }) {
-    let [title, body] = bug.split('-');
-    if (!body || title === '' || body === '') {
+    let [title, ...body] = bug.split('-');
+    if (title === '') {
       msg.reply(INVALID_COMMAND_FORMAT);
       return;
+    }
+    if (!body || body.length === 0) {
+      body = 'No detailed description specified.';
+    } else if (body.length > 0) {
+      body = body.join('-');
     }
 
     title = title.trim();

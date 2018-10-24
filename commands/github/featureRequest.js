@@ -40,11 +40,20 @@ module.exports = class FeatureRequestCommand extends commando.Command {
   }
 
   async run(msg, { feature }) {
-    var [title, body] = feature.split('-');
-    if (!body || title === '' || body === '') {
+    let [title, ...body] = feature.split('-');
+    if (title === '') {
       msg.reply(INVALID_COMMAND_FORMAT);
       return;
     }
+    if (!body || body.length === 0) {
+      body = 'No detailed description specified.';
+    } else if (body.length > 0) {
+      body = body.join('-');
+    }
+
+    title = title.trim();
+    body = body.trim();
+
     var [owner, repo] = config.GITHUB_REPO.split('/');
     const result = await octokit.issues.create({
       owner: owner,
