@@ -9,7 +9,8 @@ var CronJob = require('cron').CronJob;
 const ArxivListener = require('./listeners/arxivListener.js');
 const GithubListener = require('./listeners/githubListener.js');
 const LongReadsListener = require('./listeners/longReadsListener.js');
-const ProTipListener = require('./listeners/protipListener');
+const OpenReviewListener = require('./listeners/openReviewListener.js');
+const ProTipListener = require('./listeners/protipListener.js');
 const StockListener = require('./listeners/stockListener.js');
 const SubmissionListener = require('./listeners/submissionListener.js');
 const SubredditListener = require('./listeners/subredditListener.js');
@@ -78,7 +79,7 @@ client
   .on('ready', () => {
     console.log(
       `Client ready; logged in as ${client.user.username}#${
-        client.user.discriminator
+      client.user.discriminator
       } (${client.user.id})`
     );
 
@@ -146,7 +147,8 @@ listenerRegistry.registerListeners(
   new SubmissionListener(sequelize, Submissions),
   new TextMessageListener(Messages),
   new ProTipListener(ProTips),
-  new SubredditListener()
+  new SubredditListener(),
+  new OpenReviewListener()
 );
 
 // The ready event is vital, it means that your bot will only start reacting to
