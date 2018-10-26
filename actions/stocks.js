@@ -23,11 +23,8 @@ class StocksClient {
   async generateStockResponse(symbol, interval) {
     symbol = symbol.toUpperCase();
 
-    let symbolData;
-    try {
-      symbolData = await this._getSymbol(symbol, interval);
-    } catch (error) {
-      console.error(error);
+    let symbolData = await this._getSymbol(symbol, interval);
+    if (symbolData == null) {
       return `Unable to get stock information on ${symbol}`;
     }
 
@@ -61,10 +58,17 @@ class StocksClient {
     }
 
     // Traditional stocks
-    let symbolData = await stocks.timeSeries({
-      symbol: symbol,
-      ...this._getAPICallOptionsForInterval(interval),
-    });
+    let symbolData;
+    try {
+      symbolData = await stocks.timeSeries({
+        symbol: symbol,
+        ...this._getAPICallOptionsForInterval(interval),
+      });
+    } catch (err) {
+      console.error(`Unable to get stock information on ${symbol}`);
+      console.error(err);
+      return null;
+    }
 
     let chart;
     try {

@@ -53,7 +53,11 @@ class BaseMessageListener {
     if (!this.silent) {
       console.log(`Running listener ${this.name}.`);
     }
-    await this.onMessage(message, { link });
+    try {
+      await this.onMessage(message, { link });
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   async onMessage(message) {

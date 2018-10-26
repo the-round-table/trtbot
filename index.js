@@ -79,7 +79,7 @@ client
   .on('ready', () => {
     console.log(
       `Client ready; logged in as ${client.user.username}#${
-      client.user.discriminator
+        client.user.discriminator
       } (${client.user.id})`
     );
 
@@ -164,7 +164,7 @@ client
   .on('message', async message => {
     for (let listener of listenerRegistry.getListeners()) {
       try {
-        await listener.handleMessage(message);
+        listener.handleMessage(message);
       } catch (e) {
         console.error(e);
       }

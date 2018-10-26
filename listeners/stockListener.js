@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const symbolRegex = /(^|\s)(\$[A-Z]{1,5})\b/i;
+const symbolRegex = /(^|\s)(\$[A-Z]{1,5})\b/gi;
 const StocksClient = require('../actions/stocks.js');
 const BaseMessageListener = require('./baseMessageListener.js');
 const oneLine = require('common-tags').oneLine;
@@ -19,6 +19,8 @@ class StockListener extends BaseMessageListener {
       .map(_.trim)
       .map(_.toUpper)
       .map(symbol => symbol.substr(1))
+      .filter(symbol => symbol.length !== 0)
+      .uniq()
       .value();
 
     const client = new StocksClient();
