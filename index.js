@@ -134,6 +134,7 @@ client.registry
   .registerGroup('reminders', 'Reminders')
   .registerGroup('github', 'Github')
   .registerGroup('listeners', 'Listeners')
+  .registerGroup('stats', 'Stats')
   .registerCommandsIn(path.join(__dirname, 'commands'));
 
 listenerRegistry.registerListeners(
