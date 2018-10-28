@@ -5,7 +5,7 @@ const moment = require('moment');
 const oneLine = require('common-tags').oneLine;
 const BaseMessageListener = require('./baseMessageListener.js');
 
-const ARXIV_REGEX = /(https?:\/\/)arxiv\.org\/(pdf|abs)\/(\d{4}\.\d{5})/;
+const ARXIV_REGEX = /(https?:\/\/)(www\.)?((arxiv\.org\/(pdf|abs))|((arxiv-vanity.com\/papers)))\/(\d{4}\.\d{5})/;
 
 class ArxivListener extends BaseMessageListener {
   constructor() {
@@ -19,7 +19,7 @@ class ArxivListener extends BaseMessageListener {
 
   async onMessage(message, { link }) {
     const match = link.match(ARXIV_REGEX);
-    const identifier = match[3];
+    const identifier = match[8];
 
     arxiv.search({ id: identifier }, (err, results) => {
       if (err) {
