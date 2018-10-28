@@ -28,6 +28,8 @@ const BLACKLISTED_SITES = [
   'arxiv.org',
   'oldschoolrunescape.wikia.com',
   'openreview.net',
+  'reddit.com',
+  'arxiv-vanity.com',
 ];
 
 const IMAGE_LINK_REGEX = '.(?:jpg|gif|png)$';
