@@ -31,12 +31,12 @@ class MorningReadsGenerator {
 
   async generate() {
     let articlesForToday = {};
-    let yesterday = (d => d.setDate(d.getDate() - 1)) (new Date());  
+    let yesterday = moment().add(-1, 'days');
     for (let feed in this.feeds) {
       let feedContent = await parser.parseURL(this.feeds[feed]);
       let newArticles = [];
       for (let article of feedContent.items) {
-        if (new Date(article.pubDate) >= yesterday) {
+        if (moment(article.pubDate) >= yesterday) {
           newArticles.push(article)
         }
       }
@@ -44,7 +44,7 @@ class MorningReadsGenerator {
         articlesForToday[feed] = newArticles;
       }
     }
-    
+
     const embed = new discord.RichEmbed().setTitle(
       `🗞  Morning Reads for ${moment().format('MMMM D, YYYY')}`
     );
