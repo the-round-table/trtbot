@@ -17,7 +17,6 @@ module.exports = class MorningReadsCommand extends commando.Command {
   }
 
   async run(msg) {
-    const guild = msg.guild;
     const channel = msg.channel;
 
     let message = msg.content.replace('trt reads', '');
