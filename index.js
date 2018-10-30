@@ -24,6 +24,7 @@ const ListenerRegistry = require('./listeners/listenerRegistry.js');
 const ChannelRearranger = require('./actions/channelRearranger.js');
 const DeadChannelCop = require('./actions/deadChannelCop.js');
 const presenceGenerator = require('./actions/presenceGenerator.js');
+const MorningReadsGenerator = require('./actions/morningReadsGenerator.js');
 const ReadingListGenerator = require('./actions/readingListGenerator.js');
 const StatsGenerator = require('./actions/statsGenerator.js');
 const ReminderBot = require('./actions/reminderBot.js');
@@ -42,6 +43,7 @@ ProTips.sync();
 
 const deadChannelCop = new DeadChannelCop(Messages);
 const readingListGenerator = new ReadingListGenerator(Submissions);
+const morningReadsGenerator = new MorningReadsGenerator(config.RSS_FEEDS_LIST);
 const statsGenerator = new StatsGenerator(Messages);
 const channelRearranger = new ChannelRearranger(statsGenerator);
 
@@ -134,6 +136,7 @@ client.registry
   .registerGroup('reminders', 'Reminders')
   .registerGroup('github', 'Github')
   .registerGroup('listeners', 'Listeners')
+  .registerGroup('feeds', 'Feeds')
   .registerGroup('stats', 'Stats')
   .registerCommandsIn(path.join(__dirname, 'commands'));
 
@@ -199,6 +202,21 @@ const SCHEDULE = [
           guild,
           readingListMessage,
           config.READING_LIST_CHANNEL
+        );
+      });
+    },
+  },
+  //Post the Morning Reads
+  {
+    schedule: '0 0 6 * * *', // Every day at 6am
+    callback: () => {
+      console.log('Fetching Morning Reads');
+      client.guilds.forEach(async guild => {
+        const morningReadsEmbed = await morningReadsGenerator.generate();
+        utils.postEmbedToChannel(
+          guild,
+          morningReadsEmbed,
+          config.MORNING_READS_CHANNEL
         );
       });
     },

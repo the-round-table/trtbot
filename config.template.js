@@ -11,4 +11,6 @@ module.exports = {
   // Names of channels not to include in the dead channel report
   DEAD_CHANNEL_BLACKLIST: [],
   PROTIP_CHANNEL_ID: '',
+  RSS_FEEDS_LIST: '',
+  MORNING_READS_CHANNEL: ''
 };
