@@ -20,18 +20,18 @@ module.exports = class MorningReadsCommand extends commando.Command {
     const channel = msg.channel;
 
     let message = msg.content.replace('trt reads', '');
-    message = message.replace(/(^\s+|\s+$)/g,'');
+    message = message.trim();
     if (!message.replace(/\s/g, '').length) {
       const embed = await this.generator.generate();
       channel.send({embed});
  
     } else if (message.startsWith('add'))  {
       message = message.replace('add', '');
-      message = message.replace(/(^\s+|\s+$)/g,'');
+      message = message.trim();
       this.addFeed(message);
     } else if (message.startsWith('remove')) {
       message = message.replace('remove', '');
-      message = message.replace(/(^\s+|\s+$)/g,'');
+      message = message.trim();
       this.removeFeed(message);
     } else { 
       channel.send("Unparsible RSS command :frowning:");
@@ -40,7 +40,7 @@ module.exports = class MorningReadsCommand extends commando.Command {
 
   addFeed(subcommand) {
     let [feedTitle, ...feedUrl] = subcommand.split('-');
-    this.generator.addFeed(feedTitle.replace(/(^\s+|\s+$)/g,''), feedUrl[0].replace(/(^\s+|\s+$)/g,''));
+    this.generator.addFeed(feedTitle.trim(), feedUrl[0].trim());
   } 
 
   removeFeed(subcommand) {
