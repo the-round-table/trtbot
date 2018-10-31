@@ -9,7 +9,9 @@ module.exports = class MorningReadsCommand extends commando.Command {
       memberName: 'reads',
       group: 'feeds',
       description: 'Gets the latest stuff to read',
-      examples: ['read'],
+      examples: ['reads',
+                 'reads add Quanta Magazine - https://api.quantamagazine.com/feed',
+                 'reads remove Quanta Magazine'],
       guildOnly: true,
     });
 
