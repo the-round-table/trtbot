@@ -30,6 +30,7 @@ const BLACKLISTED_SITES = [
   'openreview.net',
   'reddit.com',
   'arxiv-vanity.com',
+  'tenor.com',
 ];
 
 const IMAGE_LINK_REGEX = '.(?:jpg|gif|png)$';
