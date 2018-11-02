@@ -1,4 +1,14 @@
-Quanta Magazine: https://api.quantamagazine.org/feed
-NYT > Technology: http://rss.nytimes.com/services/xml/rss/nyt/Technology.xml
-Ars Techinica: http://feeds.arstechnica.com/arstechnica/index
-The Verge: https://www.theverge.com/rss/index.xml
+- source: Quanta Magazine
+  url: https://api.quantamagazine.org/feed
+- source: NYT > Technology
+  url: http://rss.nytimes.com/services/xml/rss/nyt/Technology.xml
+- source: Ars Techinica
+  url: http://feeds.arstechnica.com/arstechnica/index
+- source: The Verge
+  url: https://www.theverge.com/rss/index.xml
+- source: Dezeen
+  url: https://www.dezeen.com/feed/
+- source: The Economist
+  url: https://www.economist.com/the-world-this-week/rss.xml
+- source: Letters
+  url: https://www.economist.com/letters/rss.xml

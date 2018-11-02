@@ -3,12 +3,15 @@ const discord = require('discord.js');
 const moment = require('moment');
 const truncate = require('truncate');
 const fs = require("fs")
+const request = require('request');
+const Result = require('result-js');
+Result.registerGlobals();
 let Parser = require('rss-parser');
-let parser = new Parser();
 
-class MorningReadsGenerator {
+class MorningPaperGenerator {
   constructor(feedsList) {
     this.feedsListFile = feedsList;
+    this.parser = new Parser();
     let file = fs.readFileSync(feedsList, 'utf8');
     this.feeds = YAML.parse(file);
     fs.watch(feedsList, _ => {
@@ -17,23 +20,38 @@ class MorningReadsGenerator {
     });
   }
 
-  addFeed(feed, feedUrl) {
-    this.feeds[feed] = feedUrl;
-    const feedsStr = YAML.stringify(this.feeds);
-    fs.writeFileSync(this.feedsListFile, feedsStr, 'utf8');
+  async addFeed(feed, feedUrl) {
+    try {
+      let resp = await this.parser.parseURL(feedUrl);
+      this.feeds.push({source: feed, url: feedUrl});
+      const feedsStr = YAML.stringify(this.feeds);
+      fs.writeFileSync(this.feedsListFile, feedsStr, 'utf8');
+      return Ok("Successfully added");
+    } catch (error) {
+      return Err(error);
+    }
   }
 
-  removeFeed(feed) {
-    delete this.feeds[feed];
-    const feedsStr = YAML.stringify(this.feeds);
-    fs.writeFileSync(this.feedsListFile, feedsStr, 'utf8');
+  removeFeed(sourceName) {
+    if (this.feeds.find(feed => feed.source == sourceName)) {
+      this.feeds = this.feeds.filter(feed => feed.source !== sourceName);
+      const feedsStr = YAML.stringify(this.feeds);
+      fs.writeFileSync(this.feedsListFile, feedsStr, 'utf8'); 
+      return Ok("Successfully removed feed");
+    } else {
+      return Err("This feed is not in the feed list");
+    }
+  }
+
+  listFeeds() {
+    return this.feeds;
   }
 
   async generate() {
     let articlesForToday = {};
     let yesterday = moment().add(-1, 'days');
-    for (let feed in this.feeds) {
-      let feedContent = await parser.parseURL(this.feeds[feed]);
+    for (let feed of this.feeds) {
+      let feedContent = await this.parser.parseURL(feed.url);
       let newArticles = [];
       for (let article of feedContent.items) {
         if (moment(article.pubDate) >= yesterday) {
@@ -41,12 +59,12 @@ class MorningReadsGenerator {
         }
       }
       if (newArticles.length > 0) {
-        articlesForToday[feed] = newArticles;
+        articlesForToday[feed.source] = newArticles;
       }
     }
 
     const embed = new discord.RichEmbed().setTitle(
-      `🗞  Morning Reads for ${moment().format('MMMM D, YYYY')}`
+      `🗞  Morning Paper for ${moment().format('MMMM D, YYYY')}`
     );
   
     if (articlesForToday.length === 0) {
@@ -69,4 +87,4 @@ class MorningReadsGenerator {
   }
 }
 
-module.exports = MorningReadsGenerator;
+module.exports = MorningPaperGenerator;

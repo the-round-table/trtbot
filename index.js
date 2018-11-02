@@ -24,7 +24,7 @@ const ListenerRegistry = require('./listeners/listenerRegistry.js');
 const ChannelRearranger = require('./actions/channelRearranger.js');
 const DeadChannelCop = require('./actions/deadChannelCop.js');
 const presenceGenerator = require('./actions/presenceGenerator.js');
-const MorningReadsGenerator = require('./actions/morningReadsGenerator.js');
+const MorningPaperGenerator = require('./actions/morningPaperGenerator.js');
 const ReadingListGenerator = require('./actions/readingListGenerator.js');
 const StatsGenerator = require('./actions/statsGenerator.js');
 const ReminderBot = require('./actions/reminderBot.js');
@@ -43,7 +43,7 @@ ProTips.sync();
 
 const deadChannelCop = new DeadChannelCop(Messages);
 const readingListGenerator = new ReadingListGenerator(Submissions);
-const morningReadsGenerator = new MorningReadsGenerator(config.RSS_FEEDS_LIST);
+const morningPaperGenerator = new MorningPaperGenerator(config.RSS_FEEDS_LIST);
 const statsGenerator = new StatsGenerator(Messages);
 const channelRearranger = new ChannelRearranger(statsGenerator);
 
@@ -212,10 +212,10 @@ const SCHEDULE = [
     callback: () => {
       console.log('Fetching Morning Reads');
       client.guilds.forEach(async guild => {
-        const morningReadsEmbed = await morningReadsGenerator.generate();
+        const morningPaperEmbed = await morningPaperGenerator.generate();
         utils.postEmbedToChannel(
           guild,
-          morningReadsEmbed,
+          morningPaperEmbed,
           config.MORNING_READS_CHANNEL
         );
       });
