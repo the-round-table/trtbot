@@ -5,22 +5,21 @@ const truncate = require('truncate');
 const fs = require("fs")
 const request = require('request');
 const Result = require('result-js');
-Result.registerGlobals();
 let Parser = require('rss-parser');
 
 class MorningPaperGenerator {
-  constructor(feedsList) {
-    if (feedsList === '') {
+  constructor(feedsListPath) {
+    if (!feedsListPath) {
       this.active = false;
       return;
     }
     this.active = true;
-    this.feedsListFile = feedsList;
+    this.feedsListFile = feedsListPath;
     this.parser = new Parser();
-    let file = fs.readFileSync(feedsList, 'utf8');
+    let file = fs.readFileSync(this.feedsListFile, 'utf8');
     this.feeds = YAML.parse(file);
-    fs.watch(feedsList, _ => {
-      file = fs.readFileSync(feedsList, 'utf8');
+    fs.watch(this.feedsListFile, _ => {
+      file = fs.readFileSync(this.feedsListFile, 'utf8');
       this.feeds = YAML.parse(file);
     });
   }
@@ -34,9 +33,9 @@ class MorningPaperGenerator {
       this.feeds.push({source: feed, url: feedUrl});
       const feedsStr = YAML.stringify(this.feeds);
       fs.writeFileSync(this.feedsListFile, feedsStr, 'utf8');
-      return Ok("Successfully added");
+      return Result.fromSuccess("Successfully added");
     } catch (error) {
-      return Err(error);
+      return Result.fromError(error);
     }
   }
 
@@ -48,17 +47,17 @@ class MorningPaperGenerator {
       this.feeds = this.feeds.filter(feed => feed.source !== sourceName);
       const feedsStr = YAML.stringify(this.feeds);
       fs.writeFileSync(this.feedsListFile, feedsStr, 'utf8'); 
-      return Ok("Successfully removed feed");
+      return Result.fromSuccess("Successfully removed feed");
     } else {
-      return Err("This feed is not in the feed list");
+      return Result.fromError("This feed is not in the feed list");
     }
   }
 
   listFeeds() {
     if (!this.active) {
-      return Err("RSS Feed system is not active");
+      return Result.fromError("RSS Feed system is not active");
     }
-    return this.feeds;
+    return Result.fromSuccess(this.feeds);
   }
 
   async generate(numPages=0) {

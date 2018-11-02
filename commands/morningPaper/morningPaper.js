@@ -14,7 +14,10 @@ module.exports = class MorningPaperCommand extends commando.Command {
       description: 'Gets the latest stuff to read',
       examples: ['paper',
                  'paper add Quanta Magazine - https://api.quantamagazine.com/feed',
-                 'paper remove Quanta Magazine'],
+                 'paper remove Quanta Magazine',
+                 'paper source',
+                 'paper list',
+                 'paper pages 5'],
       guildOnly: true,
     });
 
@@ -32,11 +35,15 @@ module.exports = class MorningPaperCommand extends commando.Command {
         channel.send({embed});
       }
     } else if (message.startsWith('pages')) {
-      message = message.replace('pages', '');
-      let numPages = parseInt(message, 10);
-      const embeds = await this.generator.generate(numPages);
-      for (let embed of embeds) {
-        channel.send({embed});
+      const numPagesStr = message.replace('pages', '');
+      if (isNaN(numPagesStr)) {
+        channel.send('Unparsible RSS command :frowning: (Pages arg needs to be number');
+      } else {
+        let numPages = parseInt(message, 10);
+        const embeds = await this.generator.generate(numPages);
+        for (let embed of embeds) {
+          channel.send({embed});
+        }
       }
     } else if (message.startsWith('add'))  {
       message = message.replace('add', '');
@@ -49,7 +56,7 @@ module.exports = class MorningPaperCommand extends commando.Command {
     } else if (message.startsWith('sources') || message.startsWith('list')) {
       this.listFeeds(channel);
     } else { 
-      channel.send("Unparsible RSS command :frowning:");
+      channel.send('Unparsible RSS command :frowning: (valid commands: add, remove, list, source, pages');
     }
   }
 
@@ -67,19 +74,20 @@ module.exports = class MorningPaperCommand extends commando.Command {
   }
 
   listFeeds(channel) {
-    let feeds = this.generator.listFeeds();
-    console.log(feeds);
-    let fieldChars = 0;
-    const embed = new discord.RichEmbed()
-      .setTitle(
-        `📰  Morning Paper Sources`
-      ).addField("Sources:", feeds.map(feed => {
-        const line = `- [${truncate(feed.source, 75)}](${feed.url})`;
-        fieldChars += line.length + 1;
-        return fieldChars <= 1024 ? line : '';
-      })
-      .join('\n'));
-
-    channel.send({embed});
+    this.generator.listFeeds().match(list => {
+      let fieldChars = 0;
+      const embed = new discord.RichEmbed()
+        .setTitle(
+          `📰  Morning Paper Sources`
+        ).addField("Sources:", feeds.map(feed => {
+          const line = `- [${truncate(feed.source, 75)}](${feed.url})`;
+          fieldChars += line.length + 1;
+          return fieldChars <= 1024 ? line : '';
+        })
+        .join('\n'));
+      channel.send({embed});
+      }, err => {
+        channel.send('RSS system is not active');
+      }); 
   }
 };
