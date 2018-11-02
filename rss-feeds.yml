@@ -4,8 +4,6 @@
   url: http://rss.nytimes.com/services/xml/rss/nyt/Technology.xml
 - source: Ars Techinica
   url: http://feeds.arstechnica.com/arstechnica/index
-- source: The Verge
-  url: https://www.theverge.com/rss/index.xml
 - source: Dezeen
   url: https://www.dezeen.com/feed/
 - source: The Economist
@@ -42,3 +40,5 @@
   url: https://research.fb.com/feed/
 - source: FB Code
   url: https://code.fb.com/feed/
+- source: The Verge
+  url: https://www.theverge.com/rss/index.xml

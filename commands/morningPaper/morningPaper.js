@@ -2,7 +2,6 @@ const config = require('../../config.js');
 const discord = require('discord.js');
 const commando = require('discord.js-commando');
 const truncate = require('truncate');
-const Result = require('result-js');
 
 const MorningPaperGenerator = require('../../actions/morningPaperGenerator.js')
 
