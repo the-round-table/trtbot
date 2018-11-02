@@ -89,10 +89,9 @@ class MorningPaperGenerator {
     let pages = this.paginateArticles(articlesForToday, numPages, numSources);
 
     if (articlesForToday.length === 0) {
-      return discord.RichEmbed()
+      return [discord.RichEmbed()
         .setTitle(`🗞  Morning Paper for ${moment().format('MMMM D, YYYY')}`)
-        .setDescription('Literally no news today. 😭');
-      return [embed];
+        .setDescription('Literally no news today. 😭')];
     } 
     
     let embeds = [];
