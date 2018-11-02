@@ -10,5 +10,35 @@
   url: https://www.dezeen.com/feed/
 - source: The Economist
   url: https://www.economist.com/the-world-this-week/rss.xml
-- source: Letters
-  url: https://www.economist.com/letters/rss.xml
+- source: It's Nice That
+  url: http://feeds2.feedburner.com/itsnicethat/SlXC
+- source: Creative Applications
+  url: https://www.creativeapplications.net/feed/
+- source: Flowing Data
+  url: https://flowingdata.com/feed
+- source: Architect's Journal
+  url: https://www.architectsjournal.co.uk/XmlServers/navsectionRSS.aspx?navsectioncode=13628
+- source: Architectural Digest
+  url: https://www.architecturaldigest.com/feed/rss
+- source: BLDGBLOG
+  url: http://www.bldgblog.com/feed/
+- source: Fast Co. Design
+  url: http://feeds.feedburner.com/fastcodesign/feed?format=xml
+- source: Hacker News
+  url: https://hnrss.org/frontpage?points=200
+- source: The Gradient
+  url: https://thegradient.pub/rss/
+- source: MIT Technology Review
+  url: https://www.technologyreview.com/stories.rss
+- source: Deepmind
+  url: https://deepmind.com/blog/feed/basic/
+- source: MIT Media Lab
+  url: http://news.mit.edu/rss/topic/media
+- source: Google AI Research
+  url: http://feeds.feedburner.com/blogspot/gJZg
+- source: BAIR
+  url: https://bair.berkeley.edu/blog/feed.xml
+- source: FB Research
+  url: https://research.fb.com/feed/
+- source: FB Code
+  url: https://code.fb.com/feed/

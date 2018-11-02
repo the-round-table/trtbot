@@ -47,43 +47,68 @@ class MorningPaperGenerator {
     return this.feeds;
   }
 
-  async generate() {
-    let articlesForToday = {};
+  async generate(numPages=0) {
+    let articlesForToday = [];
+    let numSources = 0
     let yesterday = moment().add(-1, 'days');
     for (let feed of this.feeds) {
+      console.log(`Attempting to get latest articles from ${feed.source}`);
       let feedContent = await this.parser.parseURL(feed.url);
       let newArticles = [];
       for (let article of feedContent.items) {
         if (moment(article.pubDate) >= yesterday) {
-          newArticles.push(article)
+          newArticles.push({title: article.title, link: article.link});
         }
       }
       if (newArticles.length > 0) {
-        articlesForToday[feed.source] = newArticles;
+        articlesForToday.push({source: feed.source, articles: newArticles});
+        numSources++;
       }
     }
 
-    const embed = new discord.RichEmbed().setTitle(
-      `🗞  Morning Paper for ${moment().format('MMMM D, YYYY')}`
-    );
-  
+    if (!numPages) {
+      numPages = Math.ceil(JSON.stringify(articlesForToday).length / 5000) + 1; // 6000 is max embed size
+    } 
+    let pages = this.paginateArticles(articlesForToday, numPages, numSources);
+
     if (articlesForToday.length === 0) {
-      embed.setDescription('Literally no news today. 😭');
-      return embed;
-    } else {
-      embed.setDescription("Here's what you __**need**__ to know today...");
+      return discord.RichEmbed()
+        .setTitle(`🗞  Morning Paper for ${moment().format('MMMM D, YYYY')}`)
+        .setDescription('Literally no news today. 😭');
+      return [embed];
+    } 
+    
+    let embeds = [];
+    let pageNum = 1;
+    for (let page of pages) {
+      let embed = new discord.RichEmbed()
+        .setTitle(`🗞  Morning Paper for ${moment().format('MMMM D, YYYY')}`)
+        .setDescription(`Here's what you __**need**__ to know today... (Page: ${pageNum}/${numPages})`);
+      for (let feeds of page) {
+        let source = feeds.source;
+        let articles = feeds.articles;
+        let fieldChars = 0;
+        embed.addField(source, articles.map(sub => {
+          const line = `- [${truncate(sub.title, 75)}](${sub.link})`;
+            fieldChars += line.length + 1;
+            return fieldChars <= 1024 ? line : '';
+          })
+        .join('\n'));
+      }
+      embeds.push(embed);
+      pageNum++;
     }
-    for (let source in articlesForToday) {
-      let articles = articlesForToday[source];
-      let fieldChars = 0;
-      embed.addField(source, articles.map(sub => {
-        const line = `- [${truncate(sub.title, 75)}](${sub.link})`;
-        fieldChars += line.length + 1;
-        return fieldChars <= 1024 ? line : '';
-      })
-      .join('\n'));
+    return embeds;
+  }
+
+  //Lots of encoded assumptions here
+  paginateArticles(articles, numPages, numSources) {
+    let numSourcesPerPage = numSources / numPages;
+    let paginatedArticles = [];
+    for (let i = 0; i < articles.length; i+=numSourcesPerPage) {
+      paginatedArticles.push(articles.slice(i, i + numSourcesPerPage));
     }
-    return embed;
+    return paginatedArticles;
   }
 }
 

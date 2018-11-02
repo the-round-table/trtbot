@@ -28,9 +28,17 @@ module.exports = class MorningPaperCommand extends commando.Command {
     let message = msg.content.replace('trt paper', '');
     message = message.trim();
     if (!message.replace(/\s/g, '').length) {
-      const embed = await this.generator.generate();
-      channel.send({embed});
- 
+      const embeds = await this.generator.generate();
+      for (let embed of embeds) {
+        channel.send({embed});
+      }
+    } else if (message.startsWith('pages')) {
+      message = message.replace('pages', '');
+      let numPages = parseInt(message, 10);
+      const embeds = await this.generator.generate(numPages);
+      for (let embed of embeds) {
+        channel.send({embed});
+      }
     } else if (message.startsWith('add'))  {
       message = message.replace('add', '');
       message = message.trim();
