@@ -10,6 +10,11 @@ let Parser = require('rss-parser');
 
 class MorningPaperGenerator {
   constructor(feedsList) {
+    if (feedsList === '') {
+      this.active = false;
+      return;
+    }
+    this.active = true;
     this.feedsListFile = feedsList;
     this.parser = new Parser();
     let file = fs.readFileSync(feedsList, 'utf8');
@@ -21,6 +26,9 @@ class MorningPaperGenerator {
   }
 
   async addFeed(feed, feedUrl) {
+    if (!this.active) {
+      return Err("RSS Feed system is not active");
+    }
     try {
       let resp = await this.parser.parseURL(feedUrl);
       this.feeds.push({source: feed, url: feedUrl});
@@ -33,6 +41,9 @@ class MorningPaperGenerator {
   }
 
   removeFeed(sourceName) {
+    if (!this.active) {
+      return Err("RSS Feed system is not active");
+    }
     if (this.feeds.find(feed => feed.source == sourceName)) {
       this.feeds = this.feeds.filter(feed => feed.source !== sourceName);
       const feedsStr = YAML.stringify(this.feeds);
@@ -44,10 +55,16 @@ class MorningPaperGenerator {
   }
 
   listFeeds() {
+    if (!this.active) {
+      return Err("RSS Feed system is not active");
+    }
     return this.feeds;
   }
 
   async generate(numPages=0) {
+    if (!this.active) {
+      return Err("RSS Feed system is not active");
+    }
     let articlesForToday = [];
     let numSources = 0
     let yesterday = moment().add(-1, 'days');
