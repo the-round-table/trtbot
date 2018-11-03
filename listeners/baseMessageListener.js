@@ -18,7 +18,8 @@ class BaseMessageListener {
     this.allowedInPM = opts.allowedInPM != null ? opts.allowedInPM : true;
     this.allowedInGuild =
       opts.allowedInGuild != null ? opts.allowedInGuild : true;
-    this.allowCommands = opts.allowCommands != null ? opts.allowCommands : false;
+    this.allowCommands =
+      opts.allowCommands != null ? opts.allowCommands : false;
     this.silent = opts.silent || false;
   }
 
@@ -32,7 +33,9 @@ class BaseMessageListener {
       return;
     }
 
-    const commandPrefix = message.guild ? message.guild.commandPrefix : message.client.commandPrefix;
+    const commandPrefix = message.guild
+      ? message.guild.commandPrefix
+      : message.client.commandPrefix;
     if (message.content.startsWith(commandPrefix) && !this.allowCommands) {
       return;
     }
