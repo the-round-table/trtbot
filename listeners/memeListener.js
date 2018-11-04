@@ -1,6 +1,7 @@
 const BaseMessageListener = require('./baseMessageListener.js');
 const oneLine = require('common-tags').oneLine;
 const MemeManager = require('../actions/memes.js');
+const utils = require('../utils.js');
 
 const MEME_REGEX = /(\s|^)m:\S*(\b|\s|$)/gim;
 
@@ -25,7 +26,8 @@ class MemeListener extends BaseMessageListener {
       const query = match.trim().substring(2);
       const meme = await this.memeManager.queryMeme(message.guild.id, query);
       if (meme != null) {
-        await message.channel.send(meme.link);
+        const memeMessage = await utils.formatImageLinkAsMessage(meme.link);
+        await message.channel.send(memeMessage);
       }
     }
   }

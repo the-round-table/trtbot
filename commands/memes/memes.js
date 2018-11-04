@@ -3,6 +3,7 @@ const commando = require('discord.js-commando');
 const isImageUrl = require('is-image-url');
 const URL = require('url').URL;
 const MemeManager = require('../../actions/memes.js');
+const utils = require('../../utils.js');
 
 const MEME_ADD_USAGE = 'Correct usage: `trt meme add [MEME_NAME] [MEME_URL]`';
 const MEME_REMOVE_USAGE = 'Correct usage: `trt meme remove [MEME_NAME]`';
@@ -21,7 +22,7 @@ function hasGifEmbed(msg) {
 }
 
 module.exports = class MemesCommand extends commando.Command {
-  constructor(client, memeManager) {
+  constructor(client) {
     super(client, {
       name: 'memes',
       memberName: 'memes',
@@ -89,7 +90,7 @@ module.exports = class MemesCommand extends commando.Command {
       return await msg.reply(MEME_REMOVE_USAGE);
     }
     const memeName = args[0];
-    await this.memeManager.removeMeme(memeName);
+    await this.memeManager.removeMeme(msg.guild.id, memeName);
     return await msg.reply('Alright. Meme removed. 🔥🗑🔥');
   }
 
@@ -102,7 +103,8 @@ module.exports = class MemesCommand extends commando.Command {
     if (meme == null) {
       return msg.reply(`Couldn't find meme with name "${query}". 😞`);
     }
-    return await msg.channel.send(meme.link);
+    const memeMessage = await utils.formatImageLinkAsMessage(meme.link);
+    return await msg.channel.send(memeMessage);
   }
 
   async listMemes(msg) {

@@ -1,5 +1,6 @@
 const getUrls = require('get-urls');
 const discord = require('discord.js');
+const isImageUrl = require('is-image-url');
 
 function getEmbedUrl(message) {
   var link = undefined;
@@ -60,8 +61,31 @@ function buildMessageLink(guildId, channelId, messageId) {
   return `https://discordapp.com/channels/${guildId}/${channelId}/${messageId}`;
 }
 
+async function formatImageLinkAsMessage(link) {
+  // Link is bare image link
+  if (isImageUrl(link, false)) {
+    return new discord.RichEmbed().setImage(link);
+  }
+
+  // Link is "disguised" image link
+  if (isImageUrl(link, true)) {
+    const res = await fetch(link);
+    if (res.ok) {
+      const buffer = await res.buffer();
+      return {
+        files: [new discord.Attachment(Buffer.from(buffer), 'attachment')],
+      };
+    }
+    return link;
+  }
+
+  // Fallback to just posting message link
+  return link;
+}
+
 module.exports = {
   buildMessageLink,
+  formatImageLinkAsMessage,
   getEmbedUrl,
   getMessageLink,
   getPostedUrl,

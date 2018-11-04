@@ -5,7 +5,7 @@ class MemeManger {
 
   async addMeme({ name, link, creatorID, guildID }) {
     name = name.toLowerCase();
-    await this.Memes.findOrCreate({
+    const [meme, created] = await this.Memes.findOrCreate({
       where: { name, guildID },
       defaults: {
         name,
@@ -14,6 +14,9 @@ class MemeManger {
         guildID,
       },
     });
+    if (!created) {
+      await meme.update({ link });
+    }
   }
 
   async removeMeme(guildID, name) {
