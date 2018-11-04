@@ -3,7 +3,6 @@ const discord = require('discord.js');
 const moment = require('moment');
 const truncate = require('truncate');
 const fs = require("fs")
-const request = require('request');
 const Result = require('result-js');
 let Parser = require('rss-parser');
 
@@ -29,7 +28,7 @@ class MorningPaperGenerator {
       return Err("RSS Feed system is not active");
     }
     try {
-      let resp = await this.parser.parseURL(feedUrl);
+      await this.parser.parseURL(feedUrl);
       this.feeds.push({source: feed, url: feedUrl});
       const feedsStr = YAML.stringify(this.feeds);
       fs.writeFileSync(this.feedsListFile, feedsStr, 'utf8');
@@ -62,7 +61,7 @@ class MorningPaperGenerator {
 
   async generate(numPages=0) {
     if (!this.active) {
-      return Err("RSS Feed system is not active");
+      return Result.fromError("RSS Feed system is not active");
     }
     let articlesForToday = [];
     let numSources = 0
@@ -88,9 +87,9 @@ class MorningPaperGenerator {
     let pages = this.paginateArticles(articlesForToday, numPages, numSources);
 
     if (articlesForToday.length === 0) {
-      return [discord.RichEmbed()
+      return Result.fromSuccess([discord.RichEmbed()
         .setTitle(`🗞  Morning Paper for ${moment().format('MMMM D, YYYY')}`)
-        .setDescription('Literally no news today. 😭')];
+        .setDescription('Literally no news today. 😭')]);
     } 
     
     let embeds = [];
@@ -113,7 +112,7 @@ class MorningPaperGenerator {
       embeds.push(embed);
       pageNum++;
     }
-    return embeds;
+    return Result.fromSuccess(embeds);
   }
 
   //Lots of encoded assumptions here

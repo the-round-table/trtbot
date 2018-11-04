@@ -30,20 +30,29 @@ module.exports = class MorningPaperCommand extends commando.Command {
     let message = msg.content.replace('trt paper', '');
     message = message.trim();
     if (!message.replace(/\s/g, '').length) {
-      const embeds = await this.generator.generate();
-      for (let embed of embeds) {
-        channel.send({embed});
-      }
+      const paper = await this.generator.generate();
+      paper.andThen(embeds => {
+        for (let embed of embeds) {
+          channel.send({embed});
+        }
+      }).orElse( _ => {
+        channel.send("Failed to generate paper");
+      });
     } else if (message.startsWith('pages')) {
       const numPagesStr = message.replace('pages', '');
       if (isNaN(numPagesStr)) {
         channel.send('Unparsible RSS command :frowning: (Pages arg needs to be number');
       } else {
         let numPages = parseInt(message, 10);
-        const embeds = await this.generator.generate(numPages);
-        for (let embed of embeds) {
-          channel.send({embed});
-        }
+        await this.generator.generate(numPages).match(
+          embeds => {
+            for (let embed of embeds) {
+              channel.send({embed});
+            }
+          }, err => {
+            channel.send(err);
+          }
+        );
       }
     } else if (message.startsWith('add'))  {
       message = message.replace('add', '');

@@ -195,13 +195,24 @@ const SCHEDULE = [
     callback: () => {
       console.log('Generating reading list');
       client.guilds.forEach(async guild => {
-        const readingListMessage = await readingListGenerator.generate({
+        await readingListGenerator.generate({
           guildId: guild.id,
-        });
-        utils.postEmbedToChannel(
-          guild,
-          readingListMessage,
-          config.READING_LIST_CHANNEL
+        }).match(
+          embeds => {
+            for (let embed of embeds) {
+              utils.postEmbedToChannel(
+                guild,
+                embed,
+                config.READING_LIST_CHANNEL
+              );
+            }
+          }, err => {
+            utils.postTextToChannel(
+              guild,
+              err,
+              config.READING_LIST_CHANNEL
+            )
+          }
         );
       });
     },
@@ -210,14 +221,24 @@ const SCHEDULE = [
   {
     schedule: '0 0 6 * * *', // Every day at 6am
     callback: () => {
-      console.log('Fetching Morning Reads');
+      console.log('Fetching Morning Paper');
       client.guilds.forEach(async guild => {
-        const morningPaperEmbed = await morningPaperGenerator.generate();
-        utils.postEmbedToChannel(
-          guild,
-          morningPaperEmbed,
-          config.MORNING_READS_CHANNEL
-        );
+        const morningPaper = await morningPaperGenerator.generate();
+        morningPaper.andThen(morningPaperEmbeds => {
+          for (let embed of morningPaperEmbeds) {
+            utils.postEmbedToChannel(
+              guild,
+              embed,
+              config.MORNING_READS_CHANNEL
+            );
+          }
+        }).orElse( _ => {
+          utils.postTextToChannel(
+            guild,
+            "Unable to generate todays Morning Paper",
+            config.MORNING_READS_CHANNEL
+          )
+        });
       });
     },
   },
