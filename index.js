@@ -9,6 +9,7 @@ var CronJob = require('cron').CronJob;
 const ArxivListener = require('./listeners/arxivListener.js');
 const GithubListener = require('./listeners/githubListener.js');
 const LongReadsListener = require('./listeners/longReadsListener.js');
+const MemeListener = require('./listeners/memeListener.js');
 const OpenReviewListener = require('./listeners/openReviewListener.js');
 const ProTipListener = require('./listeners/protipListener.js');
 const StockListener = require('./listeners/stockListener.js');
@@ -23,23 +24,25 @@ const ListenerRegistry = require('./listeners/listenerRegistry.js');
 
 const ChannelRearranger = require('./actions/channelRearranger.js');
 const DeadChannelCop = require('./actions/deadChannelCop.js');
-const presenceGenerator = require('./actions/presenceGenerator.js');
 const MorningReadsGenerator = require('./actions/morningReadsGenerator.js');
+const presenceGenerator = require('./actions/presenceGenerator.js');
 const ReadingListGenerator = require('./actions/readingListGenerator.js');
-const StatsGenerator = require('./actions/statsGenerator.js');
 const ReminderBot = require('./actions/reminderBot.js');
+const StatsGenerator = require('./actions/statsGenerator.js');
 
 const sequelize = new Sequelize('sqlite:db.sqlite', { logging: false });
+const Memes = sequelize.import(__dirname + '/models/meme.js');
 const Messages = sequelize.import(__dirname + '/models/message.js');
+const ProTips = sequelize.import(__dirname + '/models/protip.js');
 const Reminders = sequelize.import(__dirname + '/models/reminder.js');
 const Submissions = sequelize.import(__dirname + '/models/submission.js');
-const ProTips = sequelize.import(__dirname + '/models/protip.js');
 
 // Create database tables
+Memes.sync();
 Messages.sync();
+ProTips.sync();
 Reminders.sync();
 Submissions.sync();
-ProTips.sync();
 
 const deadChannelCop = new DeadChannelCop(Messages);
 const readingListGenerator = new ReadingListGenerator(Submissions);
@@ -69,6 +72,7 @@ client.Messages = Messages;
 client.Reminders = Reminders;
 client.Submissions = Submissions;
 client.ProTips = ProTips;
+client.Memes = Memes;
 
 client.listenerRegistry = listenerRegistry;
 
@@ -138,6 +142,7 @@ client.registry
   .registerGroup('listeners', 'Listeners')
   .registerGroup('feeds', 'Feeds')
   .registerGroup('stats', 'Stats')
+  .registerGroup('memes', 'Memes')
   .registerCommandsIn(path.join(__dirname, 'commands'));
 
 listenerRegistry.registerListeners(
@@ -152,7 +157,8 @@ listenerRegistry.registerListeners(
   new TextMessageListener(Messages),
   new ProTipListener(ProTips),
   new SubredditListener(),
-  new OpenReviewListener()
+  new OpenReviewListener(),
+  new MemeListener(Memes)
 );
 
 // The ready event is vital, it means that your bot will only start reacting to
