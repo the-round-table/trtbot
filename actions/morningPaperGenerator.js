@@ -25,7 +25,7 @@ class MorningPaperGenerator {
 
   async addFeed(feed, feedUrl) {
     if (!this.active) {
-      return Err("RSS Feed system is not active");
+      return Result.fromError("RSS Feed system is not active");
     }
     try {
       await this.parser.parseURL(feedUrl);
@@ -40,7 +40,7 @@ class MorningPaperGenerator {
 
   removeFeed(sourceName) {
     if (!this.active) {
-      return Err("RSS Feed system is not active");
+      return Results.fromError("RSS Feed system is not active");
     }
     if (this.feeds.find(feed => feed.source == sourceName)) {
       this.feeds = this.feeds.filter(feed => feed.source !== sourceName);

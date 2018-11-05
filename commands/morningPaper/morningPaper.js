@@ -83,7 +83,7 @@ module.exports = class MorningPaperCommand extends commando.Command {
   }
 
   listFeeds(channel) {
-    this.generator.listFeeds().match(list => {
+    this.generator.listFeeds().match(feeds => {
       let fieldChars = 0;
       const embed = new discord.RichEmbed()
         .setTitle(
