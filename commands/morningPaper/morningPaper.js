@@ -65,7 +65,7 @@ module.exports = class MorningPaperCommand extends commando.Command {
     } else if (message.startsWith('sources') || message.startsWith('list')) {
       this.listFeeds(channel);
     } else { 
-      channel.send('Unparsible RSS command :frowning: (valid commands: add, remove, list, source, pages');
+      channel.send('Unparsible RSS command :frowning: (valid commands: add, remove, list, sources, pages');
     }
   }
 
