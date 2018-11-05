@@ -24,8 +24,6 @@
   url: http://feeds.feedburner.com/fastcodesign/feed?format=xml
 - source: Hacker News
   url: https://hnrss.org/frontpage?points=200
-- source: The Gradient
-  url: https://thegradient.pub/rss/
 - source: MIT Technology Review
   url: https://www.technologyreview.com/stories.rss
 - source: Deepmind
@@ -40,5 +38,9 @@
   url: https://research.fb.com/feed/
 - source: FB Code
   url: https://code.fb.com/feed/
+- source: The Morning Paper
+  url: https://blog.acolyer.org/feed/
 - source: The Verge
   url: https://www.theverge.com/rss/index.xml
+- source: The Gradient
+  url: https://thegradient.pub/rss/
