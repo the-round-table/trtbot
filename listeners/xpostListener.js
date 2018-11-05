@@ -2,6 +2,7 @@ const BaseMessageListener = require('./baseMessageListener.js');
 const oneLine = require('common-tags').oneLine;
 const discord = require('discord.js');
 const fetch = require('node-fetch');
+const utils = require('../utils.js');
 
 const xpostRegex = /(x(-)?post)/i;
 const channelRegex = /<#[^>]*>/gim;
@@ -58,21 +59,31 @@ class XPostListener extends BaseMessageListener {
     );
     attachments = attachments.filter(attachment => attachment != null);
 
+    const bufferedMessageLink = utils.getMessageLink(bufferedMessage);
+    const crosspostEmbed = new discord.RichEmbed()
+      .setAuthor(
+        bufferedMessage.author.username,
+        bufferedMessage.author.displayAvatarURL
+      )
+      .setTitle(`Crossposted from #${srcChannel.name} by @${poster.username}`)
+      .setDescription(bufferedMessage.content)
+      .addField(
+        'Crosspost Context',
+        `[Original Message](${bufferedMessageLink})`
+      );
     for (let destChannel of destChannelIds) {
       if (destChannel != srcChannel) {
-        guild.channels
-          .get(destChannel.substring(2, destChannel.length - 1))
-          .send(
-            `Crossposted from ${srcChannel} by ${poster}:\n> ${
-              bufferedMessage.content
-            }`,
-            {
-              embed: bufferedMessage.embeds
-                ? bufferedMessage.embeds[0]
-                : undefined,
-              files: attachments,
-            }
-          );
+        const channel = guild.channels.get(
+          destChannel.substring(2, destChannel.length - 1)
+        );
+        await channel.send({ embed: crosspostEmbed, files: attachments });
+        if (bufferedMessage.embeds && bufferedMessage.embeds.length > 0) {
+          await channel.send({
+            embed: bufferedMessage.embeds
+              ? bufferedMessage.embeds[0]
+              : undefined,
+          });
+        }
       }
     }
   }

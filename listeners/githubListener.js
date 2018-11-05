@@ -27,7 +27,8 @@ class GithubListener extends BaseMessageListener {
         stripIndents`\n${owner}/${repo}:
       ⭐ Stars: ${repo_data.data.stargazers_count.toLocaleString()}
       🗣 Language: ${repo_data.data.language || 'Unknown'}
-      ⏰ Last Updated: ${moment(repo_data.data.updated_at).fromNow()}`
+      ⏰ Last Updated: ${moment(repo_data.data.updated_at).fromNow()}
+      📄 Description: ${repo_data.data.description}`
       );
     } catch (e) {
       console.error(e);

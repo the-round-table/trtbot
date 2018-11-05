@@ -34,7 +34,7 @@ class DeadChannelCop {
 
     for (let channelPair of guild.channels) {
       const channel = channelPair[1];
-      if (BLACKLIST.includes(channel.name)) {
+      if (channel.type !== 'text' || BLACKLIST.includes(channel.name)) {
         continue;
       }
       const lastUsed = await this.channelLastUsed(guild.id, channel.name);
