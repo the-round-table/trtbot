@@ -40,7 +40,7 @@ class MorningPaperGenerator {
 
   removeFeed(sourceName) {
     if (!this.active) {
-      return Results.fromError("RSS Feed system is not active");
+      return Result.fromError("RSS Feed system is not active");
     }
     if (this.feeds.find(feed => feed.source == sourceName)) {
       this.feeds = this.feeds.filter(feed => feed.source !== sourceName);
