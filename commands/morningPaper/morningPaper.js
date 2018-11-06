@@ -84,19 +84,34 @@ module.exports = class MorningPaperCommand extends commando.Command {
 
   listFeeds(channel) {
     this.generator.listFeeds().match(feeds => {
-      let fieldChars = 0;
-      const embed = new discord.RichEmbed()
-        .setTitle(
-          `📰  Morning Paper Sources`
-        ).addField("Sources:", feeds.map(feed => {
-          const line = `- [${truncate(feed.source, 75)}](${feed.url})`;
-          fieldChars += line.length + 1;
-          return fieldChars <= 1024 ? line : '';
-        })
-        .join('\n'));
-      channel.send({embed});
+      let paginatedSources = this.paginateList(feeds);
+      let pageNum = 1;
+      for(let page of paginatedSources) {
+        let fieldChars = 0;
+        const embed = new discord.RichEmbed()
+          .setTitle(
+            `📰  Morning Paper Sources (Page ${pageNum}/${[paginatedSources.length]})`
+          ).addField("Sources:", page.map(feed => {
+            const line = `- [${truncate(feed.source, 75)}](${feed.url})`;
+            fieldChars += line.length + 1;
+            return fieldChars <= 1024 ? line : '';
+          })
+          .join('\n'));
+        channel.send({embed});
+        pageNum++;
+      }
       }, err => {
         channel.send('RSS system is not active');
       }); 
+  }
+
+  paginateList(sources) {
+    let numPages = Math.ceil(JSON.stringify(sources).length / 2048) + 1; // Working around 1024 limit with a tuned number 
+    let numSourcesPerPage = sources.length / numPages;
+    let paginatedSources = [];
+    for (let i = 0; i < sources.length; i+=numSourcesPerPage) {
+      paginatedSources.push(sources.slice(i, i + numSourcesPerPage));
+    }
+    return paginatedSources;
   }
 };
