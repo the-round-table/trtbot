@@ -29,11 +29,20 @@ function generateIssueContext(message) {
     (${message.author.id})
   `;
 
+  let channelText = '';
+  if (message.channel.type === 'text') {
+    channelText = `Channel: #${message.channel.name} (${message.channel.id})`;
+  } else if (message.channel.type === 'dm') {
+    channelText = 'Reported in a PM to the bot';
+  } else {
+    channelText = `Reported in a ${message.channel.type} channel`;
+  }
+
   return stripIndents`
     - - -
     ${messageLinkText}
     ${submitterText}
-    Channel: #${message.channel.name} (${message.channel.id})
+    ${channelText}
     ${guildText}
   `;
 }

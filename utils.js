@@ -54,6 +54,9 @@ function postTextToChannel(guild, text, channelName) {
 }
 
 function getMessageLink(message) {
+  if (!message || !message.guild || !message.channel) {
+    return null;
+  }
   return buildMessageLink(message.guild.id, message.channel.id, message.id);
 }
 
