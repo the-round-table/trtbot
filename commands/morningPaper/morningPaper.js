@@ -106,7 +106,7 @@ module.exports = class MorningPaperCommand extends commando.Command {
   }
 
   paginateList(sources) {
-    let numPages = Math.ceil(JSON.stringify(sources).length / 5000) + 1; // 6000 is max embed size
+    let numPages = Math.ceil(JSON.stringify(sources).length / 2048) + 1; // Working around 1024 limit with a tuned number 
     let numSourcesPerPage = sources.length / numPages;
     let paginatedSources = [];
     for (let i = 0; i < sources.length; i+=numSourcesPerPage) {
