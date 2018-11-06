@@ -24,7 +24,7 @@ const ListenerRegistry = require('./listeners/listenerRegistry.js');
 
 const ChannelRearranger = require('./actions/channelRearranger.js');
 const DeadChannelCop = require('./actions/deadChannelCop.js');
-const MorningReadsGenerator = require('./actions/morningReadsGenerator.js');
+const MorningPaperGenerator = require('./actions/morningPaperGenerator.js');
 const presenceGenerator = require('./actions/presenceGenerator.js');
 const ReadingListGenerator = require('./actions/readingListGenerator.js');
 const ReminderBot = require('./actions/reminderBot.js');
@@ -46,7 +46,7 @@ Submissions.sync();
 
 const deadChannelCop = new DeadChannelCop(Messages);
 const readingListGenerator = new ReadingListGenerator(Submissions);
-const morningReadsGenerator = new MorningReadsGenerator(config.RSS_FEEDS_LIST);
+const morningPaperGenerator = new MorningPaperGenerator(config.RSS_FEEDS_LIST);
 const statsGenerator = new StatsGenerator(Messages);
 const channelRearranger = new ChannelRearranger(statsGenerator);
 
@@ -201,13 +201,24 @@ const SCHEDULE = [
     callback: () => {
       console.log('Generating reading list');
       client.guilds.forEach(async guild => {
-        const readingListMessage = await readingListGenerator.generate({
+        await readingListGenerator.generate({
           guildId: guild.id,
-        });
-        utils.postEmbedToChannel(
-          guild,
-          readingListMessage,
-          config.READING_LIST_CHANNEL
+        }).match(
+          embeds => {
+            for (let embed of embeds) {
+              utils.postEmbedToChannel(
+                guild,
+                embed,
+                config.READING_LIST_CHANNEL
+              );
+            }
+          }, err => {
+            utils.postTextToChannel(
+              guild,
+              err,
+              config.READING_LIST_CHANNEL
+            )
+          }
         );
       });
     },
@@ -216,14 +227,24 @@ const SCHEDULE = [
   {
     schedule: '0 0 6 * * *', // Every day at 6am
     callback: () => {
-      console.log('Fetching Morning Reads');
+      console.log('Fetching Morning Paper');
       client.guilds.forEach(async guild => {
-        const morningReadsEmbed = await morningReadsGenerator.generate();
-        utils.postEmbedToChannel(
-          guild,
-          morningReadsEmbed,
-          config.MORNING_READS_CHANNEL
-        );
+        const morningPaper = await morningPaperGenerator.generate();
+        morningPaper.andThen(morningPaperEmbeds => {
+          for (let embed of morningPaperEmbeds) {
+            utils.postEmbedToChannel(
+              guild,
+              embed,
+              config.MORNING_READS_CHANNEL
+            );
+          }
+        }).orElse( _ => {
+          utils.postTextToChannel(
+            guild,
+            "Unable to generate todays Morning Paper",
+            config.MORNING_READS_CHANNEL
+          )
+        });
       });
     },
   },
