@@ -1,7 +1,7 @@
 const commando = require('discord.js-commando');
-const _ = require('lodash');
+const discord = require('discord.js');
 
-const NO_OPTS = 'no_opts';
+const USAGE = 'Usage: [QUESTION]? [OPTION1], [OPTION2], [OPTION3]...';
 const POLL_EMOTES = [
   `1⃣`,
   `2⃣`,
@@ -22,45 +22,41 @@ module.exports = class PollCommand extends commando.Command {
       memberName: 'poll',
       group: 'util',
       description: 'Creates polls',
-      examples: ['poll', 'poll opt0 opt1'],
+      examples: ['poll', 'poll Do you like cake or pie? cake, pie'],
       guildOnly: false,
-      args: [
-        {
-          key: 'question',
-          prompt: 'What question should the poll ask?',
-          type: 'string',
-        },
-        {
-          key: 'opts',
-          prompt: 'What poll options do you want?',
-          type: 'string',
-          infinite: true,
-          default: NO_OPTS,
-        },
-      ],
+      argsType: 'single',
     });
   }
 
-  async run(msg, { question, opts }) {
-    let poll_data;
-    if (opts === NO_OPTS) {
-      poll_data = `No options provided`;
+  async run(msg, args) {
+    let [question, ...opts] = args.split('?');
+    question = question.trim();
+    opts = opts
+      .join(' ')
+      .split(',')
+      .map(opt => opt.trim());
+
+    if (!question || !opts || opts.length === 0) {
+      return await msg.reply('Incorrect Usage. ' + USAGE);
     } else if (opts.length > POLL_EMOTES.length) {
-      poll_data = `Too many options provided`;
-    } else {
-      poll_data = `**"${question}"**\n_React with one of the following emotes:_\n`;
-      for (let emoji_ind = 0; emoji_ind < opts.length; emoji_ind++) {
-        poll_data += `${POLL_EMOTES[emoji_ind]} ${opts[emoji_ind]}\n`;
-      }
+      return await msg.reply(
+        `Too many options provided. (Maximum is ${POLL_EMOTES.length})`
+      );
     }
 
-    if (!poll_data) {
-      msg.reply("Couldn't create poll.");
-    } else {
-      let resp_msg = await msg.channel.send(poll_data);
-      for (let emoji_ind = 0; emoji_ind < opts.length; emoji_ind++) {
-        await resp_msg.react(`${POLL_EMOTES[emoji_ind]}`);
-      }
+    let poll_options = `\n_React with one of the following emotes:_\n`;
+    for (let emoji_ind = 0; emoji_ind < opts.length; emoji_ind++) {
+      poll_options += `${POLL_EMOTES[emoji_ind]} ${opts[emoji_ind]}\n`;
     }
+
+    const embed = new discord.RichEmbed()
+      .setTitle(`Poll: ${question}?`)
+      .setDescription(poll_options);
+    const poll_msg = await msg.channel.send(embed);
+
+    for (let emoji_ind = 0; emoji_ind < opts.length; emoji_ind++) {
+      await poll_msg.react(`${POLL_EMOTES[emoji_ind]}`);
+    }
+    return poll_msg;
   }
 };
