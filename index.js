@@ -201,25 +201,24 @@ const SCHEDULE = [
     callback: () => {
       console.log('Generating reading list');
       client.guilds.forEach(async guild => {
-        await readingListGenerator.generate({
-          guildId: guild.id,
-        }).match(
-          embeds => {
-            for (let embed of embeds) {
-              utils.postEmbedToChannel(
-                guild,
-                embed,
-                config.READING_LIST_CHANNEL
-              );
+        await readingListGenerator
+          .generate({
+            guildId: guild.id,
+          })
+          .match(
+            embeds => {
+              for (let embed of embeds) {
+                utils.postEmbedToChannel(
+                  guild,
+                  embed,
+                  config.READING_LIST_CHANNEL
+                );
+              }
+            },
+            err => {
+              utils.postTextToChannel(guild, err, config.READING_LIST_CHANNEL);
             }
-          }, err => {
-            utils.postTextToChannel(
-              guild,
-              err,
-              config.READING_LIST_CHANNEL
-            )
-          }
-        );
+          );
       });
     },
   },
@@ -230,21 +229,23 @@ const SCHEDULE = [
       console.log('Fetching Morning Paper');
       client.guilds.forEach(async guild => {
         const morningPaper = await morningPaperGenerator.generate();
-        morningPaper.andThen(morningPaperEmbeds => {
-          for (let embed of morningPaperEmbeds) {
-            utils.postEmbedToChannel(
+        morningPaper
+          .andThen(morningPaperEmbeds => {
+            for (let embed of morningPaperEmbeds) {
+              utils.postEmbedToChannel(
+                guild,
+                embed,
+                config.MORNING_READS_CHANNEL
+              );
+            }
+          })
+          .orElse(_ => {
+            utils.postTextToChannel(
               guild,
-              embed,
+              'Unable to generate todays Morning Paper',
               config.MORNING_READS_CHANNEL
             );
-          }
-        }).orElse( _ => {
-          utils.postTextToChannel(
-            guild,
-            "Unable to generate todays Morning Paper",
-            config.MORNING_READS_CHANNEL
-          )
-        });
+          });
       });
     },
   },
