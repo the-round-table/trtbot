@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       primaryKey: true,
     },
+    guildId: DataTypes.STRING,
     messageText: DataTypes.STRING,
     dueDate: DataTypes.DATE,
   });
