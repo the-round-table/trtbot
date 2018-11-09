@@ -201,24 +201,14 @@ const SCHEDULE = [
     callback: () => {
       console.log('Generating reading list');
       client.guilds.forEach(async guild => {
-        await readingListGenerator
-          .generate({
-            guildId: guild.id,
-          })
-          .match(
-            embeds => {
-              for (let embed of embeds) {
-                utils.postEmbedToChannel(
-                  guild,
-                  embed,
-                  config.READING_LIST_CHANNEL
-                );
-              }
-            },
-            err => {
-              utils.postTextToChannel(guild, err, config.READING_LIST_CHANNEL);
-            }
-          );
+        const readingListMessage = await readingListGenerator.generate({
+          guildId: guild.id,
+        });
+        utils.postEmbedToChannel(
+          guild,
+          readingListMessage,
+          config.READING_LIST_CHANNEL
+        );
       });
     },
   },
