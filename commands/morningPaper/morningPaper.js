@@ -32,6 +32,7 @@ module.exports = class MorningPaperCommand extends commando.Command {
     let message = msg.content.replace('trt paper', '');
     message = message.trim();
     if (!message.replace(/\s/g, '').length) {
+      await msg.react('🗞');
       const paper = await this.generator.generate();
       paper
         .andThen(embeds => {
@@ -70,6 +71,7 @@ module.exports = class MorningPaperCommand extends commando.Command {
       message = message.trim();
       this.removeFeed(channel, message);
     } else if (message.startsWith('sources') || message.startsWith('list')) {
+      await msg.react('🗞');
       this.listFeeds(channel);
     } else {
       channel.send(
