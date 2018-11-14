@@ -19,20 +19,21 @@ const BUCKETS = [
 
 const BLACKLISTED_SITES = [
   'amazon.com',
+  'arxiv-vanity.com',
+  'arxiv.org',
   'facebook.com',
   'giphy.com',
+  'github.com',
   'instagram.com',
   'instagram.com',
   'itunes.apple.com',
-  'twitter.com',
-  'wikipedia.org',
-  'youtube.com',
-  'arxiv.org',
   'oldschoolrunescape.wikia.com',
   'openreview.net',
   'reddit.com',
-  'arxiv-vanity.com',
   'tenor.com',
+  'twitter.com',
+  'wikipedia.org',
+  'youtube.com',
 ];
 
 const IMAGE_LINK_REGEX = '.(?:jpg|gif|png)$';
