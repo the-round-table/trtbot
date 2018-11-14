@@ -1,6 +1,5 @@
 const fetch = require('node-fetch');
 const discord = require('discord.js');
-const stripIndents = require('common-tags').stripIndents;
 const cheerio = require('cheerio');
 const readingTime = require('reading-time');
 const URL = require('url').URL;
@@ -75,12 +74,19 @@ class LongReadsListener extends BaseMessageListener {
         const minutes = readingTimeAnalysis.minutes;
         if (minutes >= READING_TIME_THRESHOLD) {
           const embed = new discord.RichEmbed();
-          const outlineLink = `https://outline.com/${link}`;
           const readLength = determineLabelForRead(minutes);
-          embed.setDescription(
-            stripIndents`I estimate that's a **${readLength}** read.\n
-              [Reader mode](${outlineLink})`
-          );
+
+          let description = `I estimate that's a **${readLength}** read.`;
+
+          const linkURL = new URL(link);
+          // Include an outline.com link if the link isn't a PDF
+          if (!linkURL.pathname.endsWith('pdf')) {
+            const outlineLink =
+              'https://outline.com/' + link.replace(' ', '%20');
+            description += `\n[Reader mode](${outlineLink})`;
+          }
+
+          embed.setDescription(description);
           message.reply(embed);
         }
       })
