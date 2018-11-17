@@ -6,6 +6,7 @@ const _ = require('lodash');
 const ChartjsNode = require('chartjs-node');
 const moment = require('moment');
 const discord = require('discord.js');
+const yahooStocks = require('yahoo-stocks');
 
 if (global.CanvasGradient === undefined) {
   global.CanvasGradient = function() {};
@@ -37,11 +38,15 @@ class StocksClient {
 
     let responseText = '';
     responseText += symbolData.link
-      ? `[${symbol}](${symbolData.link}): `
-      : `${symbol}: `;
-    responseText += `($${symbolData.close.toFixed(2)}; `;
+      ? `[${symbol}](${symbolData.link})`
+      : `${symbol}`;
+    if (symbolData.companyName) {
+      responseText += ` (${symbolData.companyName})`;
+    }
+    responseText += ': ';
+    responseText += `$${symbolData.close.toFixed(2)}; `;
     responseText += `${changeSymbol}${Math.abs(percentChange).toFixed(2)}%; `;
-    responseText += `${changeSymbol} $${absChange.toFixed(2)})`;
+    responseText += `${changeSymbol}$${absChange.toFixed(2)}`;
 
     const attachments = symbolData.chart
       ? [new discord.Attachment(symbolData.chart, 'chart.png')]
@@ -79,10 +84,19 @@ class StocksClient {
       console.error(err);
     }
 
+    let companyName;
+    try {
+      const companyData = await yahooStocks.lookup(symbol);
+      companyName = companyData.name;
+    } catch (err) {
+      console.error(err);
+    }
+
     return {
       open: _.last(symbolData).open,
       close: _.first(symbolData).close,
       link: this._getInfoLink(symbol),
+      companyName,
       chart,
     };
   }

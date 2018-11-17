@@ -57,6 +57,7 @@
     "truncate": "^2.0.1",
     "typescript": "^2.9.2",
     "wikijs": "^4.8.1",
+    "yahoo-stocks": "^2.0.4",
     "yaml": "^1.0.0"
   },
   "devDependencies": {
