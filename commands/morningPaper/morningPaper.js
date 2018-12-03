@@ -92,7 +92,7 @@ module.exports = class MorningPaperCommand extends commando.Command {
       )
       .orElse(err =>
         channel.send(
-          `Failed to add ${feedTitle} to the source list (err: ${err.message})`
+          `Failed to add ${feedTitle} to the source list (err: ${err})`
         )
       );
   }
@@ -106,7 +106,7 @@ module.exports = class MorningPaperCommand extends commando.Command {
       .orElse(err =>
         channel.send(
           `Failed to remove ${subcommand} to the source list (err: ${
-            err.message
+            err
           })`
         )
       );

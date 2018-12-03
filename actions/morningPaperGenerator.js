@@ -28,6 +28,9 @@ class MorningPaperGenerator {
       return Result.fromError('RSS Feed system is not active');
     }
     try {
+      if (this.feeds.find(feed => feed["url"] === feedUrl)) {
+        return Result.fromError("This feed has already been added");
+      }
       await this.parser.parseURL(feedUrl);
       this.feeds.push({ source: feed, url: feedUrl });
       const feedsStr = YAML.stringify(this.feeds);
