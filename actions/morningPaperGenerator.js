@@ -66,20 +66,23 @@ class MorningPaperGenerator {
     let articlesForToday = [];
     let numSources = 0;
     let yesterday = moment().add(-1, 'days');
-    for (let feed of this.feeds) {
+    await Promise.all(this.feeds.map(feed => {
       console.log(`Attempting to get latest articles from ${feed.source}`);
-      let feedContent = await this.parser.parseURL(feed.url);
-      let newArticles = [];
-      for (let article of feedContent.items) {
-        if (moment(article.pubDate) >= yesterday) {
-          newArticles.push({ title: article.title, link: article.link });
+      return this.parser.parseURL(feed.url); 
+    })).then(feeds => {
+      for (let feed of feeds) {
+        let newArticles = [];
+        for (let article of feed.items) {
+          if (moment(article.pubDate) >= yesterday) {
+            newArticles.push({ title: article.title, link: article.link });
+          }
+       }
+        if (newArticles.length > 0) {
+          articlesForToday.push({ source: feed.title, articles: newArticles });
+          numSources++;
         }
       }
-      if (newArticles.length > 0) {
-        articlesForToday.push({ source: feed.source, articles: newArticles });
-        numSources++;
-      }
-    }
+    }).catch();
 
     if (!numPages) {
       numPages = Math.ceil(JSON.stringify(articlesForToday).length / 5000) + 1; // 6000 is max embed size

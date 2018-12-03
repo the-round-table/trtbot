@@ -44,7 +44,7 @@ module.exports = class MorningPaperCommand extends commando.Command {
           channel.send('Failed to generate paper');
         });
     } else if (message.startsWith('pages')) {
-      const numPagesStr = message.replace('pages', '');
+      const numPagesStr = message.replace(/pages/ig, '');
       if (isNaN(numPagesStr)) {
         channel.send(
           'Unparsible RSS command :frowning: (Pages arg needs to be number)'
