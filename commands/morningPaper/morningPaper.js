@@ -29,7 +29,7 @@ module.exports = class MorningPaperCommand extends commando.Command {
   async run(msg) {
     const channel = msg.channel;
 
-    let message = msg.content.replace('trt paper', '');
+    let message = msg.content.replace(/trt paper/ig, '');
     message = message.trim();
     if (!message.replace(/\s/g, '').length) {
       await msg.react('🗞');
@@ -47,7 +47,7 @@ module.exports = class MorningPaperCommand extends commando.Command {
       const numPagesStr = message.replace('pages', '');
       if (isNaN(numPagesStr)) {
         channel.send(
-          'Unparsible RSS command :frowning: (Pages arg needs to be number'
+          'Unparsible RSS command :frowning: (Pages arg needs to be number)'
         );
       } else {
         let numPages = parseInt(message, 10);
@@ -75,7 +75,7 @@ module.exports = class MorningPaperCommand extends commando.Command {
       this.listFeeds(channel);
     } else {
       channel.send(
-        'Unparsible RSS command :frowning: (valid commands: add, remove, list, sources, pages'
+        'Unparsible RSS command :frowning: (valid commands: add, remove, list, sources, pages)'
       );
     }
   }
