@@ -5,6 +5,7 @@ const Sequelize = require('sequelize');
 const Commando = require('discord.js-commando');
 const utils = require('./utils.js');
 var CronJob = require('cron').CronJob;
+const throttle = require('lodash').throttle;
 
 const ArxivListener = require('./listeners/arxivListener.js');
 const GithubListener = require('./listeners/githubListener.js');
@@ -85,7 +86,7 @@ client
   .on('ready', () => {
     console.log(
       `Client ready; logged in as ${client.user.username}#${
-        client.user.discriminator
+      client.user.discriminator
       } (${client.user.id})`
     );
 
@@ -312,7 +313,10 @@ function setupSchedule() {
     scheduleItem =>
       new CronJob(
         scheduleItem.schedule,
-        scheduleItem.callback,
+        // Throttle cron jobs to only run at most every 2 seconds
+        // This (should) fix an issue we were having w/ node-cron wherein jobs
+        // would execute many times in quick succession.
+        throttle(scheduleItem.callback, 2000),
         null,
         true,
         'America/Los_Angeles'
