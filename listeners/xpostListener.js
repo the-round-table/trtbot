@@ -20,11 +20,7 @@ class XPostListener extends BaseMessageListener {
   }
 
   async onMessage(message) {
-    // Buffer bot messages only if they contain embeds or attachments
-    if (
-      message.author.bot &&
-      !(message.embeds.length > 0 || message.attachments.size > 0)
-    ) {
+    if (message.author.bot) {
       return;
     }
 
