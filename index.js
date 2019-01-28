@@ -313,10 +313,13 @@ function setupSchedule() {
     scheduleItem =>
       new CronJob(
         scheduleItem.schedule,
-        // Throttle cron jobs to only run at most every 2 seconds
+        // Throttle cron jobs to only run at most every 10 seconds
         // This (should) fix an issue we were having w/ node-cron wherein jobs
         // would execute many times in quick succession.
-        throttle(scheduleItem.callback, 2000),
+        throttle(scheduleItem.callback, 10 * 1000, {
+          leading: true,
+          trailing: false,
+        }),
         null,
         true,
         'America/Los_Angeles'
