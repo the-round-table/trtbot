@@ -2,8 +2,6 @@
   url: https://api.quantamagazine.org/feed
 - source: NYT > Technology
   url: http://rss.nytimes.com/services/xml/rss/nyt/Technology.xml
-- source: Ars Techinica
-  url: http://feeds.arstechnica.com/arstechnica/index
 - source: Dezeen
   url: https://www.dezeen.com/feed/
 - source: The Economist
@@ -44,3 +42,49 @@
   url: https://www.theverge.com/rss/index.xml
 - source: The Gradient
   url: https://thegradient.pub/rss/
+- source: CityLab
+  url: https://www.citylab.com/feeds/posts/
+- source: FiveThirtyEight
+  url: https://fivethirtyeight.com/features/feed/
+- source: Approximately Correct
+  url: http://approximatelycorrect.com/feed
+- source: Josh's Blog
+  url: https://www.joshdunigan.com/feed.rss
+- source: Ben's Blog
+  url: https://benjamincongdon.me/blog/feed.xml
+- source: Design Week
+  url: https://www.designweek.co.uk/feed
+- source: Volume
+  url: http://volumeproject.org/feed/
+- source: Ars Technica
+  url: https://arstechnica.com/feed/
+- source: Synced
+  url: https://syncedreview.com/feed/
+- source: LcZero Blog
+  url: http://blog.lczero.org/feeds/posts/default
+- source: OpenAI
+  url: https://blog.openai.com/rss/
+- source: BAIR
+  url: https://bair.berkeley.edu/blog/feed.xml
+- source: Off The Convex Path
+  url: http://www.offconvex.org/feed.xml
+- source: Colorado Sun
+  url: https://coloradosun.com/feed
+- source: Design Milk
+  url: http://feeds.feedburner.com/design
+- source: Ars Electronica
+  url: https://ars.electronica.art/aeblog/en/feed
+- source: Aeon
+  url: https://aeon.co/feed
+- source: VideoGameDunkey
+  url: https://www.youtube.com/feeds/videos.xml?channel_id=UCsvn_Po0SmunchJYOWpOxMg
+- source: IFHT
+  url: https://www.youtube.com/feeds/videos.xml?channel_id=UCeWaURbVb0kEFTpN2pB38cw
+- source: CGP Grey
+  url: https://www.youtube.com/feeds/videos.xml?channel_id=UC2C_jShtL725hvbm1arSV9w
+- source: Stratechery
+  url: http://stratechery.com/feed/
+- source: Uber Engineering
+  url: https://eng.uber.com/rss
+- source: Logic
+  url: https://logicmag.io/rss/
