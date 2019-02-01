@@ -4,8 +4,7 @@ const oneLine = require('common-tags').oneLine;
 const Sequelize = require('sequelize');
 const Commando = require('discord.js-commando');
 const utils = require('./utils.js');
-var CronJob = require('cron').CronJob;
-const throttle = require('lodash').throttle;
+var schedule = require('node-schedule');
 
 const ArxivListener = require('./listeners/arxivListener.js');
 const GithubListener = require('./listeners/githubListener.js');
@@ -86,7 +85,7 @@ client
   .on('ready', () => {
     console.log(
       `Client ready; logged in as ${client.user.username}#${
-      client.user.discriminator
+        client.user.discriminator
       } (${client.user.id})`
     );
 
@@ -309,20 +308,10 @@ const SCHEDULE = [
 ];
 
 function setupSchedule() {
-  SCHEDULE.forEach(
-    scheduleItem =>
-      new CronJob(
-        scheduleItem.schedule,
-        // Throttle cron jobs to only run at most every 10 seconds
-        // This (should) fix an issue we were having w/ node-cron wherein jobs
-        // would execute many times in quick succession.
-        throttle(scheduleItem.callback, 10 * 1000, {
-          leading: true,
-          trailing: false,
-        }),
-        null,
-        true,
-        'America/Los_Angeles'
-      )
+  SCHEDULE.forEach(scheduleItem =>
+    schedule.scheduleJob(
+      { rule: scheduleItem.schedule, tz: 'America/Los_Angeles' },
+      scheduleItem.callback
+    )
   );
 }
