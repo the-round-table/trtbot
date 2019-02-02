@@ -27,7 +27,6 @@ class MorningPaperGenerator {
     const file = fs.readFileSync(this.feedsListFile, 'utf8');
     // Load feeds and sort alphabetically by feed name
     this.feeds = _.sortBy(YAML.parse(file), 'source');
-    console.log(this.feeds);
   }
 
   async addFeed(feed, feedUrl) {
