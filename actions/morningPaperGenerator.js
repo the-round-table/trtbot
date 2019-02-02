@@ -4,6 +4,7 @@ const moment = require('moment');
 const truncate = require('truncate');
 const fs = require('fs');
 const Result = require('result-js');
+const _ = require('lodash');
 let Parser = require('rss-parser');
 
 class MorningPaperGenerator {
@@ -15,12 +16,18 @@ class MorningPaperGenerator {
     this.active = true;
     this.feedsListFile = feedsListPath;
     this.parser = new Parser();
-    let file = fs.readFileSync(this.feedsListFile, 'utf8');
-    this.feeds = YAML.parse(file);
+
+    this.loadFeeds();
     fs.watch(this.feedsListFile, _ => {
-      file = fs.readFileSync(this.feedsListFile, 'utf8');
-      this.feeds = YAML.parse(file);
+      this.loadFeeds();
     });
+  }
+
+  loadFeeds() {
+    const file = fs.readFileSync(this.feedsListFile, 'utf8');
+    // Load feeds and sort alphabetically by feed name
+    this.feeds = _.sortBy(YAML.parse(file), 'source');
+    console.log(this.feeds);
   }
 
   async addFeed(feed, feedUrl) {
