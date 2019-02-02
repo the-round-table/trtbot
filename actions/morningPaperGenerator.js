@@ -44,6 +44,29 @@ class MorningPaperGenerator {
     }
   }
 
+  renameFeed(oldName, newName) {
+    if (!this.active) {
+      return Result.fromError('RSS Feed system is not active');
+    }
+    if (
+      this.feeds.find(
+        feed => feed.source.toLowerCase() === oldName.toLowerCase()
+      )
+    ) {
+      this.feeds = this.feeds.map(feed => {
+        if (feed.source.toLowerCase() === oldName.toLowerCase()) {
+          return { ...feed, source: newName };
+        }
+        return feed;
+      });
+      const feedsStr = YAML.stringify(this.feeds);
+      fs.writeFileSync(this.feedsListFile, feedsStr, 'utf8');
+      return Result.fromSuccess('Successfully renamed feed');
+    } else {
+      return Result.fromError('This feed is not in the feed list');
+    }
+  }
+
   removeFeed(sourceName) {
     if (!this.active) {
       return Result.fromError('RSS Feed system is not active');

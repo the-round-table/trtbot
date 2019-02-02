@@ -19,6 +19,7 @@ module.exports = class MorningPaperCommand extends commando.Command {
         'paper source',
         'paper list',
         'paper pages 5',
+        'paper rename Quanta Magazine - Quanta',
       ],
       guildOnly: true,
     });
@@ -29,11 +30,8 @@ module.exports = class MorningPaperCommand extends commando.Command {
   async run(msg) {
     const channel = msg.channel;
 
-    let message = msg.content
-      .trim()
-      .toLowerCase()
-      .replace(/.*? paper/, '');
-    if (!message.replace(/\s/g, '').length) {
+    let message = msg.content.trim().replace(/.*? paper\s*/, '');
+    if (!message.toLowerCase().replace(/\s/g, '').length) {
       await msg.react('🗞');
       const paper = await this.generator.generate();
       paper
@@ -45,7 +43,7 @@ module.exports = class MorningPaperCommand extends commando.Command {
         .orElse(_ => {
           channel.send('Failed to generate paper');
         });
-    } else if (message.startsWith('pages')) {
+    } else if (message.toLowerCase().startsWith('pages')) {
       const numPagesStr = message.replace('pages', '');
       if (isNaN(numPagesStr)) {
         channel.send(
@@ -64,15 +62,21 @@ module.exports = class MorningPaperCommand extends commando.Command {
           }
         );
       }
-    } else if (message.startsWith('add')) {
+    } else if (message.toLowerCase().startsWith('add')) {
       message = message.replace('add', '');
       message = message.trim();
       await this.addFeed(channel, message);
-    } else if (message.startsWith('remove')) {
+    } else if (message.toLowerCase().startsWith('remove')) {
       message = message.replace('remove', '');
       message = message.trim();
       this.removeFeed(channel, message);
-    } else if (message.startsWith('sources') || message.startsWith('list')) {
+    } else if (message.toLowerCase().startsWith('rename')) {
+      await msg.react('🗞');
+      await this.renameFeed(channel, message.replace('rename', ''));
+    } else if (
+      message.toLowerCase().startsWith('sources') ||
+      message.toLowerCase().startsWith('list')
+    ) {
       await msg.react('🗞');
       this.listFeeds(channel);
     } else {
@@ -97,6 +101,18 @@ module.exports = class MorningPaperCommand extends commando.Command {
           `Failed to add ${feedTitle} to the source list (err: ${err.message})`
         )
       );
+  }
+
+  async renameFeed(channel, subcommand) {
+    let [oldName, ...newName] = subcommand.split('-');
+    oldName = oldName.trim();
+    newName = newName[0].trim();
+    let result = await this.generator.renameFeed(oldName, newName);
+    result
+      .andThen(_ =>
+        channel.send(`Successfully renamed ${oldName} to ${newName}`)
+      )
+      .orElse(err => channel.send(`Failed to rename ${oldName} (err: ${err})`));
   }
 
   removeFeed(channel, subcommand) {
