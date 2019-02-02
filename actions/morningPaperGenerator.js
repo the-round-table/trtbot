@@ -70,23 +70,25 @@ class MorningPaperGenerator {
     if (!this.active) {
       return Result.fromError('RSS Feed system is not active');
     }
-    let articlesForToday = [];
-    let numSources = 0;
     let yesterday = moment().add(-1, 'days');
-    for (let feed of this.feeds) {
-      console.log(`Attempting to get latest articles from ${feed.source}`);
-      let feedContent = await this.parser.parseURL(feed.url);
-      let newArticles = [];
-      for (let article of feedContent.items) {
-        if (moment(article.pubDate) >= yesterday) {
-          newArticles.push({ title: article.title, link: article.link });
+
+    let articlesForToday = await Promise.all(
+      this.feeds.map(async feed => {
+        console.log(`Attempting to get latest articles from ${feed.source}`);
+        let feedContent = await this.parser.parseURL(feed.url);
+        let newArticles = [];
+        for (let article of feedContent.items) {
+          if (moment(article.pubDate) >= yesterday) {
+            newArticles.push({ title: article.title, link: article.link });
+          }
         }
-      }
-      if (newArticles.length > 0) {
-        articlesForToday.push({ source: feed.source, articles: newArticles });
-        numSources++;
-      }
-    }
+        return { source: feed.source, articles: newArticles };
+      })
+    );
+    articlesForToday = articlesForToday.filter(
+      entry => entry.articles.length > 0
+    );
+    const numSources = articlesForToday.length;
 
     if (!numPages) {
       numPages = Math.ceil(JSON.stringify(articlesForToday).length / 5000) + 1; // 6000 is max embed size
