@@ -64,3 +64,5 @@ serviceAccount.json
 db.sqlite
 .protip
 commando.sqlite
+
+*.swp
