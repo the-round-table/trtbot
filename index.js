@@ -308,6 +308,8 @@ const SCHEDULE = [
 ];
 
 function setupSchedule() {
+  // Cancel any outstanding jobs
+  Object.values(schedule.scheduledJobs).forEach(job => job.cancel());
   SCHEDULE.forEach(scheduleItem =>
     schedule.scheduleJob(
       { rule: scheduleItem.schedule, tz: 'America/Los_Angeles' },
