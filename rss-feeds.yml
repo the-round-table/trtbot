@@ -10,10 +10,6 @@
   url: https://ars.electronica.art/aeblog/en/feed
 - source: Ars Technica
   url: https://arstechnica.com/feed/
-- source: BAIR
-  url: https://bair.berkeley.edu/blog/feed.xml
-- source: BAIR
-  url: https://bair.berkeley.edu/blog/feed.xml
 - source: BLDGBLOG
   url: http://www.bldgblog.com/feed/
 - source: Ben's Blog
@@ -46,6 +42,8 @@
   url: https://flowingdata.com/feed
 - source: Google AI Research
   url: http://feeds.feedburner.com/blogspot/gJZg
+- source: Gradient Science
+  url: https://gradientscience.org/feed.xml
 - source: Hacker News
   url: https://hnrss.org/frontpage?points=200
 - source: IFHT
@@ -62,14 +60,24 @@
   url: http://news.mit.edu/rss/topic/media
 - source: MIT Technology Review
   url: https://www.technologyreview.com/stories.rss
+- source: Metropolis
+  url: https://www.metropolismag.com/rss
 - source: NYT > Technology
   url: http://rss.nytimes.com/services/xml/rss/nyt/Technology.xml
 - source: Off The Convex Path
   url: http://www.offconvex.org/feed.xml
 - source: OpenAI
   url: https://blog.openai.com/rss/
+- source: Outdoor > Adventure
+  url: https://www.outsideonline.com/rss/adventure/rss.xml
+- source: Outdoor > Gear
+  url: https://www.outsideonline.com/rss/gear/rss.xml
+- source: Outdoor > Travel
+  url: https://www.outsideonline.com/rss/travel/rss.xml
 - source: Quanta Magazine
   url: https://api.quantamagazine.org/feed
+- source: Ribbonfarm
+  url: http://ribbonfarm.com/feed
 - source: Stratechery
   url: http://stratechery.com/feed/
 - source: Synced
@@ -88,5 +96,5 @@
   url: https://www.youtube.com/feeds/videos.xml?channel_id=UCsvn_Po0SmunchJYOWpOxMg
 - source: Volume
   url: http://volumeproject.org/feed/
-- source: Ribbonfarm
-  url: http://ribbonfarm.com/feed
+- source: BAIR
+  url: https://bair.berkeley.edu/blog/feed.xml
