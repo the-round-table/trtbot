@@ -6,7 +6,7 @@ const oneLine = require('common-tags').oneLine;
 
 const BLACKLIST = config.DEAD_CHANNEL_BLACKLIST || [];
 
-const DEAD_CHANNEL_DAYS_THRESHOLD = 10;
+const DEAD_CHANNEL_DAYS_THRESHOLD = 30;
 
 class DeadChannelCop {
   constructor(Messages) {
