@@ -97,7 +97,12 @@ class MorningPaperGenerator {
     let articlesForToday = await Promise.all(
       this.feeds.map(async feed => {
         console.log(`Attempting to get latest articles from ${feed.source}`);
-        let feedContent = await this.parser.parseURL(feed.url);
+        let feedContent;
+        try {
+          feedContent = await this.parser.parseURL(feed.url);
+        } catch (error) {
+          return { source: feed.source, error };
+        }
         let newArticles = [];
         for (let article of feedContent.items) {
           if (moment(article.pubDate) >= yesterday) {
@@ -107,8 +112,9 @@ class MorningPaperGenerator {
         return { source: feed.source, articles: newArticles };
       })
     );
+    let errorSources = articlesForToday.filter(entry => entry.error);
     articlesForToday = articlesForToday.filter(
-      entry => entry.articles.length > 0
+      entry => !entry.error && entry.articles.length > 0
     );
     const numSources = articlesForToday.length;
 
@@ -151,6 +157,15 @@ class MorningPaperGenerator {
       }
       embeds.push(embed);
       pageNum++;
+    }
+    if (errorSources.length > 0) {
+      let errEmbed = new discord.RichEmbed().setTitle(
+        '🚨 Sources with Errors 🚨'
+      );
+      for (let source of errorSources) {
+        errEmbed.addField(source.source, `Error: ${source.error}`);
+      }
+      embeds.push(errEmbed);
     }
     return Result.fromSuccess(embeds);
   }
