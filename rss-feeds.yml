@@ -10,26 +10,40 @@
   url: https://ars.electronica.art/aeblog/en/feed
 - source: Ars Technica
   url: https://arstechnica.com/feed/
+- source: Artnome
+  url: http://feeds.feedburner.com/Blog
+- source: BAIR
+  url: https://bair.berkeley.edu/blog/feed.xml
 - source: BLDGBLOG
   url: http://www.bldgblog.com/feed/
+- source: Bandit Algorithms
+  url: http://banditalgs.com/feed/
 - source: Ben's Blog
   url: https://benjamincongdon.me/blog/feed.xml
+- source: Bon Appétit > It's Alive with Brad
+  url: https://www.youtube.com/feeds/videos.xml?playlist_id=PLKtIunYVkv_SUyXj_6Fe53okfzM9yVq1F
 - source: CGP Grey
   url: https://www.youtube.com/feeds/videos.xml?channel_id=UC2C_jShtL725hvbm1arSV9w
 - source: CityLab
   url: https://www.citylab.com/feeds/posts/
 - source: Colorado Sun
   url: https://coloradosun.com/feed
+- source: Cooper Hewitt
+  url: https://www.cooperhewitt.org/blog/rss
+- source: Cooper Hewitt Labs
+  url: https://labs.cooperhewitt.org/rss
 - source: Creative Applications
-  url: https://www.creativeapplications.net/feed/
+  url: http://www.creativeapplications.net/feed/
 - source: Deepmind
-  url: https://deepmind.com/blog/feed/basic/
+  url: http://deepmind.com/blog/feed/basic/
 - source: Design Milk
   url: http://feeds.feedburner.com/design
 - source: Design Week
   url: https://www.designweek.co.uk/feed
 - source: Dezeen
   url: https://www.dezeen.com/feed/
+- source: Distill
+  url: https://distill.pub/rss.xml
 - source: FB Code
   url: https://code.fb.com/feed/
 - source: FB Research
@@ -48,14 +62,26 @@
   url: https://hnrss.org/frontpage?points=200
 - source: IFHT
   url: https://www.youtube.com/feeds/videos.xml?channel_id=UCeWaURbVb0kEFTpN2pB38cw
+- source: Illinois News Bureau
+  url: https://news.illinois.edu/xml/6367/rss.xml
 - source: It's Nice That
-  url: http://feeds2.feedburner.com/itsnicethat/SlXC
+  url: https://feeds2.feedburner.com/itsnicethat/SlXC
+- source: JoDS
+  url: https://jods.mitpress.mit.edu/rss.xml
 - source: Josh's Blog
   url: https://www.joshdunigan.com/feed.rss
+- source: KDnuggets
+  url: https://www.kdnuggets.com/rss
+- source: Kevin Kelly > The Technium
+  url: http://feedpress.me/TheTechnium
 - source: LcZero Blog
   url: http://blog.lczero.org/feeds/posts/default
+- source: Leverhulme Centre for the Future of Intelligence
+  url: http://lcfi.ac.uk/news/feed
 - source: Logic
   url: https://logicmag.io/rss/
+- source: MCA Denver
+  url: https://mcadenver.org/rss.xml
 - source: MIT Media Lab
   url: http://news.mit.edu/rss/topic/media
 - source: MIT Technology Review
@@ -64,6 +90,10 @@
   url: https://www.metropolismag.com/rss
 - source: NYT > Technology
   url: http://rss.nytimes.com/services/xml/rss/nyt/Technology.xml
+- source: Nautilus
+  url: http://nautil.us/rss/all
+- source: Neil Gaiman's Journal
+  url: http://www.neilgaiman.com/feed/journal/
 - source: Off The Convex Path
   url: http://www.offconvex.org/feed.xml
 - source: OpenAI
@@ -74,27 +104,47 @@
   url: https://www.outsideonline.com/rss/gear/rss.xml
 - source: Outdoor > Travel
   url: https://www.outsideonline.com/rss/travel/rss.xml
+- source: Palladium
+  url: https://palladiummag.com/feed
 - source: Quanta Magazine
   url: https://api.quantamagazine.org/feed
+- source: Resident Advisor
+  url: http://feeds.feedburner.com/residentadvisor/DuYr
 - source: Ribbonfarm
   url: http://ribbonfarm.com/feed
 - source: Stratechery
   url: http://stratechery.com/feed/
+- source: Symmetry Magazine
+  url: https://www.symmetrymagazine.org/feed
 - source: Synced
   url: https://syncedreview.com/feed/
+- source: Terence Tao > What's New
+  url: https://terrytao.wordpress.com/feed/
+- source: The Conversation
+  url: https://theconversation.com/articles.atom?language=en
 - source: The Economist
   url: https://www.economist.com/the-world-this-week/rss.xml
+- source: "The Economist > 1843 Magazine"
+  url: https://www.1843magazine.com/rss/content
 - source: The Gradient
   url: https://thegradient.pub/rss/
 - source: The Morning Paper
   url: https://blog.acolyer.org/feed/
+- source: The Observation Deck
+  url: http://dtrace.org/blogs/bmc/feed/
+- source: The Syndicate
+  url: https://bit.ly/2H1PsOQ
 - source: The Verge
   url: https://www.theverge.com/rss/index.xml
+- source: Triple Canopy
+  url: https://www.canopycanopycanopy.com/feed
 - source: Uber Engineering
   url: https://eng.uber.com/rss
 - source: VideoGameDunkey
   url: https://www.youtube.com/feeds/videos.xml?channel_id=UCsvn_Po0SmunchJYOWpOxMg
 - source: Volume
   url: http://volumeproject.org/feed/
-- source: BAIR
-  url: https://bair.berkeley.edu/blog/feed.xml
+- source: Wallpaper*
+  url: http://feeds.feedburner.com/Wallpaperfeed
+- source: The Point
+  url: https://thepointmag.com/rss
