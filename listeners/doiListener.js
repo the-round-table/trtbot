@@ -1,6 +1,5 @@
 const discord = require('discord.js');
 const Cite = require('citation-js');
-const truncate = require('truncate');
 const moment = require('moment');
 const oneLine = require('common-tags').oneLine;
 const BaseMessageListener = require('./baseMessageListener.js');
