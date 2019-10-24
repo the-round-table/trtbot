@@ -8,6 +8,7 @@ var schedule = require('node-schedule');
 
 const ArxivListener = require('./listeners/arxivListener.js');
 const AppleNewsListener = require('./listeners/appleNewsListener.js');
+const DoiListener = require('./listeners/doiListener.js');
 const GithubListener = require('./listeners/githubListener.js');
 const LongReadsListener = require('./listeners/longReadsListener.js');
 const MemeListener = require('./listeners/memeListener.js');
@@ -151,6 +152,7 @@ listenerRegistry.registerListeners(
   new GithubListener(),
   new ArxivListener(),
   new AppleNewsListener(),
+  new DoiListener(),  
   new LongReadsListener(),
   new StockListener(),
   new TexListener(),
