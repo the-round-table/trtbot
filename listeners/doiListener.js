@@ -37,7 +37,7 @@ class DoiListener extends BaseMessageListener {
       .addField('Date Published',  moment(info.deposited['date-time']).format('LL'))          
       .addField(
         'Read Here:',
-        `https://sci-hub.tw/${doiCode}}`
+        `https://sci-hub.tw/${doiCode}`
       );
       message.reply({ embed });
   }
