@@ -1,4 +1,5 @@
 const config = require('../../config.js');
+const utils = require('../../utils.js');
 const discord = require('discord.js');
 const commando = require('discord.js-commando');
 const truncate = require('truncate');
@@ -87,7 +88,7 @@ module.exports = class MorningPaperCommand extends commando.Command {
   }
 
   async addFeed(channel, subcommand) {
-    let [feedTitle, ...feedUrl] = subcommand.split('-');
+    let [feedTitle, ...feedUrl] = utils.argparse(subcommand);
     let result = await this.generator.addFeed(
       feedTitle.trim(),
       feedUrl[0].trim()

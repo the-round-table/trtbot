@@ -1,5 +1,6 @@
 const commando = require('discord.js-commando');
 const config = require('../../config.js');
+const utils = require('../../utils.js');
 const octokit = require('@octokit/rest')();
 const oneLine = require('common-tags').oneLine;
 const {
@@ -40,7 +41,7 @@ module.exports = class FeatureRequestCommand extends commando.Command {
   }
 
   async run(msg, { feature }) {
-    let [title, ...body] = feature.split('-');
+    let [title, ...body] = utils.argparse(feature);
     if (title === '') {
       msg.reply(INVALID_COMMAND_FORMAT);
       return;
