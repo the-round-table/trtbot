@@ -89,7 +89,7 @@ async function formatImageLinkAsMessage(link) {
 // Takes in a string with arguments seperated by '-' and returns an array of arguments
 // Allows the delimiter to be escaped with \
 function argparse(str) {
-  return str.replace(/\\?\-/g, (t) => t == '-' ? '\u000B' : '-').split('\u000B');
+  return str.replace(/\\?\s\-\s/g, (t) => t == ' - ' ? '\u000B' : ' - ').split('\u000B');
 }
 
 module.exports = {
