@@ -50,7 +50,16 @@ class TexListener extends BaseMessageListener {
       if (m.trim().length === 0) {
         return;
       }
-      const base64Data = await renderMath(m);
+      let base64Data;
+      try {
+        base64Data = await renderMath(m);
+      } catch (error) {
+        await message.author.send(
+          `Error rendering latex: "${error}"\nOriginal message: "$${m}$"`
+        );
+        await message.react('❌');
+        return;
+      }
       await sendImage(srcChannel, base64Data);
     });
   }
