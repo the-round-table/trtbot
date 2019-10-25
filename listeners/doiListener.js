@@ -18,28 +18,29 @@ class DoiListener extends BaseMessageListener {
 
   async onMessage(message) {
     const doi = message.content.match(DOI_REGEX)[0];
-    const doiCode = doi.replace(DOI_SPLIT_REGEX, "").trim();
+    const doiCode = doi.replace(DOI_SPLIT_REGEX, '').trim();
     let citation = await Cite.async(doiCode);
-    let info = citation.data[0];  
+    let info = citation.data[0];
 
-    let title = info.title.split(' ')
-      .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+    let title = info.title
+      .split(' ')
+      .map(s => s.charAt(0).toUpperCase() + s.substring(1))
       .join(' ');
 
-    
     const embed = new discord.RichEmbed()
       .setTitle(`📄 [SciHub] "${title}"`)
       .addField(
-          'Authors', info.author.map(author => `${author.given} ${author.family}`).join(', ')
+        'Authors',
+        info.author.map(author => `${author.given} ${author.family}`).join(', ')
       )
       .addField('Subject', info.subject.join(', '))
       .addField('Published In', info['container-title'])
-      .addField('Date Published',  moment(info.deposited['date-time']).format('LL'))          
       .addField(
-        'Read Here:',
-        `https://sci-hub.tw/${doiCode}`
-      );
-      message.reply({ embed });
+        'Date Published',
+        moment(info.deposited['date-time']).format('LL')
+      )
+      .addField('Read Here:', `https://sci-hub.tw/${doiCode}`);
+    message.reply({ embed });
   }
 }
 
