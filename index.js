@@ -152,7 +152,7 @@ listenerRegistry.registerListeners(
   new GithubListener(),
   new ArxivListener(),
   new AppleNewsListener(),
-  new DoiListener(),  
+  new DoiListener(),
   new LongReadsListener(),
   new StockListener(),
   new TexListener(),
