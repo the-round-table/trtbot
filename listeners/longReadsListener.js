@@ -20,6 +20,7 @@ const BLACKLISTED_SITES = [
   'amazon.com',
   'arxiv-vanity.com',
   'arxiv.org',
+  'doi.org',
   'facebook.com',
   'giphy.com',
   'github.com',
