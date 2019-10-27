@@ -12,14 +12,14 @@
   "pre-commit": "lint",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bcongdon/trtbot.git"
+    "url": "git+https://github.com/the-round-table/trtbot.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bcongdon/trtbot/issues"
+    "url": "https://github.com/the-round-table/trtbot/issues"
   },
-  "homepage": "https://github.com/bcongdon/trtbot#readme",
+  "homepage": "https://github.com/the-round-table/trtbot#readme",
   "dependencies": {
     "@octokit/rest": "^15.9.4",
     "arxiv": "0.0.4",
